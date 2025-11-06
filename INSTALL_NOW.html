@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Install Git & Push to GitHub - Quick Guide</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 40px;
+        }
+        .option {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        .option:hover {
+            border-color: #667eea;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+        .option.recommended {
+            border-color: #4CAF50;
+            background: #e8f5e9;
+        }
+        .badge {
+            display: inline-block;
+            background: #4CAF50;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .option h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+        }
+        .option ul {
+            list-style: none;
+            margin: 20px 0;
+        }
+        .option li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+        .option li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+        .steps {
+            background: white;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .steps h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        .steps ol {
+            margin-left: 20px;
+        }
+        .steps li {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+        .button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        .button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        .button-green {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+        }
+        .center {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .info-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .info-box h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        .footer {
+            background: #f8f9fa;
+            padding: 30px;
+            text-align: center;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Install Git & Push to GitHub</h1>
+            <p>Tamer Educational Activities</p>
+        </div>
+
+        <div class="content">
+            <div class="info-box">
+                <h4>📍 Current Status</h4>
+                <p><strong>Git is NOT installed yet.</strong> Choose one of the options below to install and push your project to GitHub.</p>
+                <p style="margin-top: 10px;">Repository: <code>https://github.com/Karan2907/Tamer-Educational-Activities.git</code></p>
+            </div>
+
+            <!-- Option 1: GitHub Desktop -->
+            <div class="option recommended">
+                <span class="badge">⭐ RECOMMENDED</span>
+                <h2>Option 1: GitHub Desktop</h2>
+                <p><strong>Best for:</strong> Beginners, quick setup, visual interface</p>
+
+                <ul>
+                    <li>No command line needed</li>
+                    <li>Visual, user-friendly interface</li>
+                    <li>Automatic setup</li>
+                    <li>Push with one click</li>
+                </ul>
+
+                <div class="steps">
+                    <h3>Installation Steps:</h3>
+                    <ol>
+                        <li>Click the download button below</li>
+                        <li>Run the installer (use default settings)</li>
+                        <li>Sign in with your GitHub account</li>
+                        <li>Click <strong>File → Add Local Repository</strong></li>
+                        <li>Browse to: <code>d:\Gaming Template</code></li>
+                        <li>Click <strong>Publish repository</strong></li>
+                        <li>✅ Done! Your code is on GitHub!</li>
+                    </ol>
+                </div>
+
+                <div class="center">
+                    <a href="https://desktop.github.com/" class="button button-green" target="_blank">
+                        📥 Download GitHub Desktop
+                    </a>
+                </div>
+            </div>
+
+            <!-- Option 2: Git for Windows -->
+            <div class="option">
+                <h2>Option 2: Git for Windows</h2>
+                <p><strong>Best for:</strong> Advanced users, command line control</p>
+
+                <ul>
+                    <li>Full Git command line tools</li>
+                    <li>More control over operations</li>
+                    <li>Works with automated scripts</li>
+                    <li>Industry standard tool</li>
+                </ul>
+
+                <div class="steps">
+                    <h3>Installation Steps:</h3>
+                    <ol>
+                        <li>Click the download button below</li>
+                        <li>Run the installer with <strong>default settings</strong></li>
+                        <li>After installation, go back to the terminal window</li>
+                        <li>Type <code>y</code> and press Enter</li>
+                        <li>Follow the on-screen prompts</li>
+                        <li>✅ Script will automatically push to GitHub!</li>
+                    </ol>
+                </div>
+
+                <div class="center">
+                    <a href="https://git-scm.com/download/win" class="button" target="_blank">
+                        📥 Download Git for Windows
+                    </a>
+                </div>
+            </div>
+
+            <!-- After Installation -->
+            <div class="success-box">
+                <h3>✅ After Installation</h3>
+                <p><strong>GitHub Desktop:</strong> Just click "Publish repository" and you're done!</p>
+                <p style="margin-top: 10px;"><strong>Git for Windows:</strong> Return to the terminal and type <code>y</code></p>
+            </div>
+
+            <!-- Personal Access Token -->
+            <div class="info-box">
+                <h4>🔑 Personal Access Token (Required for Git for Windows)</h4>
+                <p>When pushing, you'll need a token instead of your password:</p>
+                <ol style="margin-left: 20px; margin-top: 10px;">
+                    <li>Visit: <a href="https://github.com/settings/tokens" target="_blank">github.com/settings/tokens</a></li>
+                    <li>Click: <strong>Generate new token (classic)</strong></li>
+                    <li>Name: <code>Tamer Educational Activities</code></li>
+                    <li>Select scope: <strong>✓ repo</strong></li>
+                    <li>Click: <strong>Generate token</strong></li>
+                    <li><strong>Copy the token</strong> (starts with <code>ghp_</code>)</li>
+                    <li>Use it as your password when pushing</li>
+                </ol>
+            </div>
+
+            <!-- Next Steps -->
+            <div class="steps">
+                <h3>🎯 After Pushing to GitHub</h3>
+                <ol>
+                    <li>Visit your repository: <a href="https://github.com/Karan2907/Tamer-Educational-Activities" target="_blank">github.com/Karan2907/Tamer-Educational-Activities</a></li>
+                    <li>Enable GitHub Pages (Settings → Pages → Source: main)</li>
+                    <li>Your app will be live at: <code>https://karan2907.github.io/Tamer-Educational-Activities/template_fix_complete.html</code></li>
+                    <li>Add description and topics to your repository</li>
+                </ol>
+            </div>
+
+            <!-- Quick Reference -->
+            <div class="steps">
+                <h3>📚 Documentation Reference</h3>
+                <ul style="list-style: none;">
+                    <li>✓ <strong>GITHUB_SETUP_COMPLETE.md</strong> - Complete setup guide</li>
+                    <li>✓ <strong>PUSH_TO_GITHUB.md</strong> - Detailed push instructions</li>
+                    <li>✓ <strong>README.md</strong> - Project documentation</li>
+                    <li>✓ <strong>INSTALL-AND-PUSH.bat</strong> - Automated push script</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>Need help?</strong> Check the documentation files in your project folder</p>
+            <p style="margin-top: 10px;">Tamer Educational Activities © 2025</p>
+        </div>
+    </div>
+
+    <script>
+        // Auto-scroll to top
+        window.scrollTo(0, 0);
+    </script>
+</body>
+</html>
