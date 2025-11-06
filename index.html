@@ -2080,7 +2080,7 @@
       gamearena: {
         template: "gamearena",
         title: "Game Arena Activity",
-        packagePath: "",
+        packagePath: "Game Arena",
         description: "Interactive game-based learning experience",
         width: "100%",
         height: "700px",
@@ -4967,7 +4967,7 @@ Created with Tamer Educational Activities
         
         <div class="relative rounded-lg overflow-hidden" style="background-color: var(--background); border: 2px solid var(--card-border);">
           <iframe 
-            src="story.html" 
+            src="${activityData.packagePath}/story.html" 
             style="width: ${activityData.width || '100%'}; height: ${activityData.height || '700px'}; border: none;"
             allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             title="${activityData.title || 'Game Arena Activity'}"
@@ -5008,7 +5008,7 @@ Created with Tamer Educational Activities
                  class="w-full px-4 py-2 rounded-lg outline-none focus:border-primary transition-colors" 
                  style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);"
                  oninput="updateGameArena('packagePath', this.value)"
-                 placeholder="Path to your game package folder (leave empty for root)">
+                 placeholder="Path to your game package folder">
           <p class="text-xs text-muted mt-1">Path to your Game Arena package folder (e.g., 'Game Arena')</p>
         </div>
         
@@ -5051,8 +5051,8 @@ Created with Tamer Educational Activities
         
         <div class="p-4 rounded-lg" style="background-color: var(--drag-bg); border: 1px solid var(--card-border);">
           <p class="text-sm mb-2"><strong>Game Arena Package:</strong></p>
-          <p class="text-sm text-muted">Your Game Arena package files should be placed in the root directory of this application.</p>
-          <p class="text-xs text-muted mt-1">Current path: <code class="text-primary">story.html</code></p>
+          <p class="text-sm text-muted">Your Game Arena package should be placed in the root directory of this application.</p>
+          <p class="text-xs text-muted mt-1">Current path: <code class="text-primary">${activityData.packagePath || 'Game Arena'}/story.html</code></p>
         </div>
       `;
       
@@ -5065,7 +5065,7 @@ Created with Tamer Educational Activities
         <h4 class="text-lg font-bold mb-4">Preview</h4>
         <div class="relative rounded-lg overflow-hidden" style="background-color: var(--background); border: 2px solid var(--card-border); height: 400px;">
           <iframe 
-            src="story.html" 
+            src="${activityData.packagePath || 'Game Arena'}/story.html" 
             style="width: 100%; height: 100%; border: none;"
             title="Game Arena Preview"
           ></iframe>
