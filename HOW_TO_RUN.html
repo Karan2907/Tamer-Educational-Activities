@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Run - Tamer Educational Activities</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+      color: #333;
+    }
+    
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      overflow: hidden;
+    }
+    
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 40px;
+      text-align: center;
+    }
+    
+    .header h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+    
+    .header p {
+      font-size: 1.2em;
+      opacity: 0.9;
+    }
+    
+    .content {
+      padding: 40px;
+    }
+    
+    .alert {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 20px;
+      margin-bottom: 30px;
+      border-radius: 8px;
+    }
+    
+    .alert h2 {
+      color: #856404;
+      margin-bottom: 10px;
+      font-size: 1.3em;
+    }
+    
+    .alert p {
+      color: #856404;
+      line-height: 1.6;
+    }
+    
+    .error-box {
+      background: #f8d7da;
+      border-left: 4px solid #dc3545;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9em;
+      color: #721c24;
+    }
+    
+    .solution {
+      background: #d4edda;
+      border-left: 4px solid #28a745;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+    }
+    
+    .solution h3 {
+      color: #155724;
+      margin-bottom: 15px;
+      font-size: 1.2em;
+    }
+    
+    .solution p {
+      color: #155724;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+    
+    .method {
+      background: #f8f9fa;
+      border: 2px solid #e9ecef;
+      padding: 20px;
+      margin: 15px 0;
+      border-radius: 8px;
+    }
+    
+    .method h4 {
+      color: #495057;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .badge {
+      background: #28a745;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8em;
+      font-weight: normal;
+    }
+    
+    .badge.easy {
+      background: #28a745;
+    }
+    
+    .badge.medium {
+      background: #ffc107;
+    }
+    
+    code {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9em;
+    }
+    
+    pre {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 20px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 15px 0;
+      line-height: 1.5;
+    }
+    
+    .steps {
+      counter-reset: step-counter;
+      list-style: none;
+      padding: 0;
+    }
+    
+    .steps li {
+      counter-increment: step-counter;
+      margin: 15px 0;
+      padding-left: 40px;
+      position: relative;
+      line-height: 1.6;
+    }
+    
+    .steps li::before {
+      content: counter(step-counter);
+      position: absolute;
+      left: 0;
+      top: 0;
+      background: #667eea;
+      color: white;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 0.9em;
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 12px 30px;
+      background: #667eea;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      margin: 10px 10px 10px 0;
+      transition: all 0.3s;
+    }
+    
+    .btn:hover {
+      background: #5568d3;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+    
+    .btn.secondary {
+      background: #6c757d;
+    }
+    
+    .btn.secondary:hover {
+      background: #5a6268;
+    }
+    
+    .icon {
+      font-size: 1.5em;
+      margin-right: 10px;
+    }
+    
+    .footer {
+      background: #f8f9fa;
+      padding: 30px;
+      text-align: center;
+      color: #6c757d;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🎓 Authentication Setup Guide</h1>
+      <p>Tamer Educational Activities</p>
+    </div>
+    
+    <div class="content">
+      <div class="alert">
+        <h2>⚠️ Important: Firebase Authentication Requires a Web Server</h2>
+        <p>
+          You're seeing errors because the authentication system requires running on a proper web server with 
+          <code>http://</code> or <code>https://</code> protocol, not the <code>file://</code> protocol used 
+          when opening HTML files directly.
+        </p>
+      </div>
+      
+      <div class="error-box">
+        <strong>Common Errors You May See:</strong><br>
+        ❌ FirebaseError: auth/unauthorized-domain<br>
+        ❌ location.protocol must be http, https or chrome-extension<br>
+        ❌ Failed to execute 'postMessage' on 'DOMWindow'
+      </div>
+      
+      <div class="solution">
+        <h3>✅ Solution: Run a Local Web Server</h3>
+        <p>Choose one of the methods below to run the application properly:</p>
+      </div>
+      
+      <div class="method">
+        <h4>
+          <span class="icon">🚀</span>
+          Method 1: Visual Studio Code Live Server
+          <span class="badge easy">EASIEST</span>
+        </h4>
+        <ol class="steps">
+          <li>Open this folder in VS Code</li>
+          <li>Install the "Live Server" extension</li>
+          <li>Right-click on <code>index.html</code></li>
+          <li>Select "Open with Live Server"</li>
+          <li>Your app will open at <code>http://127.0.0.1:5500</code></li>
+        </ol>
+      </div>
+      
+      <div class="method">
+        <h4>
+          <span class="icon">📦</span>
+          Method 2: Node.js http-server
+          <span class="badge medium">RECOMMENDED</span>
+        </h4>
+        <p><strong>Step 1:</strong> Install Node.js from <a href="https://nodejs.org" target="_blank">nodejs.org</a></p>
+        <p><strong>Step 2:</strong> Open PowerShell in this folder and run:</p>
+        <pre>npm install -g http-server
+http-server -p 8000 -o</pre>
+        <p>Your app will open at <code>http://localhost:8000</code></p>
+      </div>
+      
+      <div class="method">
+        <h4>
+          <span class="icon">🐘</span>
+          Method 3: PHP Built-in Server
+          <span class="badge easy">IF YOU HAVE PHP</span>
+        </h4>
+        <p>If you have PHP installed, run this in PowerShell:</p>
+        <pre>php -S localhost:8000</pre>
+        <p>Then open: <code>http://localhost:8000</code></p>
+      </div>
+      
+      <div class="method">
+        <h4>
+          <span class="icon">🎯</span>
+          Method 4: Python Simple Server
+          <span class="badge easy">IF YOU HAVE PYTHON</span>
+        </h4>
+        <p>If you have Python installed, run this in PowerShell:</p>
+        <pre>python -m http.server 8000</pre>
+        <p>Then open: <code>http://localhost:8000</code></p>
+      </div>
+      
+      <h2 style="margin-top: 40px; color: #667eea;">🔧 After Starting the Server:</h2>
+      
+      <div class="method">
+        <h4><span class="icon">🔥</span>Enable Firebase Authentication</h4>
+        <ol class="steps">
+          <li>Go to <a href="https://console.firebase.google.com/" target="_blank">Firebase Console</a></li>
+          <li>Select project: <strong>tamer-educational-activities</strong></li>
+          <li>Navigate to <strong>Authentication</strong> → <strong>Sign-in method</strong></li>
+          <li>Enable <strong>Email/Password</strong></li>
+          <li>Enable <strong>Google</strong> (select support email)</li>
+          <li>Click <strong>Save</strong></li>
+        </ol>
+      </div>
+      
+      <h2 style="margin-top: 40px; color: #667eea;">✨ Test Your Authentication:</h2>
+      
+      <div class="method">
+        <ol class="steps">
+          <li>Start your local server using one of the methods above</li>
+          <li>Open <code>http://localhost:8000</code> in your browser</li>
+          <li>Click the <strong>"Sign Up"</strong> button in the header</li>
+          <li>Try creating an account with email or Google</li>
+          <li>You should see "Hello, [Your Name]" after successful signup</li>
+        </ol>
+      </div>
+      
+      <div class="solution" style="margin-top: 30px;">
+        <h3>✅ What Features Are Available:</h3>
+        <ul style="color: #155724; line-height: 2; padding-left: 20px;">
+          <li>✨ Email/Password Registration</li>
+          <li>✨ Google Sign-In (One-Click)</li>
+          <li>✨ Login with Email/Password</li>
+          <li>✨ Forgot Password Recovery</li>
+          <li>✨ Session Persistence</li>
+          <li>✨ User Profile Management</li>
+          <li>✨ Secure Logout</li>
+        </ul>
+      </div>
+      
+      <div style="margin-top: 40px; text-align: center;">
+        <a href="TROUBLESHOOTING_AUTH.md" class="btn">📚 Full Troubleshooting Guide</a>
+        <a href="AUTH_SETUP_GUIDE.md" class="btn secondary">📖 Setup Documentation</a>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <p><strong>Need Help?</strong> Check the documentation files in this folder:</p>
+      <p>
+        <code>AUTH_SETUP_GUIDE.md</code> | 
+        <code>TROUBLESHOOTING_AUTH.md</code> | 
+        <code>QUICK_START_AUTH.md</code>
+      </p>
+      <p style="margin-top: 20px;">🚀 Ready to deploy? Push to GitHub and deploy on Vercel!</p>
+    </div>
+  </div>
+</body>
+</html>
