@@ -1845,6 +1845,9 @@
             <button class="px-6 py-3 font-bold border-b-2 border-transparent transition-all text-muted hover:text-primary" id="admin-tab-analytics" onclick="switchAdminTab('analytics')">
               <i class="fas fa-chart-bar mr-2"></i>Analytics
             </button>
+            <button class="px-6 py-3 font-bold border-b-2 border-transparent transition-all text-muted hover:text-primary" id="admin-tab-pricing" onclick="switchAdminTab('pricing')">
+              <i class="fas fa-dollar-sign mr-2"></i>Pricing
+            </button>
             <button class="px-6 py-3 font-bold border-b-2 border-transparent transition-all text-muted hover:text-primary" id="admin-tab-reports" onclick="switchAdminTab('reports')">
               <i class="fas fa-file-download mr-2"></i>Reports
             </button>
@@ -1928,6 +1931,96 @@
             <h3 class="text-lg font-bold mb-4">Popular Templates</h3>
             <div id="admin-popular-templates" class="space-y-3">
               <div class="text-center py-8 text-muted">Loading analytics...</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Pricing Tab -->
+        <div id="admin-content-pricing" class="card hidden">
+          <h3 class="text-lg font-bold mb-6">Manage Pricing Plans</h3>
+          
+          <div class="mb-8">
+            <div class="inline-block px-4 py-2 rounded-lg mb-4" style="background-color: var(--warn); background: linear-gradient(135deg, var(--warn) 0%, var(--error) 100%); color: white;">
+              <i class="fas fa-info-circle mr-2"></i>
+              <span class="font-bold">Note:</span> Changes will update prices on the public pricing page immediately
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Standard Plan Pricing -->
+            <div class="p-6 rounded-lg" style="background-color: var(--drag-bg); border: 2px solid var(--primary);">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-12 h-12 rounded-full flex items-center justify-center" style="background-color: var(--primary); color: white;">
+                  <i class="fas fa-crown text-xl"></i>
+                </div>
+                <h4 class="text-xl font-bold">Standard Plan</h4>
+              </div>
+              
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-sm text-muted mb-2">Monthly Price ($)</label>
+                  <input type="number" id="admin-standard-monthly" value="10" min="0" step="0.01" class="w-full px-4 py-2 rounded-lg outline-none focus:border-primary transition-colors" style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);">
+                </div>
+                
+                <div>
+                  <label class="block text-sm text-muted mb-2">Annual Price ($)</label>
+                  <input type="number" id="admin-standard-annual" value="7.50" min="0" step="0.01" class="w-full px-4 py-2 rounded-lg outline-none focus:border-primary transition-colors" style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);">
+                  <p class="text-xs text-muted mt-1">Per month (billed annually)</p>
+                </div>
+                
+                <div>
+                  <label class="block text-sm text-muted mb-2">Annual Total ($)</label>
+                  <input type="number" id="admin-standard-annual-total" value="90" min="0" step="0.01" class="w-full px-4 py-2 rounded-lg outline-none focus:border-primary transition-colors" style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);">
+                  <p class="text-xs text-muted mt-1">Total billed annually</p>
+                </div>
+                
+                <button class="btn btn-primary w-full" onclick="saveStandardPricing()">
+                  <i class="fas fa-save mr-2"></i>
+                  Save Standard Pricing
+                </button>
+              </div>
+            </div>
+            
+            <!-- Pro Plan Pricing -->
+            <div class="p-6 rounded-lg" style="background-color: var(--drag-bg); border: 2px solid var(--accent);">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-12 h-12 rounded-full flex items-center justify-center" style="background-color: var(--accent); color: white;">
+                  <i class="fas fa-star text-xl"></i>
+                </div>
+                <h4 class="text-xl font-bold">Pro Plan</h4>
+              </div>
+              
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-sm text-muted mb-2">Monthly Price ($)</label>
+                  <input type="number" id="admin-pro-monthly" value="15" min="0" step="0.01" class="w-full px-4 py-2 rounded-lg outline-none focus:border-primary transition-colors" style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);">
+                </div>
+                
+                <div>
+                  <label class="block text-sm text-muted mb-2">Annual Price ($)</label>
+                  <input type="number" id="admin-pro-annual" value="11.25" min="0" step="0.01" class="w-full px-4 py-2 rounded-lg outline-none focus:border-primary transition-colors" style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);">
+                  <p class="text-xs text-muted mt-1">Per month (billed annually)</p>
+                </div>
+                
+                <div>
+                  <label class="block text-sm text-muted mb-2">Annual Total ($)</label>
+                  <input type="number" id="admin-pro-annual-total" value="135" min="0" step="0.01" class="w-full px-4 py-2 rounded-lg outline-none focus:border-primary transition-colors" style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);">
+                  <p class="text-xs text-muted mt-1">Total billed annually</p>
+                </div>
+                
+                <button class="btn btn-accent w-full" onclick="saveProPricing()">
+                  <i class="fas fa-save mr-2"></i>
+                  Save Pro Pricing
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Pricing History -->
+          <div class="mt-8 p-6 rounded-lg" style="background-color: var(--button-bg); border: 1px solid var(--card-border);">
+            <h4 class="text-lg font-bold mb-4">Pricing Change History</h4>
+            <div id="admin-pricing-history" class="space-y-2">
+              <div class="text-sm text-muted">No pricing changes recorded yet</div>
             </div>
           </div>
         </div>
@@ -8246,7 +8339,7 @@ Created with Tamer Educational Activities
       adminCurrentTab = tab;
       
       // Update tab buttons
-      ['users', 'templates', 'analytics', 'reports'].forEach(t => {
+      ['users', 'templates', 'analytics', 'pricing', 'reports'].forEach(t => {
         const btn = document.getElementById(`admin-tab-${t}`);
         const content = document.getElementById(`admin-content-${t}`);
         
@@ -8266,6 +8359,7 @@ Created with Tamer Educational Activities
       if (tab === 'users') loadAdminUsers(0);
       else if (tab === 'templates') loadAdminTemplates();
       else if (tab === 'analytics') loadAdminAnalytics();
+      else if (tab === 'pricing') loadAdminPricing();
     };
     
     // Load admin users
@@ -8403,6 +8497,138 @@ Created with Tamer Educational Activities
     window.showCustomReportBuilder = function() {
       alert('Custom Report Builder\nThis would show a modal to configure custom report parameters.');
     };
+    
+    // ===== Admin Pricing Management Functions =====
+    
+    // Load admin pricing
+    async function loadAdminPricing() {
+      console.log('Loading admin pricing');
+      
+      // Load saved prices from localStorage (or Firebase in production)
+      const savedPricing = localStorage.getItem('adminPricing');
+      
+      if (savedPricing) {
+        const pricing = JSON.parse(savedPricing);
+        
+        // Update form fields
+        document.getElementById('admin-standard-monthly').value = pricing.standardMonthly || 10;
+        document.getElementById('admin-standard-annual').value = pricing.standardAnnual || 7.50;
+        document.getElementById('admin-standard-annual-total').value = pricing.standardAnnualTotal || 90;
+        document.getElementById('admin-pro-monthly').value = pricing.proMonthly || 15;
+        document.getElementById('admin-pro-annual').value = pricing.proAnnual || 11.25;
+        document.getElementById('admin-pro-annual-total').value = pricing.proAnnualTotal || 135;
+      }
+      
+      // Load pricing history
+      loadPricingHistory();
+    }
+    
+    // Save Standard plan pricing
+    window.saveStandardPricing = function() {
+      const monthlyPrice = document.getElementById('admin-standard-monthly').value;
+      const annualPrice = document.getElementById('admin-standard-annual').value;
+      const annualTotal = document.getElementById('admin-standard-annual-total').value;
+      
+      // Get current pricing or initialize
+      const currentPricing = JSON.parse(localStorage.getItem('adminPricing') || '{}');
+      
+      // Update Standard pricing
+      currentPricing.standardMonthly = monthlyPrice;
+      currentPricing.standardAnnual = annualPrice;
+      currentPricing.standardAnnualTotal = annualTotal;
+      
+      // Save to localStorage
+      localStorage.setItem('adminPricing', JSON.stringify(currentPricing));
+      
+      // Update public pricing page
+      document.getElementById('standard-price').textContent = monthlyPrice;
+      
+      // Record change in history
+      addPricingHistory('Standard', monthlyPrice, annualPrice, annualTotal);
+      
+      updateStatus('Standard pricing updated successfully!');
+      alert('Standard plan pricing updated!\n\nMonthly: $' + monthlyPrice + '\nAnnual: $' + annualPrice + '/month ($' + annualTotal + '/year)');
+    };
+    
+    // Save Pro plan pricing
+    window.saveProPricing = function() {
+      const monthlyPrice = document.getElementById('admin-pro-monthly').value;
+      const annualPrice = document.getElementById('admin-pro-annual').value;
+      const annualTotal = document.getElementById('admin-pro-annual-total').value;
+      
+      // Get current pricing or initialize
+      const currentPricing = JSON.parse(localStorage.getItem('adminPricing') || '{}');
+      
+      // Update Pro pricing
+      currentPricing.proMonthly = monthlyPrice;
+      currentPricing.proAnnual = annualPrice;
+      currentPricing.proAnnualTotal = annualTotal;
+      
+      // Save to localStorage
+      localStorage.setItem('adminPricing', JSON.stringify(currentPricing));
+      
+      // Update public pricing page
+      document.getElementById('pro-price').textContent = monthlyPrice;
+      
+      // Record change in history
+      addPricingHistory('Pro', monthlyPrice, annualPrice, annualTotal);
+      
+      updateStatus('Pro pricing updated successfully!');
+      alert('Pro plan pricing updated!\n\nMonthly: $' + monthlyPrice + '\nAnnual: $' + annualPrice + '/month ($' + annualTotal + '/year)');
+    };
+    
+    // Add pricing change to history
+    function addPricingHistory(plan, monthly, annual, annualTotal) {
+      const history = JSON.parse(localStorage.getItem('pricingHistory') || '[]');
+      
+      history.unshift({
+        plan: plan,
+        monthly: monthly,
+        annual: annual,
+        annualTotal: annualTotal,
+        timestamp: new Date().toISOString(),
+        user: auth.currentUser?.email || 'Admin'
+      });
+      
+      // Keep only last 50 changes
+      if (history.length > 50) {
+        history.splice(50);
+      }
+      
+      localStorage.setItem('pricingHistory', JSON.stringify(history));
+      loadPricingHistory();
+    }
+    
+    // Load pricing history
+    function loadPricingHistory() {
+      const history = JSON.parse(localStorage.getItem('pricingHistory') || '[]');
+      const historyDiv = document.getElementById('admin-pricing-history');
+      
+      if (history.length === 0) {
+        historyDiv.innerHTML = '<div class="text-sm text-muted">No pricing changes recorded yet</div>';
+        return;
+      }
+      
+      historyDiv.innerHTML = history.slice(0, 10).map(change => {
+        const date = new Date(change.timestamp);
+        const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+        
+        return `
+          <div class="flex items-center justify-between p-3 rounded-lg" style="background-color: var(--button-bg); border: 1px solid var(--card-border);">
+            <div>
+              <span class="font-bold">${change.plan} Plan</span>
+              <span class="text-muted mx-2">•</span>
+              <span class="text-sm">Monthly: $${change.monthly}</span>
+              <span class="text-muted mx-2">•</span>
+              <span class="text-sm">Annual: $${change.annual}/mo</span>
+            </div>
+            <div class="text-xs text-muted">${formattedDate}</div>
+          </div>
+        `;
+      }).join('');
+    }
+    
+    // ===== End Admin Pricing Management Functions =====
     
     // ===== End Admin Dashboard Functions =====
     
