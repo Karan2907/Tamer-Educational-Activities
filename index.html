@@ -8122,7 +8122,8 @@ Created with Tamer Educational Activities
         'activity-creator',
         'my-templates-dashboard',
         'public-gallery',
-        'admin-dashboard'
+        'admin-dashboard',
+        'price-plans'
       ];
       
       sections.forEach(id => {
@@ -8133,6 +8134,70 @@ Created with Tamer Educational Activities
         }
       });
     }
+    
+    // ===== Price Plans Functions =====
+    
+    // Show Price Plans
+    window.showPricePlans = function() {
+      console.log('Showing price plans');
+      hideAllSections();
+      const pricePlans = document.getElementById('price-plans');
+      if (pricePlans) {
+        pricePlans.classList.remove('hidden');
+      }
+      
+      // Close mobile sidebar
+      if (window.innerWidth < 1024) {
+        toggleSidebar();
+      }
+    };
+    
+    // Switch billing cycle (monthly/annual)
+    window.switchBillingCycle = function(cycle) {
+      const monthlyBtn = document.getElementById('billing-monthly');
+      const annualBtn = document.getElementById('billing-annual');
+      
+      if (cycle === 'monthly') {
+        monthlyBtn.style.backgroundColor = 'var(--primary)';
+        monthlyBtn.style.color = 'white';
+        annualBtn.style.backgroundColor = 'transparent';
+        annualBtn.style.color = 'var(--text)';
+        
+        // Update prices to monthly
+        document.getElementById('standard-price').textContent = '10';
+        document.getElementById('standard-billing').textContent = 'Billed monthly';
+        document.getElementById('pro-price').textContent = '15';
+        document.getElementById('pro-billing').textContent = 'Billed monthly';
+      } else {
+        annualBtn.style.backgroundColor = 'var(--primary)';
+        annualBtn.style.color = 'white';
+        monthlyBtn.style.backgroundColor = 'transparent';
+        monthlyBtn.style.color = 'var(--text)';
+        
+        // Update prices to annual (25% off)
+        document.getElementById('standard-price').textContent = '7.50';
+        document.getElementById('standard-billing').textContent = 'Billed annually at $90 / year';
+        document.getElementById('pro-price').textContent = '11.25';
+        document.getElementById('pro-billing').textContent = 'Billed annually at $135 / year';
+      }
+    };
+    
+    // Handle subscription
+    window.handleSubscribe = function(plan) {
+      console.log('Subscribing to plan:', plan);
+      
+      // Check if user is logged in
+      if (!uid || uid.startsWith('guest_')) {
+        updateStatus('Please sign up or log in to subscribe');
+        showAuthModal('signup');
+        return;
+      }
+      
+      // In a real implementation, this would integrate with a payment provider
+      // For now, just show a message
+      alert(`You are subscribing to the ${plan.toUpperCase()} plan.\n\nIn a production environment, this would redirect you to a secure payment page.`);
+      updateStatus(`Processing subscription to ${plan} plan...`);
+    };
     
     // ===== Admin Dashboard Functions =====
     
