@@ -1203,13 +1203,58 @@
       <!-- Home / Landing Page (shown by default) -->
       <section id="home-page">
         <!-- Hero Section with Resource Counter -->
-        <div class="text-center mb-12">
-          <div class="inline-block px-4 py-2 rounded-full mb-4" style="background-color: var(--primary); background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white;">
-            <span class="font-bold text-lg" id="resource-counter">0</span>
-            <span class="text-sm ml-2">resources created</span>
+        <!-- Hero Section with Vector Image -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-12">
+          <div class="text-center lg:text-left">
+            <div class="inline-block px-4 py-2 rounded-full mb-4" style="background-color: var(--primary); background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white;">
+              <span class="font-bold text-lg" id="resource-counter">0</span>
+              <span class="text-sm ml-2">resources created</span>
+            </div>
+            <h1 class="text-5xl font-bold mb-4">Create better lessons quicker</h1>
+            <p class="text-xl text-muted mb-8">The easy way to create your own teaching resources. Make custom activities for your classroom. Quizzes, match ups, word games, and much more.</p>
           </div>
-          <h1 class="text-5xl font-bold mb-4">Create better lessons quicker</h1>
-          <p class="text-xl text-muted mb-8 max-w-3xl mx-auto">The easy way to create your own teaching resources. Make custom activities for your classroom. Quizzes, match ups, word games, and much more.</p>
+          
+          <!-- Hero Vector Illustration -->
+          <div class="hidden lg:flex justify-center">
+            <svg viewBox="0 0 500 400" class="w-full max-w-md" xmlns="http://www.w3.org/2000/svg">
+              <!-- Teacher figure -->
+              <ellipse cx="250" cy="380" rx="150" ry="15" fill="currentColor" opacity="0.1"/>
+              
+              <!-- Desk -->
+              <rect x="150" y="280" width="200" height="15" rx="5" fill="currentColor" opacity="0.2"/>
+              <rect x="140" y="295" width="220" height="10" rx="5" fill="currentColor" opacity="0.15"/>
+              
+              <!-- Laptop -->
+              <rect x="180" y="240" width="140" height="90" rx="8" fill="var(--primary)" opacity="0.3"/>
+              <rect x="185" y="245" width="130" height="70" rx="4" fill="var(--background)"/>
+              <rect x="190" y="250" width="120" height="60" rx="2" fill="var(--primary)" opacity="0.6"/>
+              <line x1="245" y1="330" x2="255" y2="350" stroke="var(--primary)" stroke-width="3"/>
+              <rect x="200" y="350" width="100" height="5" rx="2" fill="var(--primary)" opacity="0.4"/>
+              
+              <!-- Person -->
+              <circle cx="350" cy="170" r="30" fill="var(--secondary)"/>
+              <path d="M 350 200 Q 320 220 320 280 L 340 280 L 340 350 L 360 350 L 360 280 L 380 280 Q 380 220 350 200" fill="var(--accent)"/>
+              <rect x="335" y="230" width="30" height="50" rx="5" fill="var(--primary)" opacity="0.3"/>
+              
+              <!-- Floating educational icons -->
+              <g opacity="0.6">
+                <circle cx="100" cy="100" r="25" fill="var(--success)" opacity="0.3"/>
+                <text x="100" y="110" text-anchor="middle" font-size="24" fill="var(--success)">✓</text>
+                
+                <circle cx="420" cy="80" r="25" fill="var(--warn)" opacity="0.3"/>
+                <text x="420" y="90" text-anchor="middle" font-size="24" fill="var(--warn)">★</text>
+                
+                <circle cx="80" cy="250" r="20" fill="var(--error)" opacity="0.3"/>
+                <text x="80" y="258" text-anchor="middle" font-size="20" fill="var(--error)">♥</text>
+                
+                <circle cx="450" cy="220" r="20" fill="var(--primary)" opacity="0.3"/>
+                <text x="450" y="228" text-anchor="middle" font-size="20" fill="var(--primary)">◆</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+        
+        <div class="text-center mb-12">
           <button class="btn btn-primary text-lg px-8 py-4" id="signup-cta-home" onclick="showAuthModal('signup')">
             <i class="fas fa-rocket mr-2"></i>
             Sign Up To Start Creating
@@ -1227,82 +1272,138 @@
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <!-- Feature 1: Quick Creation -->
             <div class="card text-center">
-              <div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4" style="background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%);">
-                <i class="fas fa-clock text-3xl text-white"></i>
-              </div>
+              <svg viewBox="0 0 120 120" class="w-24 h-24 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="60" cy="60" r="50" fill="var(--primary)" opacity="0.2"/>
+                <circle cx="60" cy="60" r="40" fill="var(--primary)" opacity="0.4"/>
+                <circle cx="60" cy="60" r="5" fill="var(--primary)"/>
+                <line x1="60" y1="60" x2="60" y2="35" stroke="var(--primary)" stroke-width="3" stroke-linecap="round"/>
+                <line x1="60" y1="60" x2="80" y2="60" stroke="var(--secondary)" stroke-width="3" stroke-linecap="round"/>
+                <text x="60" y="100" text-anchor="middle" font-size="14" font-weight="bold" fill="var(--primary)">1 MIN</text>
+              </svg>
               <h3 class="text-2xl font-bold mb-3">Create an activity in 1 minute</h3>
               <p class="text-muted">Just enter your content and press play. It's that simple. No complex setup or learning curve required.</p>
             </div>
             
             <!-- Feature 2: Multiple Templates -->
             <div class="card text-center">
-              <div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4" style="background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 50%);">
-                <i class="fas fa-layer-group text-3xl text-white"></i>
-              </div>
+              <svg viewBox="0 0 120 120" class="w-24 h-24 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg">
+                <rect x="15" y="25" width="90" height="70" rx="5" fill="var(--secondary)" opacity="0.2"/>
+                <rect x="25" y="20" width="70" height="70" rx="5" fill="var(--accent)" opacity="0.3"/>
+                <rect x="30" y="30" width="60" height="50" rx="5" fill="var(--primary)" opacity="0.5"/>
+                <circle cx="45" cy="50" r="8" fill="var(--success)"/>
+                <circle cx="75" cy="50" r="8" fill="var(--warn)"/>
+                <rect x="40" y="65" width="40" height="4" rx="2" fill="var(--text)" opacity="0.3"/>
+                <rect x="40" y="72" width="30" height="4" rx="2" fill="var(--text)" opacity="0.3"/>
+                <text x="60" y="105" text-anchor="middle" font-size="14" font-weight="bold" fill="var(--primary)">20+</text>
+              </svg>
               <h3 class="text-2xl font-bold mb-3">20+ activity types in one platform</h3>
               <p class="text-muted">Quiz, match up, flash cards, drag and drop, timelines, crosswords, and many more interactive templates.</p>
             </div>
             
             <!-- Feature 3: Export Options -->
             <div class="card text-center">
-              <div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4" style="background: linear-gradient(135deg, var(--accent) 0%, var(--success) 50%);">
-                <i class="fas fa-download text-3xl text-white"></i>
-              </div>
+              <svg viewBox="0 0 120 120" class="w-24 h-24 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg">
+                <rect x="30" y="25" width="60" height="70" rx="5" fill="var(--accent)" opacity="0.2"/>
+                <path d="M 60 45 L 60 75 M 50 65 L 60 75 L 70 65" stroke="var(--success)" stroke-width="4" stroke-linecap="round" fill="none"/>
+                <line x1="35" y1="85" x2="85" y2="85" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/>
+                <text x="60" y="105" text-anchor="middle" font-size="10" font-weight="bold" fill="var(--success)">EXPORT</text>
+              </svg>
               <h3 class="text-2xl font-bold mb-3">Export to any format</h3>
               <p class="text-muted">Download as SCORM for LMS, Storyline for advanced editing, or HTML for offline use and homework.</p>
             </div>
             
             <!-- Feature 4: Share & Embed -->
             <div class="card text-center">
-              <div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4" style="background: linear-gradient(135deg, var(--success) 0%, var(--warn) 50%);">
-                <i class="fas fa-share-nodes text-3xl text-white"></i>
-              </div>
+              <svg viewBox="0 0 120 120" class="w-24 h-24 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="35" cy="50" r="15" fill="var(--success)" opacity="0.5"/>
+                <circle cx="85" cy="50" r="15" fill="var(--success)" opacity="0.5"/>
+                <circle cx="60" cy="80" r="15" fill="var(--success)" opacity="0.5"/>
+                <line x1="47" y1="55" x2="73" y2="55" stroke="var(--success)" stroke-width="3"/>
+                <line x1="45" y1="60" x2="60" y2="73" stroke="var(--success)" stroke-width="3"/>
+                <line x1="75" y1="60" x2="65" y2="73" stroke="var(--success)" stroke-width="3"/>
+                <circle cx="35" cy="50" r="8" fill="var(--background)"/>
+                <circle cx="85" cy="50" r="8" fill="var(--background)"/>
+                <circle cx="60" cy="80" r="8" fill="var(--background)"/>
+              </svg>
               <h3 class="text-2xl font-bold mb-3">Share instantly</h3>
               <p class="text-muted">Share via link, social media, or embed on your website. Students can access activities on any device.</p>
             </div>
             
             <!-- Feature 5: Template Conversion -->
             <div class="card text-center">
-              <div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4" style="background: linear-gradient(135deg, var(--warn) 0%, var(--error) 50%);">
-                <i class="fas fa-exchange-alt text-3xl text-white"></i>
-              </div>
+              <svg viewBox="0 0 120 120" class="w-24 h-24 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg">
+                <rect x="20" y="40" width="35" height="40" rx="5" fill="var(--warn)" opacity="0.4"/>
+                <rect x="65" y="40" width="35" height="40" rx="5" fill="var(--error)" opacity="0.4"/>
+                <path d="M 45 60 L 60 60 M 55 55 L 60 60 L 55 65" stroke="var(--primary)" stroke-width="3" fill="none" stroke-linecap="round"/>
+                <circle cx="30" cy="55" r="5" fill="var(--warn)"/>
+                <circle cx="80" cy="60" r="8" fill="var(--error)"/>
+                <rect x="75" y="67" width="10" height="3" rx="1" fill="var(--error)" opacity="0.6"/>
+              </svg>
               <h3 class="text-2xl font-bold mb-3">Activity customization</h3>
               <p class="text-muted">Switch your content to an entirely different activity with just one click. Change colors and themes instantly.</p>
             </div>
             
             <!-- Feature 6: Cloud Storage -->
             <div class="card text-center">
-              <div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4" style="background: linear-gradient(135deg, var(--error) 0%, var(--primary) 50%);">
-                <i class="fas fa-cloud text-3xl text-white"></i>
-              </div>
+              <svg viewBox="0 0 120 120" class="w-24 h-24 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 30 70 Q 30 50 50 50 Q 50 35 65 35 Q 80 35 80 50 Q 100 50 100 70 Q 100 85 85 85 L 35 85 Q 30 85 30 70" fill="var(--primary)" opacity="0.3"/>
+                <circle cx="60" cy="55" r="3" fill="var(--primary)"/>
+                <circle cx="50" cy="63" r="2" fill="var(--primary)" opacity="0.6"/>
+                <circle cx="70" cy="63" r="2" fill="var(--primary)" opacity="0.6"/>
+                <circle cx="60" cy="70" r="2" fill="var(--primary)" opacity="0.6"/>
+                <text x="60" y="100" text-anchor="middle" font-size="10" font-weight="bold" fill="var(--primary)">CLOUD</text>
+              </svg>
               <h3 class="text-2xl font-bold mb-3">Cloud-based storage</h3>
               <p class="text-muted">Access your activities from anywhere. All your templates are saved securely in the cloud with Firebase.</p>
             </div>
           </div>
         </div>
         
-        <!-- Easy as 1-2-3 Section -->
-        <div class="card max-w-4xl mx-auto mb-12">
+        <!-- Easy as 1-2-3 Section with Vector Illustrations -->
+        <div class="card max-w-6xl mx-auto mb-12">
           <h2 class="text-3xl font-bold mb-8 text-center">Easy as 1-2-3</h2>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <p class="text-center text-muted mb-12">Create a customized resource with just a few words and a few clicks.</p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
             <div class="text-center">
-              <div class="w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl font-bold mb-4 mx-auto shadow-lg" style="background: var(--primary);">
-                1
-              </div>
+              <!-- Step 1 Illustration -->
+              <svg viewBox="0 0 200 200" class="w-32 h-32 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg">
+                <rect x="40" y="40" width="120" height="140" rx="10" fill="var(--primary)" opacity="0.2"/>
+                <rect x="50" y="50" width="100" height="20" rx="5" fill="var(--primary)" opacity="0.6"/>
+                <rect x="50" y="80" width="100" height="20" rx="5" fill="var(--primary)" opacity="0.4"/>
+                <rect x="50" y="110" width="100" height="20" rx="5" fill="var(--primary)" opacity="0.6"/>
+                <rect x="50" y="140" width="100" height="20" rx="5" fill="var(--primary)" opacity="0.4"/>
+                <circle cx="30" cy="30" r="25" fill="var(--primary)"/>
+                <text x="30" y="40" text-anchor="middle" font-size="24" font-weight="bold" fill="white">1</text>
+              </svg>
               <h3 class="text-xl font-bold mb-2">Pick a template</h3>
               <p class="text-muted">Choose from 20+ interactive templates below</p>
             </div>
             <div class="text-center">
-              <div class="w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl font-bold mb-4 mx-auto shadow-lg" style="background: var(--secondary);">
-                2
-              </div>
+              <!-- Step 2 Illustration -->
+              <svg viewBox="0 0 200 200" class="w-32 h-32 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg">
+                <rect x="30" y="50" width="140" height="100" rx="10" fill="var(--secondary)" opacity="0.2"/>
+                <rect x="40" y="60" width="120" height="15" rx="3" fill="var(--secondary)" opacity="0.5"/>
+                <rect x="40" y="85" width="120" height="15" rx="3" fill="var(--secondary)" opacity="0.3"/>
+                <rect x="40" y="110" width="90" height="15" rx="3" fill="var(--secondary)" opacity="0.5"/>
+                <rect x="145" y="110" width="15" height="15" rx="3" fill="var(--success)"/>
+                <path d="M 147 117 L 152 122 L 158 112" stroke="white" stroke-width="2" fill="none"/>
+                <circle cx="30" cy="30" r="25" fill="var(--secondary)"/>
+                <text x="30" y="40" text-anchor="middle" font-size="24" font-weight="bold" fill="white">2</text>
+              </svg>
               <h3 class="text-xl font-bold mb-2">Enter your content</h3>
               <p class="text-muted">Add your questions, words, or educational content</p>
             </div>
             <div class="text-center">
-              <div class="w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl font-bold mb-4 mx-auto shadow-lg" style="background: var(--accent);">
-                3
-              </div>
+              <!-- Step 3 Illustration -->
+              <svg viewBox="0 0 200 200" class="w-32 h-32 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg">
+                <rect x="50" y="40" width="100" height="120" rx="10" fill="var(--accent)" opacity="0.2"/>
+                <circle cx="100" cy="90" r="30" fill="var(--accent)" opacity="0.6"/>
+                <path d="M 85 90 L 95 100 L 115 75" stroke="white" stroke-width="4" fill="none" stroke-linecap="round"/>
+                <rect x="65" y="130" width="70" height="15" rx="7" fill="var(--success)"/>
+                <text x="100" y="141" text-anchor="middle" font-size="10" font-weight="bold" fill="white">PLAY</text>
+                <circle cx="30" cy="30" r="25" fill="var(--accent)"/>
+                <text x="30" y="40" text-anchor="middle" font-size="24" font-weight="bold" fill="white">3</text>
+              </svg>
               <h3 class="text-xl font-bold mb-2">Play, share, or export</h3>
               <p class="text-muted">Use in play mode, share with students, or export as SCORM/Storyline/HTML</p>
             </div>
