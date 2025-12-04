@@ -878,6 +878,23 @@
       </h1>
       <span class="pill hidden md:inline-block">Create better lessons quicker</span>
     </div>
+    
+    <!-- Navigation Links -->
+    <nav class="hidden lg:flex items-center gap-2">
+      <button class="btn btn-ghost" onclick="showHomePage()">
+        <i class="fas fa-home mr-2"></i>
+        Home
+      </button>
+      <button class="btn btn-ghost" onclick="showPricePlans()">
+        <i class="fas fa-tag mr-2"></i>
+        Price Plans
+      </button>
+      <button class="btn btn-ghost" onclick="showPublicGallery()">
+        <i class="fas fa-users mr-2"></i>
+        Community
+      </button>
+    </nav>
+    
     <div class="flex items-center gap-3">
       <button id="theme-toggle" class="btn btn-ghost" onclick="toggleTheme()">
         <i class="fas fa-moon"></i>
@@ -914,19 +931,7 @@
   <!-- Main App Container -->
   <div class="app-container">
     <!-- Sidebar -->
-    <aside id="sidebar" class="sidebar">
-      <!-- Home -->
-      <div class="sidebar-section">
-        <div class="sidebar-item active" onclick="showHomePage()">
-          <div class="sidebar-icon" style="background-color: var(--drag-bg); color: var(--primary);">
-            <i class="fas fa-home"></i>
-          </div>
-          <div class="sidebar-content">
-            <div class="sidebar-item-name">Home</div>
-          </div>
-        </div>
-      </div>
-      
+    <aside id="sidebar" class="sidebar">      
       <!-- Templates Section (Collapsible) -->
       <div class="sidebar-section">
         <div class="sidebar-title" style="cursor: pointer; user-select: none;" onclick="toggleTemplatesSection()">
@@ -1630,6 +1635,158 @@
         
         <div id="my-templates-list" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           <div class="text-center py-12 text-muted col-span-full">Loading your templates...</div>
+        </div>
+      </section>
+      
+      <!-- Price Plans Section -->
+      <section id="price-plans" class="hidden">
+        <div class="text-center mb-12">
+          <h1 class="text-5xl font-bold mb-4">Price Plans</h1>
+          <p class="text-xl text-muted mb-8 max-w-3xl mx-auto">Choose the plan that works best for you</p>
+          
+          <!-- Monthly/Annual Toggle -->
+          <div class="inline-flex items-center gap-3 p-2 rounded-lg" style="background-color: var(--button-bg); border: 1px solid var(--button-border);">
+            <button id="billing-monthly" class="px-6 py-2 rounded-lg font-bold transition-all" style="background-color: var(--primary); color: white;" onclick="switchBillingCycle('monthly')">
+              Pay Monthly
+            </button>
+            <button id="billing-annual" class="px-6 py-2 rounded-lg font-bold transition-all" onclick="switchBillingCycle('annual')">
+              Pay Annually
+              <span class="ml-2 px-2 py-1 text-xs rounded-full" style="background-color: var(--success); color: white;">25% off</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Pricing Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+          <!-- Basic Plan -->
+          <div class="card text-center">
+            <h3 class="text-2xl font-bold mb-2">Basic</h3>
+            <div class="my-6">
+              <div class="text-5xl font-bold mb-2">
+                <span id="price-basic">Free</span>
+              </div>
+            </div>
+            <button class="btn btn-secondary w-full mb-6" onclick="showAuthModal('signup')">
+              <i class="fas fa-rocket mr-2"></i>
+              Free Sign Up
+            </button>
+            <div class="text-left space-y-3">
+              <div class="flex items-start gap-2">
+                <i class="fas fa-check text-success mt-1"></i>
+                <span class="text-sm">Create up to 3 activities</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <i class="fas fa-check text-success mt-1"></i>
+                <span class="text-sm">12 standard templates</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <i class="fas fa-check text-success mt-1"></i>
+                <span class="text-sm">Basic sharing options</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Standard Plan (Recommended) -->
+          <div class="card text-center" style="border: 2px solid var(--primary); box-shadow: 0 8px 24px rgba(37, 99, 235, 0.2);">
+            <div class="inline-block px-3 py-1 rounded-full text-xs font-bold mb-2" style="background-color: var(--primary); color: white;">
+              RECOMMENDED
+            </div>
+            <h3 class="text-2xl font-bold mb-2">Standard</h3>
+            <div class="my-6">
+              <div class="text-5xl font-bold mb-2">
+                <span>$<span id="standard-price">10</span></span>
+                <span class="text-xl"> / month</span>
+              </div>
+              <div class="text-sm text-muted" id="standard-billing">Billed monthly</div>
+            </div>
+            <button class="btn btn-primary w-full mb-6" onclick="handleSubscribe('standard')">
+              <i class="fas fa-crown mr-2"></i>
+              Subscribe
+            </button>
+            <div class="text-left space-y-3">
+              <div class="flex items-start gap-2">
+                <i class="fas fa-check text-success mt-1"></i>
+                <span class="text-sm">Create and edit unlimited activities</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <i class="fas fa-check text-success mt-1"></i>
+                <span class="text-sm">Edit activity options</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <i class="fas fa-check text-success mt-1"></i>
+                <span class="text-sm">Unlimited community search</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <i class="fas fa-check text-success mt-1"></i>
+                <span class="text-sm">Export as SCORM/HTML</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <i class="fas fa-check text-success mt-1"></i>
+                <span class="text-sm">12 standard templates</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Pro Plan -->
+          <div class="card text-center">
+            <h3 class="text-2xl font-bold mb-2">Pro</h3>
+            <div class="my-6">
+              <div class="text-5xl font-bold mb-2">
+                <span>$<span id="pro-price">15</span></span>
+                <span class="text-xl"> / month</span>
+              </div>
+              <div class="text-sm text-muted" id="pro-billing">Billed monthly</div>
+            </div>
+            <button class="btn btn-accent w-full mb-6" onclick="handleSubscribe('pro')">
+              <i class="fas fa-star mr-2"></i>
+              Subscribe
+            </button>
+            <div class="text-left space-y-3">
+              <div class="flex items-start gap-2">
+                <i class="fas fa-check text-success mt-1"></i>
+                <span class="text-sm font-bold">Everything in Standard, plus:</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <i class="fas fa-check text-success mt-1"></i>
+                <span class="text-sm">20+ templates (all templates)</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <i class="fas fa-check text-success mt-1"></i>
+                <span class="text-sm">Export to Storyline (.story)</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <i class="fas fa-check text-success mt-1"></i>
+                <span class="text-sm">Early access to new templates</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <i class="fas fa-check text-success mt-1"></i>
+                <span class="text-sm">Priority support</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- FAQs -->
+        <div class="card max-w-4xl mx-auto">
+          <h2 class="text-3xl font-bold mb-8 text-center">Frequently Asked Questions</h2>
+          <div class="space-y-6">
+            <div>
+              <h3 class="text-lg font-bold mb-2">What happens to my activities if I cancel?</h3>
+              <p class="text-muted">You will still have access to your activities folder. You can play, export, or share your resources. However, you won't be able to create new resources or edit existing ones.</p>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold mb-2">Can I cancel anytime?</h3>
+              <p class="text-muted">Yes! There is no contract. You can cancel at any point and no further payments will be taken.</p>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold mb-2">Can I switch between Standard and Pro later?</h3>
+              <p class="text-muted">Yes, you can upgrade or downgrade your plan at any time from your account settings.</p>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold mb-2">What payment methods do you support?</h3>
+              <p class="text-muted">We accept Visa, MasterCard, American Express, Apple Pay, and PayPal.</p>
+            </div>
+          </div>
         </div>
       </section>
       
