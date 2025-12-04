@@ -870,51 +870,51 @@
 </head>
 <body class="font-sans">
   <!-- Header -->
-  <header class="sticky top-0 z-10 p-4 border-b flex flex-wrap gap-4 items-center justify-between backdrop-blur-sm bg-opacity-80" style="background-color: var(--background); border-color: var(--divider);">
-    <div class="flex items-center gap-4">
-      <h1 class="text-2xl font-bold flex items-center gap-2">
+  <header class="sticky top-0 z-10 p-4 border-b flex items-center justify-between backdrop-blur-sm bg-opacity-80" style="background-color: var(--background); border-color: var(--divider);">
+    <div class="flex items-center gap-2">
+      <h1 class="text-xl lg:text-2xl font-bold flex items-center gap-2">
         <i class="fas fa-graduation-cap text-primary"></i>
-        <span>Tamer Educational Activities</span>
+        <span class="hidden sm:inline">Tamer Educational Activities</span>
+        <span class="sm:hidden">Tamer</span>
       </h1>
-      <span class="pill hidden md:inline-block">Create better lessons quicker</span>
     </div>
     
     <!-- Navigation Links -->
-    <nav class="hidden lg:flex items-center gap-2">
-      <button class="btn btn-ghost" onclick="showHomePage()">
-        <i class="fas fa-home mr-2"></i>
+    <nav class="hidden lg:flex items-center gap-1">
+      <button class="btn btn-ghost text-sm px-3" onclick="showHomePage()">
+        <i class="fas fa-home mr-1"></i>
         Home
       </button>
-      <button class="btn btn-ghost" onclick="showPricePlans()">
-        <i class="fas fa-tag mr-2"></i>
+      <button class="btn btn-ghost text-sm px-3" onclick="showPricePlans()">
+        <i class="fas fa-tag mr-1"></i>
         Price Plans
       </button>
-      <button class="btn btn-ghost" onclick="showPublicGallery()">
-        <i class="fas fa-users mr-2"></i>
+      <button class="btn btn-ghost text-sm px-3" onclick="showPublicGallery()">
+        <i class="fas fa-users mr-1"></i>
         Community
       </button>
     </nav>
     
-    <div class="flex items-center gap-3">
-      <button id="theme-toggle" class="btn btn-ghost" onclick="toggleTheme()">
+    <div class="flex items-center gap-2">
+      <button id="theme-toggle" class="btn btn-ghost p-2" onclick="toggleTheme()">
         <i class="fas fa-moon"></i>
       </button>
-      <select id="theme-variant-selector-header" class="px-3 py-2 rounded-lg outline-none transition-colors text-sm" style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);" onchange="switchThemeVariant(this.value)">
+      <select id="theme-variant-selector-header" class="px-2 py-1 rounded-lg outline-none transition-colors text-xs hidden xl:block" style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);" onchange="switchThemeVariant(this.value)">
         <option value="default">Default</option>
         <option value="minimal">Minimal</option>
         <option value="chalkboard">Chalkboard</option>
         <option value="neon">Neon</option>
         <option value="vibrant">Vibrant</option>
       </select>
-      <div id="auth-buttons">
-        <button class="btn btn-primary" onclick="showAuthModal('signup')">Sign Up</button>
-        <button class="btn" onclick="showAuthModal('login')">Log In</button>
+      <div id="auth-buttons" class="flex gap-2">
+        <button class="btn btn-primary text-sm px-3 py-2" onclick="showAuthModal('signup')">Sign Up</button>
+        <button class="btn text-sm px-3 py-2" onclick="showAuthModal('login')">Log In</button>
       </div>
-      <div id="user-menu" class="hidden flex items-center gap-3">
-        <span class="text-sm">Hello, <span id="user-display-name">User</span></span>
-        <button class="btn btn-ghost" onclick="handleLogout()">
+      <div id="user-menu" class="hidden flex items-center gap-2">
+        <span class="text-xs lg:text-sm">Hi, <span id="user-display-name" class="font-bold">User</span></span>
+        <button class="btn btn-ghost text-sm px-3 py-2" onclick="handleLogout()">
           <i class="fas fa-sign-out-alt"></i>
-          Logout
+          <span class="hidden lg:inline ml-1">Logout</span>
         </button>
       </div>
     </div>
