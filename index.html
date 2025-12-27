@@ -288,10 +288,15 @@
         --accent-hover: #0d9488;
         --success: #10b981;
         --success-hover: #059669;
+        --success-bg: rgba(16, 185, 129, 0.2);
+        --success-bg-hover: rgba(16, 185, 129, 0.3);
         --warn: #f59e0b;
         --warn-hover: #d97706;
         --error: #f43f5e;
         --error-hover: #e11d48;
+        --error-bg: rgba(244, 63, 94, 0.2);
+        --error-bg-hover: rgba(244, 63, 94, 0.3);
+        --warn-bg: rgba(245, 158, 11, 0.2);
       }
       
       .theme-light {
@@ -319,10 +324,15 @@
         --accent-hover: #0d9488;
         --success: #10b981;
         --success-hover: #059669;
+        --success-bg: rgba(16, 185, 129, 0.2);
+        --success-bg-hover: rgba(16, 185, 129, 0.3);
         --warn: #f59e0b;
         --warn-hover: #d97706;
         --error: #f43f5e;
         --error-hover: #e11d48;
+        --error-bg: rgba(244, 63, 94, 0.2);
+        --error-bg-hover: rgba(244, 63, 94, 0.3);
+        --warn-bg: rgba(245, 158, 11, 0.2);
       }
       
       body.theme-light {
@@ -635,6 +645,161 @@
       .sidebar-icon {
         width: 2rem;
         height: 2rem;
+        display: flex;
+        align-items: center;
+      }
+      
+      /* Interactive Video Overlay */
+      .video-question-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 75%;
+        max-width: 600px;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        z-index: 10;
+        text-align: center;
+      }
+      
+      .video-question-overlay .video-option {
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        transition: all 0.3s ease;
+      }
+      
+      .video-question-overlay .video-option:hover {
+        background: rgba(255, 255, 255, 0.3);
+        border-color: rgba(255, 255, 255, 0.6);
+      }
+      
+      .video-question-overlay .video-option:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+      
+      /* CSS-only icons */
+      .icon {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        position: relative;
+      }
+      
+      .icon-fullscreen {
+        width: 14px;
+        height: 14px;
+      }
+      
+      .icon-fullscreen::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 6px;
+        height: 6px;
+        border: 2px solid currentColor;
+        border-right: none;
+        border-bottom: none;
+      }
+      
+      .icon-fullscreen::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 6px;
+        height: 6px;
+        border: 2px solid currentColor;
+        border-left: none;
+        border-top: none;
+      }
+      
+      .icon-volume {
+        width: 16px;
+        height: 16px;
+      }
+      
+      .icon-volume::before {
+        content: '';
+        position: absolute;
+        top: 4px;
+        left: 2px;
+        width: 6px;
+        height: 8px;
+        background: currentColor;
+        clip-path: polygon(0 0, 100% 20%, 100% 80%, 0 100%);
+      }
+      
+      .icon-volume::after {
+        content: '';
+        position: absolute;
+        top: 5px;
+        left: 8px;
+        width: 2px;
+        height: 6px;
+        background: currentColor;
+        border-radius: 1px;
+      }
+      
+      .icon-volume-mute {
+        width: 16px;
+        height: 16px;
+      }
+      
+      .icon-volume-mute::before {
+        content: '';
+        position: absolute;
+        top: 4px;
+        left: 2px;
+        width: 6px;
+        height: 8px;
+        background: currentColor;
+        clip-path: polygon(0 0, 100% 20%, 100% 80%, 0 100%);
+      }
+      
+      .icon-volume-mute::after {
+        content: '';
+        position: absolute;
+        top: 5px;
+        left: 8px;
+        width: 2px;
+        height: 6px;
+        background: currentColor;
+        border-radius: 1px;
+        opacity: 0.3;
+      }
+      
+      .icon-volume-mute::before {
+        content: '';
+        position: absolute;
+        top: 4px;
+        left: 2px;
+        width: 6px;
+        height: 8px;
+        background: currentColor;
+        clip-path: polygon(0 0, 100% 20%, 100% 80%, 0 100%);
+      }
+      
+      .icon-volume-mute .slash {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 14px;
+        height: 2px;
+        background: currentColor;
+        transform: rotate(45deg);
+        transform-origin: center;
+        border-radius: 1px;
+      }
+      
+      .btn-icon {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -1682,7 +1847,7 @@
                 Embed
               </button>
               <button class="btn btn-sm" onclick="toggleFullscreen()" title="Fullscreen mode">
-                <i class="fas fa-expand mr-1"></i>
+                <div class="icon-fullscreen mr-1"></div>
                 <span id="fullscreen-text">Fullscreen</span>
               </button>
               <button class="btn btn-sm" onclick="toggleTimer()" title="Start/Stop timer">
@@ -1690,7 +1855,7 @@
                 <span id="timer-display">00:00</span>
               </button>
               <button class="btn btn-sm" onclick="toggleSound()" title="Toggle sound" id="sound-btn">
-                <i class="fas fa-volume-up" id="sound-icon"></i>
+                <div class="icon-volume" id="sound-icon"></div>
               </button>
             </div>
             <div class="text-xs text-muted" id="save-status">Not saved yet</div>
@@ -2451,6 +2616,10 @@
           <i class="fas fa-save mr-2"></i>
           Save Activity
         </button>
+        <button id="publish-btn" class="btn btn-accent" onclick="publishToPublicGallery()" title="Share this template with the community">
+          <i class="fas fa-globe mr-2"></i>
+          Publish to Gallery
+        </button>
         <div class="text-sm text-muted flex items-center" id="save-status">Not saved yet</div>
       </div>
     </div>
@@ -2473,7 +2642,7 @@
                   Embed
                 </button>
                 <button class="btn btn-sm" onclick="toggleFullscreen()" title="Fullscreen mode">
-                  <i class="fas fa-expand mr-1"></i>
+                  <div class="icon-fullscreen mr-1"></div>
                   <span id="fullscreen-text">Fullscreen</span>
                 </button>
                 <button class="btn btn-sm" onclick="toggleTimer()" title="Start/Stop timer">
@@ -2481,7 +2650,7 @@
                   <span id="timer-display">00:00</span>
                 </button>
                 <button class="btn btn-sm" onclick="toggleSound()" title="Toggle sound" id="sound-btn">
-                  <i class="fas fa-volume-up" id="sound-icon"></i>
+                  <div class="icon-volume" id="sound-icon"></div>
                 </button>
               </div>
               <div class="text-xs text-muted hidden md:block">Activity Controls</div>
@@ -2504,6 +2673,10 @@
               <button id="save-changes-btn-dashboard" class="btn btn-accent">
                 <i class="fas fa-save mr-2"></i>
                 Save Changes
+              </button>
+              <button id="publish-btn-dashboard" class="btn btn-secondary" onclick="publishToPublicGallery()" title="Share this template with the community">
+                <i class="fas fa-globe mr-2"></i>
+                Publish
               </button>
             </div>
           </div>
@@ -2697,7 +2870,7 @@
     // Firebase imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
     import { getAuth, signInAnonymously, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signOut, updateProfile, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
 
     // Make Firebase modules available globally
     window.firebase = {
@@ -2716,7 +2889,9 @@
       doc,
       getDoc,
       setDoc,
-      deleteDoc
+      deleteDoc,
+      collection,
+      getDocs
     };
 
     // Firebase setup
@@ -3604,6 +3779,48 @@
       const activityCreator = document.getElementById('activity-creator');
       if (activityCreator) {
         activityCreator.scrollIntoView({ behavior: 'smooth' });
+      }
+    };
+    
+    // Share a saved template
+    window.shareSavedTemplate = async function(templateType) {
+      if (!uid) {
+        alert('Please sign in to share templates.');
+        return;
+      }
+      
+      try {
+        // Load the template data
+        const ref = firebase.doc(db, 'users', uid, 'templates', templateType);
+        const snap = await firebase.getDoc(ref);
+        
+        if (snap.exists()) {
+          const templateData = snap.data();
+          
+          // Generate share link
+          const shareUrl = window.location.origin + window.location.pathname + `?template=${templateType}&user=${uid}`;
+          
+          // Copy to clipboard
+          navigator.clipboard.writeText(shareUrl).then(() => {
+            updateStatus('Share link copied to clipboard!');
+            
+            // Show sharing options
+            if (confirm(`Template link copied!\n\nShare on social media?`)) {
+              // Open sharing dialog
+              const text = `Check out this ${templateData.title || 'educational template'} I created!`;
+              const socialUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(text)}`;
+              window.open(socialUrl, '_blank');
+            }
+          }).catch(err => {
+            console.error('Failed to copy link: ', err);
+            alert('Failed to copy link. Here it is: ' + shareUrl);
+          });
+        } else {
+          alert('Template not found');
+        }
+      } catch (error) {
+        console.error('Error sharing template:', error);
+        alert('Failed to share template. Please try again.');
       }
     };
     
@@ -5288,30 +5505,30 @@ Created with Tamer Educational Activities
         if (selectedIndex === correctIndex) {
           score++;
           playSound('correct'); // Play success sound
-          options[selectedIndex].style.backgroundColor = '#00d48d';
-          options[selectedIndex].style.borderColor = '#00d48d';
+          options[selectedIndex].style.backgroundColor = 'var(--success)';
+          options[selectedIndex].style.borderColor = 'var(--success)';
           options[selectedIndex].style.color = '#fff';
           if (feedbackDiv) {
             feedbackDiv.className = 'mt-4 p-3 rounded-lg';
-            feedbackDiv.style.backgroundColor = '#d4edda';
-            feedbackDiv.style.borderColor = '#28a745';
-            feedbackDiv.style.color = '#155724';
+            feedbackDiv.style.backgroundColor = 'var(--success-bg)';
+            feedbackDiv.style.borderColor = 'var(--success)';
+            feedbackDiv.style.color = 'var(--success)';
             feedbackDiv.innerHTML = '✅ <strong>Correct!</strong> Great job!';
             feedbackDiv.classList.remove('hidden');
           }
         } else {
           playSound('incorrect'); // Play error sound
-          options[selectedIndex].style.backgroundColor = '#ff6b6b';
-          options[selectedIndex].style.borderColor = '#ff6b6b';
+          options[selectedIndex].style.backgroundColor = 'var(--error)';
+          options[selectedIndex].style.borderColor = 'var(--error)';
           options[selectedIndex].style.color = '#fff';
-          options[correctIndex].style.backgroundColor = '#00d48d';
-          options[correctIndex].style.borderColor = '#00d48d';
+          options[correctIndex].style.backgroundColor = 'var(--success)';
+          options[correctIndex].style.borderColor = 'var(--success)';
           options[correctIndex].style.color = '#fff';
           if (feedbackDiv) {
             feedbackDiv.className = 'mt-4 p-3 rounded-lg';
-            feedbackDiv.style.backgroundColor = '#f8d7da';
-            feedbackDiv.style.borderColor = '#dc3545';
-            feedbackDiv.style.color = '#721c24';
+            feedbackDiv.style.backgroundColor = 'var(--error-bg)';
+            feedbackDiv.style.borderColor = 'var(--error)';
+            feedbackDiv.style.color = 'var(--error)';
             feedbackDiv.innerHTML = `❌ <strong>Incorrect!</strong> The correct answer is ${String.fromCharCode(65 + correctIndex)}.`;
             feedbackDiv.classList.remove('hidden');
           }
@@ -5483,14 +5700,14 @@ Created with Tamer Educational Activities
           score++;
           const selectedBtn = selectedValue ? trueBtn : falseBtn;
           if (selectedBtn) {
-            selectedBtn.style.backgroundColor = '#00d48d';
-            selectedBtn.style.borderColor = '#00d48d';
+            selectedBtn.style.backgroundColor = 'var(--success)';
+            selectedBtn.style.borderColor = 'var(--success)';
             selectedBtn.style.color = '#fff';
           }
           if (feedbackDiv) {
-            feedbackDiv.style.backgroundColor = '#d4edda';
-            feedbackDiv.style.borderColor = '#28a745';
-            feedbackDiv.style.color = '#155724';
+            feedbackDiv.style.backgroundColor = 'var(--success-bg)';
+            feedbackDiv.style.borderColor = 'var(--success)';
+            feedbackDiv.style.color = 'var(--success)';
             feedbackDiv.innerHTML = '✅ <strong>Correct!</strong> Well done!';
             feedbackDiv.classList.remove('hidden');
           }
@@ -5498,19 +5715,19 @@ Created with Tamer Educational Activities
           const selectedBtn = selectedValue ? trueBtn : falseBtn;
           const correctBtn = correctValue ? trueBtn : falseBtn;
           if (selectedBtn) {
-            selectedBtn.style.backgroundColor = '#ff6b6b';
-            selectedBtn.style.borderColor = '#ff6b6b';
+            selectedBtn.style.backgroundColor = 'var(--error)';
+            selectedBtn.style.borderColor = 'var(--error)';
             selectedBtn.style.color = '#fff';
           }
           if (correctBtn) {
-            correctBtn.style.backgroundColor = '#00d48d';
-            correctBtn.style.borderColor = '#00d48d';
+            correctBtn.style.backgroundColor = 'var(--success)';
+            correctBtn.style.borderColor = 'var(--success)';
             correctBtn.style.color = '#fff';
           }
           if (feedbackDiv) {
-            feedbackDiv.style.backgroundColor = '#f8d7da';
-            feedbackDiv.style.borderColor = '#dc3545';
-            feedbackDiv.style.color = '#721c24';
+            feedbackDiv.style.backgroundColor = 'var(--error-bg)';
+            feedbackDiv.style.borderColor = 'var(--error)';
+            feedbackDiv.style.color = 'var(--error)';
             feedbackDiv.innerHTML = `❌ <strong>Incorrect!</strong> The correct answer is ${correctValue ? 'True' : 'False'}.`;
             feedbackDiv.classList.remove('hidden');
           }
@@ -5842,9 +6059,9 @@ Created with Tamer Educational Activities
       // Create inline result display
       const resultDiv = document.createElement('div');
       resultDiv.className = 'mt-6 p-6 rounded-lg text-center';
-      resultDiv.style.backgroundColor = correct === total ? '#d4edda' : '#fff3cd';
-      resultDiv.style.borderColor = correct === total ? '#28a745' : '#ffc107';
-      resultDiv.style.color = correct === total ? '#155724' : '#856404';
+      resultDiv.style.backgroundColor = correct === total ? 'var(--success-bg)' : 'var(--warn-bg)';
+      resultDiv.style.borderColor = correct === total ? 'var(--success)' : 'var(--warn)';
+      resultDiv.style.color = correct === total ? 'var(--success)' : 'var(--warn)';
       resultDiv.style.border = '2px solid';
       
       const icon = correct === total ? '🎉' : '📊';
@@ -5934,7 +6151,7 @@ Created with Tamer Educational Activities
       
       const container = document.createElement('div');
       container.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
-      container.style.backgroundColor = '#9F76D7';
+      container.style.backgroundColor = 'var(--accent)';
       container.style.padding = '2rem';
       container.style.borderRadius = '1rem';
       
@@ -6049,7 +6266,7 @@ Created with Tamer Educational Activities
       }
       
       const mainContainer = document.createElement('div');
-      mainContainer.style.backgroundColor = '#9F75D7';
+      mainContainer.style.backgroundColor = 'var(--accent)';
       mainContainer.style.padding = '2rem';
       mainContainer.style.borderRadius = '1rem';
       
@@ -6328,18 +6545,18 @@ Created with Tamer Educational Activities
             correct++;
             correctSelections++;
             itemElement.classList.add('correct');
-            itemElement.style.backgroundColor = '#00d48d';
+            itemElement.style.backgroundColor = 'var(--success)';
             itemElement.querySelector('i').className = 'fas fa-check-circle text-white';
           } else if (item.isCorrect && !isSelected) {
             // Should have been selected but wasn't
-            itemElement.style.backgroundColor = '#ffc107';
+            itemElement.style.backgroundColor = 'var(--warn)';
             itemElement.style.opacity = '0.7';
             itemElement.querySelector('i').className = 'fas fa-exclamation-circle text-white';
           } else if (!item.isCorrect && isSelected) {
             // Incorrectly selected
             incorrectSelections++;
             itemElement.classList.add('incorrect');
-            itemElement.style.backgroundColor = '#ff6b6b';
+            itemElement.style.backgroundColor = 'var(--error)';
             itemElement.querySelector('i').className = 'fas fa-times-circle text-white';
           } else {
             // Correctly not selected
@@ -6352,9 +6569,9 @@ Created with Tamer Educational Activities
         // Create inline result display
         const resultDiv = document.createElement('div');
         resultDiv.className = 'mt-6 p-6 rounded-lg text-center';
-        resultDiv.style.backgroundColor = correct === total && incorrectSelections === 0 ? '#d4edda' : '#fff3cd';
-        resultDiv.style.borderColor = correct === total && incorrectSelections === 0 ? '#28a745' : '#ffc107';
-        resultDiv.style.color = correct === total && incorrectSelections === 0 ? '#155724' : '#856404';
+        resultDiv.style.backgroundColor = correct === total && incorrectSelections === 0 ? 'var(--success-bg)' : 'var(--warn-bg)';
+        resultDiv.style.borderColor = correct === total && incorrectSelections === 0 ? 'var(--success)' : 'var(--warn)';
+        resultDiv.style.color = correct === total && incorrectSelections === 0 ? 'var(--success)' : 'var(--warn)';
         resultDiv.style.border = '2px solid';
         
         const icon = correct === total && incorrectSelections === 0 ? '🎉' : '📊';
@@ -6363,8 +6580,8 @@ Created with Tamer Educational Activities
         resultDiv.innerHTML = `
           <div class="text-3xl mb-3">${icon}</div>
           <div class="text-2xl font-bold mb-2">${message}</div>
-          <div class="text-xl mb-2">You got <span class="font-bold" style="color: #00d48d;">${correct}</span> out of <span class="font-bold">${total}</span> correct answers!</div>
-          ${incorrectSelections > 0 ? `<div class="text-lg mb-2" style="color: #ff6b6b;">Incorrectly selected: ${incorrectSelections}</div>` : ''}
+          <div class="text-xl mb-2">You got <span class="font-bold" style="color: var(--success);">${correct}</span> out of <span class="font-bold">${total}</span> correct answers!</div>
+          ${incorrectSelections > 0 ? `<div class="text-lg mb-2" style="color: var(--error);">Incorrectly selected: ${incorrectSelections}</div>` : ''}
           <div class="text-lg">${percentage}% Correct</div>
           <button class="btn btn-primary mt-4" onclick="resetActivity()">Try Again</button>
         `;
@@ -6594,7 +6811,7 @@ Created with Tamer Educational Activities
       if (playControls) {
         playControls.innerHTML = `
           <button class="btn btn-primary" onclick="toggleSCORMFullscreen()">
-            <i class="fas fa-expand mr-2"></i>
+            <div class="icon-fullscreen mr-2"></div>
             Fullscreen
           </button>
           <button class="btn btn-ghost" onclick="refreshSCORM()">
@@ -6753,7 +6970,7 @@ Created with Tamer Educational Activities
       if (playControls) {
         playControls.innerHTML = `
           <button class="btn btn-primary" onclick="toggleGameArenaFullscreen()">
-            <i class="fas fa-expand mr-2"></i>
+            <div class="icon-fullscreen mr-2"></div>
             Fullscreen
           </button>
           <button class="btn btn-ghost" onclick="refreshGameArena()">
@@ -7217,23 +7434,7 @@ Created with Tamer Educational Activities
         <div class="mb-4 p-4 rounded-lg" style="background-color: var(--button-bg); border: 1px solid var(--button-border);">
           <p class="text-sm text-muted">${activityData.description || 'Interactive Video Lesson'}</p>
         </div>
-        
-        <div id="video-question-area" class="hidden p-6 rounded-lg mb-4" style="background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white;">
-          <div class="text-lg font-bold mb-4" id="question-text">Which statement is correct?</div>
-          <div id="question-options" class="space-y-3">
-            <button class="w-full p-3 rounded-lg border-2 border-white/30 hover:border-white/60 hover:bg-white/10 transition-all text-left video-option" onclick="answerVideoQuestion(0)">
-              A. Plants produce oxygen
-            </button>
-            <button class="w-full p-3 rounded-lg border-2 border-white/30 hover:border-white/60 hover:bg-white/10 transition-all text-left video-option" onclick="answerVideoQuestion(1)">
-              B. Plants produce carbon dioxide
-            </button>
-            <button class="w-full p-3 rounded-lg border-2 border-white/30 hover:border-white/60 hover:bg-white/10 transition-all text-left video-option" onclick="answerVideoQuestion(2)">
-              C. Plants don't breathe
-            </button>
-          </div>
-          <div id="video-feedback" class="mt-4 p-3 rounded-lg" style="background-color: rgba(16, 185, 129, 0.2); border: 2px solid;">✅ <strong>Correct!</strong> Great job!</div>
-        </div>
-        
+              
         <div class="relative rounded-lg overflow-hidden mb-4" style="background-color: var(--background); border: 2px solid var(--card-border);">
           <iframe 
             id="video-player"
@@ -7243,16 +7444,32 @@ Created with Tamer Educational Activities
             allowfullscreen
             title="${activityData.title || 'Interactive Video'}"
           ></iframe>
+                  
+          <!-- Video Question Overlay - Positioned on top of video -->
+          <div id="video-question-area" class="video-question-overlay hidden" style="max-width: 600px;">
+            <div class="text-lg font-bold mb-4" id="question-text">Which statement is correct?</div>
+            <div id="question-options" class="space-y-3">
+              <button class="w-full p-3 rounded-lg border-2 border-white/30 hover:border-white/60 hover:bg-white/10 transition-all text-left video-option" onclick="answerVideoQuestion(0)">
+                A. Plants produce oxygen
+              </button>
+              <button class="w-full p-3 rounded-lg border-2 border-white/30 hover:border-white/60 hover:bg-white/10 transition-all text-left video-option" onclick="answerVideoQuestion(1)">
+                B. Plants produce carbon dioxide
+              </button>
+              <button class="w-full p-3 rounded-lg border-2 border-white/30 hover:border-white/60 hover:bg-white/10 transition-all text-left video-option" onclick="answerVideoQuestion(2)">
+                C. Plants don't breathe
+              </button>
+            </div>
+            <div id="video-feedback" class="mt-4 p-3 rounded-lg hidden" style="background-color: var(--success-bg); border: 2px solid var(--success); color: var(--success);">✅ <strong>Correct!</strong> Great job!</div>
+          </div>
         </div>
-        
+              
         <div class="flex justify-between items-center p-4 rounded-lg" style="background-color: var(--button-bg); border: 1px solid var(--button-border);">
           <div class="flex gap-4">
             <div class="pill">Progress: <span id="video-progress" class="text-accent font-bold">0</span>/${activityData.questions ? activityData.questions.length : 0}</div>
             <div class="pill">Score: <span id="video-score" class="text-success font-bold">0</span>/${activityData.questions ? activityData.questions.length : 0}</div>
           </div>
           <div class="text-xs text-muted">Questions appear automatically at specific timestamps</div>
-        </div>
-      `;
+        </div>`;
       
       playArea.innerHTML = '';
       playArea.appendChild(container);
@@ -7263,7 +7480,7 @@ Created with Tamer Educational Activities
       if (playControls) {
         playControls.innerHTML = `
           <button class="btn btn-primary" onclick="toggleVideoFullscreen()">
-            <i class="fas fa-expand mr-2"></i>
+            <div class="icon-fullscreen mr-2"></div>
             Fullscreen
           </button>
           <button class="btn btn-ghost" onclick="resetVideoActivity()">
@@ -7273,9 +7490,38 @@ Created with Tamer Educational Activities
         `;
       }
       
-      // Simulate question triggers (in production, use YouTube/Vimeo API)
+      // Initialize video player for pausing functionality
+      const videoPlayer = document.getElementById('video-player');
+      
+      // Function to check if it's time to show a question based on video progress
+      function checkVideoTime() {
+        if (!activityData.questions || currentQuestionIndex >= activityData.questions.length) {
+          clearInterval(checkInterval);
+          return;
+        }
+        
+        const currentQuestion = activityData.questions[currentQuestionIndex];
+        const timestamp = currentQuestion.timestamp || 5; // Default to 5 seconds if no timestamp
+        
+        // In a real implementation, we'd get the actual video time
+        // For demo, we'll simulate based on elapsed time
+        const elapsed = (Date.now() - startTime) / 1000; // seconds since start
+        
+        if (elapsed >= timestamp && !questionsAnswered.includes(currentQuestionIndex)) {
+          showNextVideoQuestion();
+        }
+      }
+      
+      const startTime = Date.now();
+      
+      // Start checking for questions
+      checkInterval = setInterval(checkVideoTime, 1000); // Check every second
+      
+      // Also trigger initial check after 5 seconds as backup
       setTimeout(() => {
-        showNextVideoQuestion();
+        if (currentQuestionIndex < (activityData.questions?.length || 0)) {
+          showNextVideoQuestion();
+        }
       }, 5000);
     };
     
@@ -7304,6 +7550,13 @@ Created with Tamer Educational Activities
       questionArea.classList.remove('hidden');
       
       // In production, pause the video here using YouTube/Vimeo API
+      // For now, we'll simulate with a message
+      const videoFrame = document.getElementById('video-player');
+      if (videoFrame) {
+        // Note: Actual pausing would require YouTube/Vimeo API integration
+        // This is a placeholder for the concept
+        console.log('Video should pause when question appears');
+      }
     };
     
     // Answer video question
@@ -7319,25 +7572,25 @@ Created with Tamer Educational Activities
       
       if (isCorrect) {
         videoScore++;
-        options[selectedIndex].style.backgroundColor = 'rgba(16, 185, 129, 0.3)';
-        options[selectedIndex].style.borderColor = '#10b981';
+        options[selectedIndex].style.backgroundColor = 'var(--success-bg)';
+        options[selectedIndex].style.borderColor = 'var(--success)';
         if (feedbackDiv) {
           feedbackDiv.className = 'mt-4 p-3 rounded-lg';
-          feedbackDiv.style.backgroundColor = 'rgba(16, 185, 129, 0.2)';
-          feedbackDiv.style.borderColor = '#10b981';
+          feedbackDiv.style.backgroundColor = 'var(--success-bg)';
+          feedbackDiv.style.borderColor = 'var(--success)';
           feedbackDiv.style.border = '2px solid';
           feedbackDiv.innerHTML = '✅ <strong>Correct!</strong> Great job!';
           feedbackDiv.classList.remove('hidden');
         }
       } else {
-        options[selectedIndex].style.backgroundColor = 'rgba(244, 63, 94, 0.3)';
-        options[selectedIndex].style.borderColor = '#f43f5e';
-        options[question.correctIndex].style.backgroundColor = 'rgba(16, 185, 129, 0.3)';
-        options[question.correctIndex].style.borderColor = '#10b981';
+        options[selectedIndex].style.backgroundColor = 'var(--error-bg)';
+        options[selectedIndex].style.borderColor = 'var(--error)';
+        options[question.correctIndex].style.backgroundColor = 'var(--success-bg)';
+        options[question.correctIndex].style.borderColor = 'var(--success)';
         if (feedbackDiv) {
           feedbackDiv.className = 'mt-4 p-3 rounded-lg';
-          feedbackDiv.style.backgroundColor = 'rgba(244, 63, 94, 0.2)';
-          feedbackDiv.style.borderColor = '#f43f5e';
+          feedbackDiv.style.backgroundColor = 'var(--error-bg)';
+          feedbackDiv.style.borderColor = 'var(--error)';
           feedbackDiv.style.border = '2px solid';
           feedbackDiv.innerHTML = '❌ <strong>Incorrect.</strong> The correct answer is highlighted.';
           feedbackDiv.classList.remove('hidden');
@@ -7359,6 +7612,12 @@ Created with Tamer Educational Activities
         currentQuestionIndex++;
         
         // In production, resume video playback here
+        const videoPlayer = document.getElementById('video-player');
+        if (videoPlayer) {
+          // Note: Actual resuming would require YouTube/Vimeo API integration
+          // This is a placeholder for the concept
+          console.log('Video should resume after answering');
+        }
         
         // Show next question after delay (simulating video progress)
         setTimeout(() => {
@@ -7374,7 +7633,7 @@ Created with Tamer Educational Activities
       
       const percentage = Math.round((videoScore / activityData.questions.length) * 100);
       
-      questionArea.className = 'p-6 rounded-lg mb-4 text-center';
+      questionArea.className = 'video-question-overlay text-center';
       questionArea.style.background = 'linear-gradient(135deg, var(--success) 0%, var(--accent) 100%)';
       questionArea.style.color = 'white';
       questionArea.innerHTML = `
@@ -7849,7 +8108,7 @@ Created with Tamer Educational Activities
       const btn = document.getElementById('sound-btn');
       
       if (icon) {
-        icon.className = soundEnabled ? 'fas fa-volume-up' : 'fas fa-volume-mute';
+        icon.className = soundEnabled ? 'icon-volume' : 'icon-volume-mute';
       }
       
       if (btn) {
@@ -7999,9 +8258,33 @@ Created with Tamer Educational Activities
       try {
         galleryList.innerHTML = '<div class="text-center py-12 text-muted col-span-full">Loading...</div>';
         
-        // In production, this would fetch from a public collection
-        // For demo, we'll create sample public templates
-        const publicTemplates = [
+        // Fetch public templates from Firestore
+        const publicTemplatesRef = firebase.collection(db, 'public_templates');
+        const querySnapshot = await firebase.getDocs(publicTemplatesRef);
+        
+        const publicTemplates = [];
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          publicTemplates.push({
+            id: doc.id,
+            type: data.type,
+            title: data.title,
+            author: data.author,
+            description: data.description,
+            plays: data.analytics?.plays || 0,
+            rating: data.analytics?.avgScore ? data.analytics.avgScore / 20 : 0, // Convert percentage to 5-star scale
+            thumbnail: data.thumbnail || 'fa-graduation-cap',
+            createdAt: data.createdAt || data.timestamp || new Date().toISOString()
+          });
+        });
+        
+        window.publicTemplatesCache = publicTemplates;
+        renderGalleryTemplates(publicTemplates);
+        
+      } catch (error) {
+        console.error('Error loading public gallery:', error);
+        // Fallback to sample data if there's an error
+        const sampleTemplates = [
           {
             id: 'pub_mcq_1',
             type: 'mcq',
@@ -8064,12 +8347,8 @@ Created with Tamer Educational Activities
           }
         ];
         
-        window.publicTemplatesCache = publicTemplates;
-        renderGalleryTemplates(publicTemplates);
-        
-      } catch (error) {
-        console.error('Error loading public gallery:', error);
-        galleryList.innerHTML = '<div class="text-center py-12 text-muted col-span-full">Error loading templates</div>';
+        window.publicTemplatesCache = sampleTemplates;
+        renderGalleryTemplates(sampleTemplates);
       }
     };
     
@@ -8163,13 +8442,110 @@ Created with Tamer Educational Activities
     };
     
     // Use public template
-    window.usePublicTemplate = function(templateId) {
-      alert(`In production, this would copy template ${templateId} to your workspace.\n\nFor demo, you can create templates from scratch using the sidebar templates.`);
+    window.usePublicTemplate = async function(templateId) {
+      try {
+        // Get the template data from public templates
+        const templateRef = firebase.doc(db, 'public_templates', templateId);
+        const templateSnap = await firebase.getDoc(templateRef);
+        
+        if (templateSnap.exists()) {
+          const templateData = templateSnap.data();
+          
+          // Update the current activity with the template data
+          activityData = {...templateData};
+          
+          // Update the current template type to match the imported template
+          currentTemplate = templateData.type;
+          
+          // Update UI to show the imported template
+          updateActivityDisplay();
+          if (currentMode === 'play') {
+            renderPlayMode();
+          } else {
+            renderEditMode();
+          }
+          
+          // Update template selection in UI
+          const templateSelect = document.getElementById('template-select');
+          if (templateSelect) {
+            templateSelect.value = templateData.type;
+          }
+          
+          updateStatus(`Imported template: ${templateData.title}`);
+        } else {
+          alert('Template not found');
+        }
+      } catch (error) {
+        console.error('Error importing template:', error);
+        alert('Failed to import template. Please try again.');
+      }
     };
     
     // Preview public template
-    window.previewPublicTemplate = function(templateId) {
-      alert(`In production, this would show a preview of template ${templateId}.\n\nFor demo, click "Use Template" to add it to your workspace.`);
+    window.previewPublicTemplate = async function(templateId) {
+      try {
+        // Get the template data from public templates
+        const templateRef = firebase.doc(db, 'public_templates', templateId);
+        const templateSnap = await firebase.getDoc(templateRef);
+        
+        if (templateSnap.exists()) {
+          const templateData = templateSnap.data();
+          
+          // Store the original activity data to restore later
+          const originalActivityData = activityData;
+          const originalTemplate = currentTemplate;
+          
+          // Update the current activity with the template data
+          activityData = {...templateData};
+          
+          // Update the current template type to match the previewed template
+          currentTemplate = templateData.type;
+          
+          // Update UI to show the previewed template
+          updateActivityDisplay();
+          if (currentMode === 'play') {
+            renderPlayMode();
+          } else {
+            renderEditMode();
+          }
+          
+          // Update template selection in UI
+          const templateSelect = document.getElementById('template-select');
+          if (templateSelect) {
+            templateSelect.value = templateData.type;
+          }
+          
+          updateStatus(`Previewing template: ${templateData.title}`);
+          
+          // After preview, ask user if they want to use the template
+          setTimeout(() => {
+            if (confirm(`Like this template?\n\nClick OK to import it to your workspace, or Cancel to go back to your work.`)) {
+              // User wants to import the template, keep it as is
+              updateStatus(`Template imported: ${templateData.title}`);
+            } else {
+              // Restore original activity data
+              activityData = originalActivityData;
+              currentTemplate = originalTemplate;
+              updateActivityDisplay();
+              if (currentMode === 'play') {
+                renderPlayMode();
+              } else {
+                renderEditMode();
+              }
+              const templateSelect = document.getElementById('template-select');
+              if (templateSelect) {
+                templateSelect.value = originalTemplate;
+              }
+              updateStatus('Returned to your work');
+            }
+          }, 1000);
+        } else {
+          alert('Template not found');
+        }
+      } catch (error) {
+        console.error('Error previewing template:', error);
+        alert('Failed to preview template. Please try again.');
+      }
     };
     
     // ===== End Public Gallery Functions =====
@@ -8824,6 +9200,7 @@ Created with Tamer Educational Activities
           const ref = firebase.doc(db, 'users', uid, 'templates', currentTemplate);
           console.log('Saving to Firebase:', ref.path);
           await firebase.setDoc(ref, dataToSave, { merge: false });
+          
           updateStatus('Game Arena template saved successfully!');
           setTimeout(() => {
             updateStatus('All changes saved');
@@ -8833,6 +9210,65 @@ Created with Tamer Educational Activities
       } catch (error) {
         console.error('Error saving activity:', error);
         updateStatus('Error saving Game Arena template: ' + error.message);
+      }
+    };
+    
+    // Publish template to public gallery
+    window.publishToPublicGallery = async function() {
+      if (!uid || uid.startsWith('guest_')) {
+        alert('You must be logged in to publish templates to the public gallery.');
+        return;
+      }
+      
+      if (!activityData) {
+        updateStatus('No activity data to publish');
+        return;
+      }
+      
+      // Get user info to set as author
+      const user = auth.currentUser;
+      const author = user?.displayName || user?.email?.split('@')[0] || 'Anonymous';
+      
+      // Create public template data
+      const publicTemplateData = {
+        ...activityData,
+        author: author,
+        authorId: uid,
+        createdAt: new Date().toISOString(),
+        lastModified: new Date().toISOString(),
+        analytics: activityData.analytics || {
+          plays: 0,
+          scores: [],
+          avgScore: 0,
+          lastPlayed: null
+        },
+        thumbnail: activityData.thumbnail || 'fa-graduation-cap',
+        isPublic: true
+      };
+      
+      try {
+        // Generate a unique ID for the public template
+        const templateId = currentTemplate + '_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+        
+        // Save to public templates collection
+        const publicRef = firebase.doc(db, 'public_templates', templateId);
+        await firebase.setDoc(publicRef, publicTemplateData);
+        
+        updateStatus('Template published to public gallery successfully!');
+        
+        // Ask if user wants to share the template
+        if (confirm('Template published successfully! Would you like to share it with others?')) {
+          // Copy share link to clipboard
+          const shareUrl = window.location.origin + window.location.pathname + `?template=${templateId}`;
+          navigator.clipboard.writeText(shareUrl).then(() => {
+            alert('Share link copied to clipboard!');
+          }).catch(err => {
+            console.error('Failed to copy link: ', err);
+          });
+        }
+      } catch (error) {
+        console.error('Error publishing template:', error);
+        updateStatus('Error publishing template: ' + error.message);
       }
     };
     

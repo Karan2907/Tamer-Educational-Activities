@@ -1,0 +1,1883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tamer Educational Activities - Wordwall Layout</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    // Pre-declare all global functions to avoid ReferenceError
+    window.selectTemplate = function() {};
+    window.toggleMode = function() {};
+    window.resetActivity = function() {};
+    window.updateActivityTitle = function() {};
+    window.removeMCQQuestion = function() {};
+    window.updateMCQQuestion = function() {};
+    window.updateMCQOption = function() {};
+    window.updateMCQCorrectIndex = function() {};
+    window.checkTrueFalseAnswer = function() {};
+    window.removeTrueFalseItem = function() {};
+    window.updateTrueFalseStatement = function() {};
+    window.updateTrueFalseAnswer = function() {};
+    window.removeFlipCard = function() {};
+    window.updateFlipCard = function() {};
+    window.removeDragDropPair = function() {};
+    window.updateDragDropPair = function() {};
+    window.checkDragDropAnswers = function() {};
+    window.checkMCQAnswer = function() {};
+    window.saveActivity = function() {};
+    window.loadActivity = function() {};
+    window.updateStatus = function() {};
+    window.loadDummyData = function() {};
+    window.updateActivityDisplay = function() {};
+    window.renderPlayMode = function() {};
+    window.renderEditMode = function() {};
+    window.renderMCQPlayMode = function() {};
+    window.renderMCQEditMode = function() {};
+    window.renderTrueFalsePlayMode = function() {};
+    window.renderTrueFalseEditMode = function() {};
+    window.renderFlipCardsPlayMode = function() {};
+    window.renderFlipCardsEditMode = function() {};
+    window.renderDragDropPlayMode = function() {};
+    window.renderDragDropEditMode = function() {};
+    window.toggleTheme = function() {};
+    window.initTheme = function() {};
+    window.showHomePage = function() {};
+    window.showUserDashboard = function() {};
+    window.showMyTemplatesDashboard = function() {};
+    window.showPublicGallery = function() {};
+    window.showAdminDashboard = function() {};
+    window.showPricePlans = function() {};
+    window.switchAdminTab = function() {};
+    window.handleLogout = function() {};
+    window.showAuthModal = function() {};
+    window.toggleSidebar = function() {};
+    window.toggleTemplatesSection = function() {};
+    window.animateResourceCounter = function() {};
+    window.switchBillingCycle = function() {};
+    window.handleSubscribe = function() {};
+    window.saveStandardPricing = function() {};
+    window.saveProPricing = function() {};
+    window.loadAdminPricing = function() {};
+    window.addPricingHistory = function() {};
+    window.loadPricingHistory = function() {};
+    window.switchThemeVariant = function() {};
+    
+    // Theme configuration - Comprehensive Education Palette
+    const themeConfig = {
+      dark: {
+        background: '#0f1419',
+        backgroundGradient: '#1a1f2e',
+        card: '#1e2433',
+        cardBorder: '#2d3548',
+        buttonBg: '#252d3d',
+        buttonBorder: '#3d4a5f',
+        text: '#f8fafc',
+        muted: '#94a3b8',
+        divider: '#334155',
+        dragBorder: '#475569',
+        dropBorder: '#64748b',
+        dragBg: '#1e293b',
+        dropBg: '#1e293b',
+        hoverBg: '#334155',
+        // Semantic colors
+        primary: '#2563eb',
+        secondary: '#6366f1',
+        accent: '#14b8a6',
+        success: '#10b981',
+        warn: '#f59e0b',
+        error: '#f43f5e'
+      },
+      light: {
+        background: '#f8fafc',
+        backgroundGradient: '#f1f5f9',
+        card: '#ffffff',
+        cardBorder: '#e2e8f0',
+        buttonBg: '#ffffff',
+        buttonBorder: '#cbd5e1',
+        text: '#0f172a',
+        muted: '#64748b',
+        divider: '#e2e8f0',
+        dragBorder: '#94a3b8',
+        dropBorder: '#94a3b8',
+        dragBg: '#f8fafc',
+        dropBg: '#f8fafc',
+        hoverBg: '#f1f5f9',
+        // Semantic colors (same for both modes)
+        primary: '#2563eb',
+        secondary: '#6366f1',
+        accent: '#14b8a6',
+        success: '#10b981',
+        warn: '#f59e0b',
+        error: '#f43f5e'
+      }
+    };
+    
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            // Custom Color Palette
+            jasmine: {
+              DEFAULT: '#ffe588',
+              100: '#4f3e00',
+              200: '#9d7b00',
+              300: '#ecb900',
+              400: '#ffd53b',
+              500: '#ffe588',
+              600: '#ffeba1',
+              700: '#fff0b9',
+              800: '#fff5d0',
+              900: '#fffae8'
+            },
+            atomic_tangerine: {
+              DEFAULT: '#f79d65',
+              100: '#421b03',
+              200: '#843707',
+              300: '#c6520a',
+              400: '#f37222',
+              500: '#f79d65',
+              600: '#f8b083',
+              700: '#fac4a2',
+              800: '#fcd8c1',
+              900: '#fdebe0'
+            },
+            imperial_red: {
+              DEFAULT: '#f35252',
+              100: '#3d0404',
+              200: '#7a0808',
+              300: '#b70d0d',
+              400: '#ef1616',
+              500: '#f35252',
+              600: '#f57676',
+              700: '#f89898',
+              800: '#fababa',
+              900: '#fddddd'
+            },
+            aquamarine: {
+              DEFAULT: '#5ef2d5',
+              100: '#053e33',
+              200: '#0a7d66',
+              300: '#0fbb98',
+              400: '#20edc4',
+              500: '#5ef2d5',
+              600: '#7ff5dd',
+              700: '#9ff7e6',
+              800: '#bffaee',
+              900: '#dffcf7'
+            },
+            argentinian_blue: {
+              DEFAULT: '#60b5ff',
+              100: '#002646',
+              200: '#004b8d',
+              300: '#0071d3',
+              400: '#1b94ff',
+              500: '#60b5ff',
+              600: '#81c4ff',
+              700: '#a0d3ff',
+              800: '#c0e1ff',
+              900: '#dff0ff'
+            },
+            // Primary - Blue (Trust, Learning)
+            primary: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+              DEFAULT: '#2563eb'
+            },
+            // Secondary - Indigo (Creativity)
+            secondary: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              200: '#c7d2fe',
+              300: '#a5b4fc',
+              400: '#818cf8',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              800: '#3730a3',
+              900: '#312e81',
+              DEFAULT: '#6366f1'
+            },
+            // Accent - Teal (Innovation, Fresh)
+            accent: {
+              50: '#f0fdfa',
+              100: '#ccfbf1',
+              200: '#99f6e4',
+              300: '#5eead4',
+              400: '#2dd4bf',
+              500: '#14b8a6',
+              600: '#0d9488',
+              700: '#0f766e',
+              800: '#115e59',
+              900: '#134e4a',
+              DEFAULT: '#14b8a6'
+            },
+            // Success - Green (Correct, Positive)
+            success: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              200: '#bbf7d0',
+              300: '#86efac',
+              400: '#4ade80',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d',
+              DEFAULT: '#10b981'
+            },
+            // Warning - Amber (Caution, Attention)
+            warn: {
+              50: '#fffbeb',
+              100: '#fef3c7',
+              200: '#fde68a',
+              300: '#fcd34d',
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+              700: '#b45309',
+              800: '#92400e',
+              900: '#78350f',
+              DEFAULT: '#f59e0b'
+            },
+            // Error - Red (Incorrect, Danger)
+            error: {
+              50: '#fef2f2',
+              100: '#fee2e2',
+              200: '#fecaca',
+              300: '#fca5a5',
+              400: '#f87171',
+              500: '#ef4444',
+              600: '#dc2626',
+              700: '#b91c1c',
+              800: '#991b1b',
+              900: '#7f1d1d',
+              DEFAULT: '#f43f5e'
+            },
+            // Text Colors
+            text: {
+              DEFAULT: 'var(--text)',
+              muted: 'var(--muted)'
+            },
+            // Background Colors
+            background: {
+              DEFAULT: 'var(--background)',
+              gradient: 'var(--background-gradient)',
+              card: 'var(--card)'
+            },
+            // Border Colors
+            border: {
+              DEFAULT: 'var(--divider)',
+              card: 'var(--card-border)',
+              button: 'var(--button-border)',
+              drag: 'var(--drag-border)',
+              drop: 'var(--drop-border)'
+            }
+          }
+        }
+      }
+    };
+
+    // Initialize theme variables
+    function initTheme() {
+      console.log('Initializing theme');
+      const isDarkMode = localStorage.getItem('darkMode') === 'true';
+      const themeVariant = localStorage.getItem('themeVariant') || 'default';
+      
+      // Apply dark mode if needed
+      if (isDarkMode) {
+        document.body.classList.add('dark');
+      }
+      
+      // Apply theme variant
+      switchThemeVariant(themeVariant);
+      
+      console.log('Theme initialized');
+    }
+
+    // Toggle between light and dark mode
+    function toggleTheme() {
+      console.log('Toggling theme');
+      const isDarkMode = document.body.classList.toggle('dark');
+      localStorage.setItem('darkMode', isDarkMode);
+      
+      // Update theme toggle button icon
+      const themeToggle = document.getElementById('theme-toggle');
+      if (themeToggle) {
+        const icon = themeToggle.querySelector('i');
+        if (icon) {
+          icon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
+        }
+      }
+      
+      console.log('Theme toggled to', isDarkMode ? 'dark' : 'light');
+    }
+
+    // Switch theme variant
+    function switchThemeVariant(variant) {
+      console.log('Switching theme variant to', variant);
+      localStorage.setItem('themeVariant', variant);
+      
+      // Get current theme mode (light or dark)
+      const isDarkMode = document.body.classList.contains('dark');
+      const theme = isDarkMode ? themeConfig.dark : themeConfig.light;
+      
+      // Apply theme variables to root
+      const root = document.documentElement;
+      root.style.setProperty('--background', theme.background);
+      root.style.setProperty('--background-gradient', theme.backgroundGradient);
+      root.style.setProperty('--card', theme.card);
+      root.style.setProperty('--card-border', theme.cardBorder);
+      root.style.setProperty('--button-bg', theme.buttonBg);
+      root.style.setProperty('--button-border', theme.buttonBorder);
+      root.style.setProperty('--text', theme.text);
+      root.style.setProperty('--muted', theme.muted);
+      root.style.setProperty('--divider', theme.divider);
+      root.style.setProperty('--drag-border', theme.dragBorder);
+      root.style.setProperty('--drop-border', theme.dropBorder);
+      root.style.setProperty('--drag-bg', theme.dragBg);
+      root.style.setProperty('--drop-bg', theme.dropBg);
+      root.style.setProperty('--hover-bg', theme.hoverBg);
+      root.style.setProperty('--primary', theme.primary);
+      root.style.setProperty('--secondary', theme.secondary);
+      root.style.setProperty('--accent', theme.accent);
+      root.style.setProperty('--success', theme.success);
+      root.style.setProperty('--warn', theme.warn);
+      root.style.setProperty('--error', theme.error);
+      
+      console.log('Theme variant applied');
+    }
+
+    // Hide all sections
+    function hideAllSections() {
+      console.log('Hiding all sections');
+      const sections = [
+        'home-page',
+        'user-dashboard',
+        'welcome-section',
+        'activity-creator',
+        'my-templates-dashboard',
+        'public-gallery',
+        'admin-dashboard',
+        'price-plans'
+      ];
+      
+      sections.forEach(id => {
+        const section = document.getElementById(id);
+        if (section) {
+          console.log('Hiding section:', id);
+          section.classList.add('hidden');
+        }
+      });
+    }
+
+    // Show home page
+    window.showHomePage = function() {
+      console.log('Showing home page');
+      hideAllSections();
+      const homePage = document.getElementById('home-page');
+      if (homePage) {
+        homePage.classList.remove('hidden');
+      }
+      
+      // Close mobile sidebar
+      if (window.innerWidth < 1024) {
+        toggleSidebar();
+      }
+    };
+
+    // Show user dashboard
+    window.showUserDashboard = function() {
+      console.log('Showing user dashboard');
+      hideAllSections();
+      const dashboard = document.getElementById('user-dashboard');
+      if (dashboard) {
+        dashboard.classList.remove('hidden');
+      }
+      
+      // Close mobile sidebar
+      if (window.innerWidth < 1024) {
+        toggleSidebar();
+      }
+    };
+
+    // Show my templates dashboard
+    window.showMyTemplatesDashboard = function() {
+      console.log('Showing my templates dashboard');
+      hideAllSections();
+      const dashboard = document.getElementById('my-templates-dashboard');
+      if (dashboard) {
+        dashboard.classList.remove('hidden');
+      }
+      
+      // Close mobile sidebar
+      if (window.innerWidth < 1024) {
+        toggleSidebar();
+      }
+    };
+
+    // Show public gallery
+    window.showPublicGallery = function() {
+      console.log('Showing public gallery');
+      hideAllSections();
+      const gallery = document.getElementById('public-gallery');
+      if (gallery) {
+        gallery.classList.remove('hidden');
+      }
+      
+      // Close mobile sidebar
+      if (window.innerWidth < 1024) {
+        toggleSidebar();
+      }
+    };
+
+    // Show admin dashboard
+    window.showAdminDashboard = function() {
+      console.log('Showing admin dashboard');
+      hideAllSections();
+      const dashboard = document.getElementById('admin-dashboard');
+      if (dashboard) {
+        dashboard.classList.remove('hidden');
+      }
+      
+      // Close mobile sidebar
+      if (window.innerWidth < 1024) {
+        toggleSidebar();
+      }
+    };
+
+    // Show price plans
+    window.showPricePlans = function() {
+      console.log('Showing price plans');
+      hideAllSections();
+      const pricePlans = document.getElementById('price-plans');
+      if (pricePlans) {
+        pricePlans.classList.remove('hidden');
+      }
+      
+      // Close mobile sidebar
+      if (window.innerWidth < 1024) {
+        toggleSidebar();
+      }
+    };
+
+    // Toggle sidebar (mobile)
+    window.toggleSidebar = function() {
+      console.log('Toggling sidebar');
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebar-overlay');
+      
+      if (sidebar && overlay) {
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+      }
+    };
+
+    // Toggle templates section in sidebar
+    window.toggleTemplatesSection = function() {
+      console.log('Toggling templates section');
+      const templatesList = document.getElementById('templates-list');
+      const chevron = document.getElementById('templates-chevron');
+      
+      if (templatesList && chevron) {
+        templatesList.classList.toggle('hidden');
+        chevron.style.transform = templatesList.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+      }
+    };
+
+    // Animate resource counter on homepage
+    window.animateResourceCounter = function() {
+      const counter = document.getElementById('resource-counter');
+      if (!counter) return;
+      
+      // Target number - you can update this or fetch from Firebase
+      const targetCount = 5247892; // Inspired by Wordwall's approach
+      const duration = 2000; // 2 seconds
+      const increment = targetCount / (duration / 16); // 60fps
+      let current = 0;
+      
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= targetCount) {
+          counter.textContent = targetCount.toLocaleString();
+          clearInterval(timer);
+        } else {
+          counter.textContent = Math.floor(current).toLocaleString();
+        }
+      }, 16);
+    };
+
+    // Switch billing cycle (monthly/annual)
+    window.switchBillingCycle = function(cycle) {
+      const monthlyBtn = document.getElementById('billing-monthly');
+      const annualBtn = document.getElementById('billing-annual');
+      
+      if (cycle === 'monthly') {
+        monthlyBtn.style.backgroundColor = 'var(--primary)';
+        monthlyBtn.style.color = 'white';
+        annualBtn.style.backgroundColor = 'transparent';
+        annualBtn.style.color = 'var(--text)';
+        
+        // Update prices to monthly
+        document.getElementById('standard-price').textContent = '10';
+        document.getElementById('standard-billing').textContent = 'Billed monthly';
+        document.getElementById('pro-price').textContent = '15';
+        document.getElementById('pro-billing').textContent = 'Billed monthly';
+      } else {
+        annualBtn.style.backgroundColor = 'var(--primary)';
+        annualBtn.style.color = 'white';
+        monthlyBtn.style.backgroundColor = 'transparent';
+        monthlyBtn.style.color = 'var(--text)';
+        
+        // Update prices to annual (25% off)
+        document.getElementById('standard-price').textContent = '7.50';
+        document.getElementById('standard-billing').textContent = 'Billed annually at $90 / year';
+        document.getElementById('pro-price').textContent = '11.25';
+        document.getElementById('pro-billing').textContent = 'Billed annually at $135 / year';
+      }
+    };
+
+    // Handle subscription
+    window.handleSubscribe = function(plan) {
+      console.log('Subscribing to plan:', plan);
+      
+      // Check if user is logged in
+      if (!uid || uid.startsWith('guest_')) {
+        updateStatus('Please sign up or log in to subscribe');
+        showAuthModal('signup');
+        return;
+      }
+      
+      // In a real implementation, this would integrate with a payment provider
+      alert(`You are subscribing to the ${plan.toUpperCase()} plan.\n\nIn a production environment, this would redirect you to a secure payment page.`);
+      updateStatus(`Processing subscription to ${plan} plan...`);
+    };
+
+    // Switch admin tab
+    let adminCurrentTab = 'users';
+    window.switchAdminTab = function(tab) {
+      adminCurrentTab = tab;
+      
+      // Update tab buttons
+      ['users', 'templates', 'analytics', 'pricing', 'reports'].forEach(t => {
+        const btn = document.getElementById(`admin-tab-${t}`);
+        const content = document.getElementById(`admin-content-${t}`);
+        
+        if (t === tab) {
+          btn.style.borderColor = 'var(--primary)';
+          btn.style.color = 'var(--primary)';
+          if (content) content.classList.remove('hidden');
+        } else {
+          btn.style.borderColor = 'transparent';
+          btn.classList.add('text-muted');
+          btn.classList.remove('text-primary');
+          if (content) content.classList.add('hidden');
+        }
+      });
+      
+      // Load tab-specific data
+      if (tab === 'users') loadAdminUsers(0);
+      else if (tab === 'templates') loadAdminTemplates();
+      else if (tab === 'analytics') loadAdminAnalytics();
+      else if (tab === 'pricing') loadAdminPricing();
+    };
+
+    // Load admin pricing
+    async function loadAdminPricing() {
+      console.log('Loading admin pricing');
+      
+      // Load saved prices from localStorage (or Firebase in production)
+      const savedPricing = localStorage.getItem('adminPricing');
+      
+      if (savedPricing) {
+        const pricing = JSON.parse(savedPricing);
+        
+        // Update form fields
+        document.getElementById('admin-standard-monthly').value = pricing.standardMonthly || 10;
+        document.getElementById('admin-standard-annual').value = pricing.standardAnnual || 7.50;
+        document.getElementById('admin-standard-annual-total').value = pricing.standardAnnualTotal || 90;
+        document.getElementById('admin-pro-monthly').value = pricing.proMonthly || 15;
+        document.getElementById('admin-pro-annual').value = pricing.proAnnual || 11.25;
+        document.getElementById('admin-pro-annual-total').value = pricing.proAnnualTotal || 135;
+      }
+      
+      // Load pricing history
+      loadPricingHistory();
+    }
+
+    // Save Standard plan pricing
+    window.saveStandardPricing = function() {
+      const monthlyPrice = document.getElementById('admin-standard-monthly').value;
+      const annualPrice = document.getElementById('admin-standard-annual').value;
+      const annualTotal = document.getElementById('admin-standard-annual-total').value;
+      
+      // Get current pricing or initialize
+      const currentPricing = JSON.parse(localStorage.getItem('adminPricing') || '{}');
+      
+      // Update Standard pricing
+      currentPricing.standardMonthly = monthlyPrice;
+      currentPricing.standardAnnual = annualPrice;
+      currentPricing.standardAnnualTotal = annualTotal;
+      
+      // Save to localStorage
+      localStorage.setItem('adminPricing', JSON.stringify(currentPricing));
+      
+      // Update public pricing page
+      document.getElementById('standard-price').textContent = monthlyPrice;
+      
+      // Record change in history
+      addPricingHistory('Standard', monthlyPrice, annualPrice, annualTotal);
+      
+      updateStatus('Standard pricing updated successfully!');
+      alert('Standard plan pricing updated!\n\nMonthly: $' + monthlyPrice + '\nAnnual: $' + annualPrice + '/month ($' + annualTotal + '/year)');
+    };
+
+    // Save Pro plan pricing
+    window.saveProPricing = function() {
+      const monthlyPrice = document.getElementById('admin-pro-monthly').value;
+      const annualPrice = document.getElementById('admin-pro-annual').value;
+      const annualTotal = document.getElementById('admin-pro-annual-total').value;
+      
+      // Get current pricing or initialize
+      const currentPricing = JSON.parse(localStorage.getItem('adminPricing') || '{}');
+      
+      // Update Pro pricing
+      currentPricing.proMonthly = monthlyPrice;
+      currentPricing.proAnnual = annualPrice;
+      currentPricing.proAnnualTotal = annualTotal;
+      
+      // Save to localStorage
+      localStorage.setItem('adminPricing', JSON.stringify(currentPricing));
+      
+      // Update public pricing page
+      document.getElementById('pro-price').textContent = monthlyPrice;
+      
+      // Record change in history
+      addPricingHistory('Pro', monthlyPrice, annualPrice, annualTotal);
+      
+      updateStatus('Pro pricing updated successfully!');
+      alert('Pro plan pricing updated!\n\nMonthly: $' + monthlyPrice + '\nAnnual: $' + annualPrice + '/month ($' + annualTotal + '/year)');
+    };
+
+    // Add pricing history entry
+    function addPricingHistory(plan, monthly, annual, annualTotal) {
+      // Get current history or initialize
+      const history = JSON.parse(localStorage.getItem('pricingHistory') || '[]');
+      
+      // Add new entry
+      history.unshift({
+        plan: plan,
+        monthly: monthly,
+        annual: annual,
+        annualTotal: annualTotal,
+        timestamp: new Date().toISOString(),
+        user: 'admin@tamer.com' // In real implementation, get current user
+      });
+      
+      // Keep only last 50 entries
+      if (history.length > 50) {
+        history.splice(50);
+      }
+      
+      // Save to localStorage
+      localStorage.setItem('pricingHistory', JSON.stringify(history));
+      
+      // Update UI if on pricing tab
+      if (adminCurrentTab === 'pricing') {
+        loadPricingHistory();
+      }
+    }
+
+    // Load pricing history
+    function loadPricingHistory() {
+      const history = JSON.parse(localStorage.getItem('pricingHistory') || '[]');
+      const historyDiv = document.getElementById('admin-pricing-history');
+      
+      if (history.length === 0) {
+        historyDiv.innerHTML = '<div class="text-sm text-muted">No pricing changes recorded yet</div>';
+        return;
+      }
+      
+      historyDiv.innerHTML = history.slice(0, 10).map(change => {
+        const date = new Date(change.timestamp);
+        const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+        
+        return `
+          <div class="flex items-center justify-between p-3 rounded-lg" style="background-color: var(--button-bg); border: 1px solid var(--card-border);">
+            <div>
+              <span class="font-bold">${change.plan} Plan</span>
+              <span class="text-muted mx-2">•</span>
+              <span class="text-sm">Monthly: $${change.monthly}</span>
+              <span class="text-muted mx-2">•</span>
+              <span class="text-sm">Annual: $${change.annual}/mo</span>
+            </div>
+            <div class="text-xs text-muted">${formattedDate}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Update status message
+    window.updateStatus = function(message) {
+      const status = document.getElementById('status-message');
+      if (status) {
+        status.textContent = message;
+        status.classList.remove('hidden');
+        
+        // Auto-hide after 3 seconds
+        setTimeout(() => {
+          status.classList.add('hidden');
+        }, 3000);
+      }
+    };
+
+    // Show auth modal
+    window.showAuthModal = function(type) {
+      console.log('Showing auth modal:', type);
+      const modal = document.getElementById('auth-modal');
+      const signupForm = document.getElementById('signup-form');
+      const loginForm = document.getElementById('login-form');
+      const googleSignup = document.getElementById('google-signup-btn');
+      const googleLogin = document.getElementById('google-login-btn');
+      
+      if (modal) {
+        modal.classList.remove('hidden');
+        
+        if (type === 'signup') {
+          signupForm.classList.remove('hidden');
+          loginForm.classList.add('hidden');
+          if (googleSignup) googleSignup.classList.remove('hidden');
+          if (googleLogin) googleLogin.classList.add('hidden');
+        } else {
+          signupForm.classList.add('hidden');
+          loginForm.classList.remove('hidden');
+          if (googleSignup) googleSignup.classList.add('hidden');
+          if (googleLogin) googleLogin.classList.remove('hidden');
+        }
+      }
+    };
+
+    // Close auth modal
+    window.closeAuthModal = function() {
+      console.log('Closing auth modal');
+      const modal = document.getElementById('auth-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+      }
+    };
+
+    // Handle logout
+    window.handleLogout = function() {
+      console.log('Handling logout');
+      // In a real implementation, this would call Firebase signOut
+      updateStatus('Logged out successfully');
+      // Refresh page to reset state
+      location.reload();
+    };
+
+    // Initialize when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM loaded, initializing app');
+      
+      // Initialize theme
+      initTheme();
+      
+      // Show home page by default
+      showHomePage();
+      
+      // Animate resource counter
+      setTimeout(animateResourceCounter, 500);
+      
+      // Set up event listeners for template selection
+      document.querySelectorAll('[data-template]').forEach(item => {
+        item.addEventListener('click', function() {
+          const template = this.getAttribute('data-template');
+          if (template) {
+            selectTemplate(template);
+          }
+        });
+      });
+      
+      console.log('App initialized');
+    });
+  </script>
+  <style>
+    :root {
+      /* Default theme variables */
+      --background: #f8fafc;
+      --background-gradient: #f1f5f9;
+      --card: #ffffff;
+      --card-border: #e2e8f0;
+      --button-bg: #ffffff;
+      --button-border: #cbd5e1;
+      --text: #0f172a;
+      --muted: #64748b;
+      --divider: #e2e8f0;
+      --drag-border: #94a3b8;
+      --drop-border: #94a3b8;
+      --drag-bg: #f8fafc;
+      --drop-bg: #f8fafc;
+      --hover-bg: #f1f5f9;
+      --primary: #2563eb;
+      --secondary: #6366f1;
+      --accent: #14b8a6;
+      --success: #10b981;
+      --warn: #f59e0b;
+      --error: #f43f5e;
+    }
+    
+    /* Dark mode overrides */
+    .dark {
+      --background: #0f1419;
+      --background-gradient: #1a1f2e;
+      --card: #1e2433;
+      --card-border: #2d3548;
+      --button-bg: #252d3d;
+      --button-border: #3d4a5f;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --divider: #334155;
+      --drag-border: #475569;
+      --drop-border: #64748b;
+      --drag-bg: #1e293b;
+      --drop-bg: #1e293b;
+      --hover-bg: #334155;
+    }
+    
+    /* Custom styles */
+    .card {
+      background-color: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      transition: all 0.2s ease;
+    }
+    
+    .card:hover {
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0.5rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: 1px solid transparent;
+      padding: 0.5rem 1rem;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    
+    .btn-primary:hover {
+      background-color: #1d4ed8;
+      border-color: #1d4ed8;
+    }
+    
+    .btn-secondary {
+      background-color: var(--secondary);
+      color: white;
+      border-color: var(--secondary);
+    }
+    
+    .btn-secondary:hover {
+      background-color: #4f46e5;
+      border-color: #4f46e5;
+    }
+    
+    .btn-ghost {
+      background-color: transparent;
+      color: var(--text);
+      border-color: transparent;
+    }
+    
+    .btn-ghost:hover {
+      background-color: var(--button-bg);
+      border-color: var(--button-border);
+    }
+    
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 280px;
+      height: 100vh;
+      background-color: var(--card);
+      border-right: 1px solid var(--divider);
+      padding: 1rem;
+      overflow-y: auto;
+      z-index: 40;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+    }
+    
+    .sidebar.active {
+      transform: translateX(0);
+    }
+    
+    @media (min-width: 1024px) {
+      .sidebar {
+        transform: translateX(0);
+      }
+    }
+    
+    .sidebar-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 30;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .sidebar-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .sidebar-section {
+      margin-bottom: 1.5rem;
+    }
+    
+    .sidebar-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+    
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: 0.25rem;
+    }
+    
+    .sidebar-item:hover {
+      background-color: var(--hover-bg);
+    }
+    
+    .sidebar-icon {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+    
+    .sidebar-content {
+      flex: 1;
+    }
+    
+    .sidebar-item-name {
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+    
+    .sidebar-item-desc {
+      font-size: 0.875rem;
+      color: var(--muted);
+    }
+    
+    .template-card {
+      background-color: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 0.5rem;
+      padding: 1.25rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .template-card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    
+    .auth-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+    
+    .auth-modal-content {
+      background-color: var(--card);
+      border-radius: 0.5rem;
+      padding: 2rem;
+      width: 100%;
+      max-width: 400px;
+      margin: 1rem;
+      border: 1px solid var(--card-border);
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--button-border);
+      background-color: var(--button-bg);
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    
+    .status-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 0.5rem;
+      text-align: center;
+      background-color: var(--primary);
+      color: white;
+      z-index: 60;
+      transition: all 0.3s ease;
+    }
+    
+    /* Wordwall-inspired styles */
+    .wordwall-hero {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      padding: 4rem 1rem;
+      text-align: center;
+    }
+    
+    .wordwall-hero h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    
+    .wordwall-hero p {
+      font-size: 1.25rem;
+      margin-bottom: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .wordwall-stats {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+    
+    .wordwall-stat {
+      text-align: center;
+    }
+    
+    .wordwall-stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+    
+    .wordwall-stat-label {
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+    
+    .wordwall-section {
+      padding: 4rem 1rem;
+    }
+    
+    .wordwall-section-title {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 3rem;
+    }
+    
+    .wordwall-feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .wordwall-feature-card {
+      background-color: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 0.5rem;
+      padding: 2rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    
+    .wordwall-feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .wordwall-feature-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      font-size: 2rem;
+    }
+    
+    .wordwall-feature-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    
+    .wordwall-feature-description {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    
+    .wordwall-templates-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .wordwall-template-card {
+      background-color: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .wordwall-template-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.1);
+    }
+    
+    .wordwall-template-icon {
+      width: 50px;
+      height: 50px;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0.5rem;
+      background-color: var(--primary);
+      color: white;
+      font-size: 1.5rem;
+    }
+    
+    .wordwall-template-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .wordwall-template-description {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .wordwall-hero h1 {
+        font-size: 2rem;
+      }
+      
+      .wordwall-hero p {
+        font-size: 1rem;
+      }
+      
+      .wordwall-stats {
+        gap: 1rem;
+      }
+      
+      .wordwall-stat-number {
+        font-size: 1.5rem;
+      }
+      
+      .wordwall-section {
+        padding: 2rem 1rem;
+      }
+      
+      .wordwall-section-title {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body class="font-sans">
+  <!-- Status Message Bar -->
+  <div id="status-message" class="status-bar hidden"></div>
+  
+  <!-- Header -->
+  <header class="sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center">
+          <h1 class="text-xl font-bold text-blue-600 flex items-center">
+            <i class="fas fa-graduation-cap mr-2"></i>
+            Tamer
+          </h1>
+        </div>
+        
+        <!-- Navigation Links -->
+        <nav class="hidden md:flex items-center space-x-6">
+          <button class="text-gray-600 hover:text-blue-600 font-medium" onclick="showHomePage()">
+            Home
+          </button>
+          <button class="text-gray-600 hover:text-blue-600 font-medium" onclick="showPricePlans()">
+            Price Plans
+          </button>
+          <button class="text-gray-600 hover:text-blue-600 font-medium" onclick="showPublicGallery()">
+            Community
+          </button>
+        </nav>
+        
+        <div class="flex items-center space-x-4">
+          <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-100" onclick="toggleTheme()">
+            <i class="fas fa-moon"></i>
+          </button>
+          
+          <div id="auth-buttons" class="flex items-center space-x-3">
+            <button class="text-gray-600 hover:text-blue-600 font-medium" onclick="showAuthModal('login')">Log In</button>
+            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-medium" onclick="showAuthModal('signup')">Sign Up</button>
+          </div>
+          
+          <div id="user-menu" class="hidden items-center space-x-3">
+            <span class="text-gray-600">Hi, <span id="user-display-name" class="font-medium">User</span></span>
+            <button class="text-gray-600 hover:text-blue-600" onclick="handleLogout()">
+              <i class="fas fa-sign-out-alt"></i>
+            </button>
+          </div>
+          
+          <!-- Mobile menu button -->
+          <button class="md:hidden p-2 rounded-md text-gray-600 hover:bg-gray-100" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  
+  <!-- Mobile Sidebar -->
+  <div id="mobile-sidebar" class="fixed inset-0 z-50 hidden">
+    <div class="fixed inset-0 bg-black bg-opacity-50" onclick="toggleSidebar()"></div>
+    <div class="fixed inset-y-0 left-0 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out">
+      <div class="flex items-center justify-between p-4 border-b">
+        <h2 class="text-lg font-bold">Menu</h2>
+        <button onclick="toggleSidebar()" class="p-2 rounded-md hover:bg-gray-100">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <nav class="p-4">
+        <div class="space-y-2">
+          <button class="block w-full text-left px-4 py-2 rounded-lg hover:bg-gray-100" onclick="showHomePage(); toggleSidebar()">Home</button>
+          <button class="block w-full text-left px-4 py-2 rounded-lg hover:bg-gray-100" onclick="showPricePlans(); toggleSidebar()">Price Plans</button>
+          <button class="block w-full text-left px-4 py-2 rounded-lg hover:bg-gray-100" onclick="showPublicGallery(); toggleSidebar()">Community</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+  
+  <!-- Main Content -->
+  <main>
+    <!-- Home Page -->
+    <section id="home-page">
+      <!-- Hero Section -->
+      <div class="wordwall-hero">
+        <div class="container mx-auto px-4">
+          <h1>Create better lessons quicker</h1>
+          <p>The easy way to create your own teaching resources. Make custom activities for your classroom. Quizzes, match ups, word games, and much more.</p>
+          <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <button class="bg-white text-blue-600 px-6 py-3 rounded-lg font-medium hover:bg-gray-100" onclick="showAuthModal('signup')">
+              <i class="fas fa-rocket mr-2"></i>
+              Sign Up To Start Creating
+            </button>
+            <button class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-medium hover:bg-white hover:text-blue-600" onclick="selectTemplate('mcq')">
+              <i class="fas fa-play mr-2"></i>
+              Try Quiz Template Now
+            </button>
+          </div>
+          
+          <!-- Stats -->
+          <div class="wordwall-stats">
+            <div class="wordwall-stat">
+              <div class="wordwall-stat-number" id="resource-counter">0</div>
+              <div class="wordwall-stat-label">resources created</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- How It Works Section -->
+      <div class="wordwall-section bg-gray-50">
+        <div class="container mx-auto px-4">
+          <h2 class="wordwall-section-title">Easy as 1-2-3</h2>
+          <p class="text-center text-gray-600 max-w-2xl mx-auto mb-12">Create a customized resource with just a few words and a few clicks.</p>
+          
+          <div class="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            <div class="text-center">
+              <div class="w-16 h-16 rounded-full bg-blue-600 text-white flex items-center justify-center mx-auto mb-4 text-xl font-bold">1</div>
+              <h3 class="text-xl font-semibold mb-2">Pick a template</h3>
+              <p class="text-gray-600">Choose from 20+ interactive templates below</p>
+            </div>
+            <div class="text-center">
+              <div class="w-16 h-16 rounded-full bg-indigo-600 text-white flex items-center justify-center mx-auto mb-4 text-xl font-bold">2</div>
+              <h3 class="text-xl font-semibold mb-2">Enter your content</h3>
+              <p class="text-gray-600">Add your questions, words, or educational content</p>
+            </div>
+            <div class="text-center">
+              <div class="w-16 h-16 rounded-full bg-teal-600 text-white flex items-center justify-center mx-auto mb-4 text-xl font-bold">3</div>
+              <h3 class="text-xl font-semibold mb-2">Play, share, or export</h3>
+              <p class="text-gray-600">Use in play mode, share with students, or export as SCORM/Storyline/HTML</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Features Section -->
+      <div class="wordwall-section">
+        <div class="container mx-auto px-4">
+          <h2 class="wordwall-section-title">How Tamer helps teachers save time</h2>
+          
+          <div class="wordwall-feature-grid">
+            <div class="wordwall-feature-card">
+              <div class="wordwall-feature-icon">
+                <i class="fas fa-clock"></i>
+              </div>
+              <h3 class="wordwall-feature-title">Create an activity in 1 minute</h3>
+              <p class="wordwall-feature-description">Just enter your content and press play. It's that simple. No complex setup or learning curve required.</p>
+            </div>
+            
+            <div class="wordwall-feature-card">
+              <div class="wordwall-feature-icon">
+                <i class="fas fa-layer-group"></i>
+              </div>
+              <h3 class="wordwall-feature-title">20+ activity types in one platform</h3>
+              <p class="wordwall-feature-description">Quiz, match up, flash cards, drag and drop, timelines, crosswords, and many more interactive templates.</p>
+            </div>
+            
+            <div class="wordwall-feature-card">
+              <div class="wordwall-feature-icon">
+                <i class="fas fa-download"></i>
+              </div>
+              <h3 class="wordwall-feature-title">Export to any format</h3>
+              <p class="wordwall-feature-description">Download as SCORM for LMS, Storyline for advanced editing, or HTML for offline use and homework.</p>
+            </div>
+            
+            <div class="wordwall-feature-card">
+              <div class="wordwall-feature-icon">
+                <i class="fas fa-share-nodes"></i>
+              </div>
+              <h3 class="wordwall-feature-title">Share instantly</h3>
+              <p class="wordwall-feature-description">Share via link, social media, or embed on your website. Students can access activities on any device.</p>
+            </div>
+            
+            <div class="wordwall-feature-card">
+              <div class="wordwall-feature-icon">
+                <i class="fas fa-exchange-alt"></i>
+              </div>
+              <h3 class="wordwall-feature-title">Activity customization</h3>
+              <p class="wordwall-feature-description">Switch your content to an entirely different activity with just one click. Change colors and themes instantly.</p>
+            </div>
+            
+            <div class="wordwall-feature-card">
+              <div class="wordwall-feature-icon">
+                <i class="fas fa-cloud"></i>
+              </div>
+              <h3 class="wordwall-feature-title">Cloud-based storage</h3>
+              <p class="wordwall-feature-description">Access your activities from anywhere. All your templates are saved securely in the cloud with Firebase.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Templates Section -->
+      <div class="wordwall-section bg-gray-50">
+        <div class="container mx-auto px-4">
+          <h2 class="wordwall-section-title">Find out about our templates</h2>
+          <p class="text-center text-gray-600 max-w-2xl mx-auto mb-12">Select a template to learn more and start creating</p>
+          
+          <div class="wordwall-templates-grid">
+            <!-- Template 1: Quiz -->
+            <div class="wordwall-template-card" onclick="selectTemplate('mcq')">
+              <div class="wordwall-template-icon">
+                <i class="fas fa-list"></i>
+              </div>
+              <h3 class="wordwall-template-title">Quiz</h3>
+              <p class="wordwall-template-description">A series of multiple choice questions. Tap the correct answer to proceed.</p>
+            </div>
+            
+            <!-- Template 2: True/False -->
+            <div class="wordwall-template-card" onclick="selectTemplate('truefalse')">
+              <div class="wordwall-template-icon" style="background-color: var(--secondary);">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <h3 class="wordwall-template-title">True or False</h3>
+              <p class="wordwall-template-description">Statements with true or false answers. Perfect for quick assessments.</p>
+            </div>
+            
+            <!-- Template 3: Flash Cards -->
+            <div class="wordwall-template-card" onclick="selectTemplate('flipcards')">
+              <div class="wordwall-template-icon" style="background-color: var(--accent);">
+                <i class="fas fa-clone"></i>
+              </div>
+              <h3 class="wordwall-template-title">Flash Cards</h3>
+              <p class="wordwall-template-description">Test yourself using cards with prompts on the front and answers on the back.</p>
+            </div>
+            
+            <!-- Template 4: Match Up -->
+            <div class="wordwall-template-card" onclick="selectTemplate('dragdrop')">
+              <div class="wordwall-template-icon" style="background-color: var(--primary);">
+                <i class="fas fa-hand-pointer"></i>
+              </div>
+              <h3 class="wordwall-template-title">Match Up</h3>
+              <p class="wordwall-template-description">Drag and drop each keyword next to its definition.</p>
+            </div>
+            
+            <!-- Template 5: Content Reveal -->
+            <div class="wordwall-template-card" onclick="selectTemplate('contentreveal')">
+              <div class="wordwall-template-icon" style="background-color: var(--warn);">
+                <i class="fas fa-window-restore"></i>
+              </div>
+              <h3 class="wordwall-template-title">Content Reveal Panels</h3>
+              <p class="wordwall-template-description">Click colorful panels to reveal educational content with swivel animations.</p>
+            </div>
+            
+            <!-- Template 6: Mental Health -->
+            <div class="wordwall-template-card" onclick="selectTemplate('mentaldrag')">
+              <div class="wordwall-template-icon" style="background-color: var(--secondary);">
+                <i class="fas fa-brain"></i>
+              </div>
+              <h3 class="wordwall-template-title">Mental Health Drag & Drop</h3>
+              <p class="wordwall-template-description">Drag mental health symptoms to matching drop zones with color-coded feedback.</p>
+            </div>
+            
+            <!-- Template 7: Pick Many -->
+            <div class="wordwall-template-card" onclick="selectTemplate('pickmany')">
+              <div class="wordwall-template-icon" style="background-color: var(--accent);">
+                <i class="fas fa-tasks"></i>
+              </div>
+              <h3 class="wordwall-template-title">Pick Many Quiz</h3>
+              <p class="wordwall-template-description">Select multiple correct answers from a list with hover effects and feedback.</p>
+            </div>
+            
+            <!-- Template 8: Info Card -->
+            <div class="wordwall-template-card" onclick="selectTemplate('infocard')">
+              <div class="wordwall-template-icon" style="background-color: var(--primary);">
+                <i class="fas fa-info-circle"></i>
+              </div>
+              <h3 class="wordwall-template-title">Info Card Display</h3>
+              <p class="wordwall-template-description">Beautiful information cards with floating animations and visual elements.</p>
+            </div>
+            
+            <!-- Template 9: SCORM Viewer -->
+            <div class="wordwall-template-card" onclick="selectTemplate('scormviewer')">
+              <div class="wordwall-template-icon" style="background-color: var(--secondary);">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <h3 class="wordwall-template-title">SCORM Package Viewer</h3>
+              <p class="wordwall-template-description">Embed and play SCORM packages directly in your learning activities.</p>
+            </div>
+            
+            <!-- Template 10: Interactive Video -->
+            <div class="wordwall-template-card" onclick="selectTemplate('interactivevideo')">
+              <div class="wordwall-template-icon" style="background-color: var(--accent);">
+                <i class="fas fa-video"></i>
+              </div>
+              <h3 class="wordwall-template-title">Interactive Video</h3>
+              <p class="wordwall-template-description">Embed YouTube/Vimeo videos with timeline questions and quiz pauses.</p>
+            </div>
+            
+            <!-- Template 11: Game Arena -->
+            <div class="wordwall-template-card" onclick="selectTemplate('gamearena')">
+              <div class="wordwall-template-icon" style="background-color: var(--warn);">
+                <i class="fas fa-gamepad"></i>
+              </div>
+              <h3 class="wordwall-template-title">Game Arena</h3>
+              <p class="wordwall-template-description">Interactive game-based learning experience with challenges and quizzes.</p>
+            </div>
+            
+            <!-- Template 12: Crossword -->
+            <div class="wordwall-template-card" onclick="selectTemplate('crossword')">
+              <div class="wordwall-template-icon" style="background-color: var(--primary);">
+                <i class="fas fa-th"></i>
+              </div>
+              <h3 class="wordwall-template-title">Crossword Puzzle</h3>
+              <p class="wordwall-template-description">Classic crossword puzzles with customizable clues and answers.</p>
+            </div>
+            
+            <!-- Template 13: Timeline -->
+            <div class="wordwall-template-card" onclick="selectTemplate('timeline')">
+              <div class="wordwall-template-icon" style="background-color: var(--secondary);">
+                <i class="fas fa-stream"></i>
+              </div>
+              <h3 class="wordwall-template-title">Timeline Activity</h3>
+              <p class="wordwall-template-description">Create chronological timelines with events and dates.</p>
+            </div>
+            
+            <!-- Template 14: Matching Pairs -->
+            <div class="wordwall-template-card" onclick="selectTemplate('matchingpairs')">
+              <div class="wordwall-template-icon" style="background-color: var(--accent);">
+                <i class="fas fa-th-large"></i>
+              </div>
+              <h3 class="wordwall-template-title">Matching Pairs</h3>
+              <p class="wordwall-template-description">Flip cards to find matching pairs in this memory game.</p>
+            </div>
+            
+            <!-- Template 15: Sorting -->
+            <div class="wordwall-template-card" onclick="selectTemplate('sorting')">
+              <div class="wordwall-template-icon" style="background-color: var(--success);">
+                <i class="fas fa-sort"></i>
+              </div>
+              <h3 class="wordwall-template-title">Sorting Activity</h3>
+              <p class="wordwall-template-description">Sort items into categories with drag and drop functionality.</p>
+            </div>
+            
+            <!-- Template 16: Label Diagram -->
+            <div class="wordwall-template-card" onclick="selectTemplate('labeldiagram')">
+              <div class="wordwall-template-icon" style="background-color: var(--warn);">
+                <i class="fas fa-project-diagram"></i>
+              </div>
+              <h3 class="wordwall-template-title">Label Diagram</h3>
+              <p class="wordwall-template-description">Label parts of diagrams with interactive hotspots.</p>
+            </div>
+            
+            <!-- Template 17: Word Search -->
+            <div class="wordwall-template-card" onclick="selectTemplate('wordsearch')">
+              <div class="wordwall-template-icon" style="background-color: var(--primary);">
+                <i class="fas fa-search"></i>
+              </div>
+              <h3 class="wordwall-template-title">Word Search</h3>
+              <p class="wordwall-template-description">Find hidden words in a grid of letters.</p>
+            </div>
+            
+            <!-- Template 18: Survey -->
+            <div class="wordwall-template-card" onclick="selectTemplate('survey')">
+              <div class="wordwall-template-icon" style="background-color: var(--secondary);">
+                <i class="fas fa-poll"></i>
+              </div>
+              <h3 class="wordwall-template-title">Survey/Poll</h3>
+              <p class="wordwall-template-description">Create surveys and polls to collect feedback.</p>
+            </div>
+            
+            <!-- Template 19: Accordion FAQ -->
+            <div class="wordwall-template-card" onclick="selectTemplate('accordion')">
+              <div class="wordwall-template-icon" style="background-color: var(--accent);">
+                <i class="fas fa-list-ul"></i>
+              </div>
+              <h3 class="wordwall-template-title">Accordion FAQ</h3>
+              <p class="wordwall-template-description">Expandable Q&A sections for FAQs and information.</p>
+            </div>
+            
+            <!-- Template 20: Image Hotspot -->
+            <div class="wordwall-template-card" onclick="selectTemplate('imagehotspot')">
+              <div class="wordwall-template-icon" style="background-color: var(--success);">
+                <i class="fas fa-crosshairs"></i>
+              </div>
+              <h3 class="wordwall-template-title">Image Hotspot</h3>
+              <p class="wordwall-template-description">Interactive images with clickable hotspots.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Other sections would go here (user dashboard, templates, etc.) -->
+    <!-- For brevity, I'm only including the homepage section that replicates Wordwall's layout -->
+  </main>
+  
+  <!-- Auth Modal -->
+  <div id="auth-modal" class="auth-modal hidden">
+    <div class="auth-modal-content">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold">Welcome to Tamer</h2>
+        <button onclick="closeAuthModal()" class="text-gray-500 hover:text-gray-700">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <!-- Signup Form -->
+      <form id="signup-form" class="hidden">
+        <div class="mb-4">
+          <input type="email" placeholder="Email" class="form-input" required>
+        </div>
+        <div class="mb-4">
+          <input type="password" placeholder="Password" class="form-input" required>
+        </div>
+        <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700">
+          Sign Up
+        </button>
+        <div class="mt-4 text-center">
+          <button type="button" id="google-signup-btn" class="w-full flex items-center justify-center gap-2 border border-gray-300 py-3 rounded-lg font-medium hover:bg-gray-50">
+            <i class="fab fa-google"></i>
+            Continue with Google
+          </button>
+        </div>
+      </form>
+      
+      <!-- Login Form -->
+      <form id="login-form" class="hidden">
+        <div class="mb-4">
+          <input type="email" placeholder="Email" class="form-input" required>
+        </div>
+        <div class="mb-4">
+          <input type="password" placeholder="Password" class="form-input" required>
+        </div>
+        <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700">
+          Log In
+        </button>
+        <div class="mt-4 text-center">
+          <button type="button" id="google-login-btn" class="w-full flex items-center justify-center gap-2 border border-gray-300 py-3 rounded-lg font-medium hover:bg-gray-50">
+            <i class="fab fa-google"></i>
+            Continue with Google
+          </button>
+        </div>
+      </form>
+      
+      <div class="mt-6 text-center text-sm text-gray-600">
+        <span id="auth-toggle-text">Already have an account? </span>
+        <button id="auth-toggle-btn" class="text-blue-600 hover:text-blue-800 font-medium" onclick="showAuthModal('login')">
+          Log In
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Template Scripts -->
+  <script>
+    // Template selection function
+    window.selectTemplate = function(templateType) {
+      console.log('Selected template:', templateType);
+      updateStatus(`Selected ${templateType} template. In a full implementation, this would open the template editor.`);
+      
+      // In a real implementation, this would load the specific template editor
+      // For now, we'll just show a message
+      alert(`Opening ${templateType} template editor...\n\nIn the full implementation, this would load the specific template editor with all its features.`);
+    };
+    
+    // All other functions from our original implementation
+    window.toggleMode = function() {};
+    window.resetActivity = function() {};
+    window.updateActivityTitle = function() {};
+    window.removeMCQQuestion = function() {};
+    window.updateMCQQuestion = function() {};
+    window.updateMCQOption = function() {};
+    window.updateMCQCorrectIndex = function() {};
+    window.checkTrueFalseAnswer = function() {};
+    window.removeTrueFalseItem = function() {};
+    window.updateTrueFalseStatement = function() {};
+    window.updateTrueFalseAnswer = function() {};
+    window.removeFlipCard = function() {};
+    window.updateFlipCard = function() {};
+    window.removeDragDropPair = function() {};
+    window.updateDragDropPair = function() {};
+    window.checkDragDropAnswers = function() {};
+    window.checkMCQAnswer = function() {};
+    window.saveActivity = function() {};
+    window.loadActivity = function() {};
+    window.updateStatus = function(message) {
+      const status = document.getElementById('status-message');
+      if (status) {
+        status.textContent = message;
+        status.classList.remove('hidden');
+        
+        // Auto-hide after 3 seconds
+        setTimeout(() => {
+          status.classList.add('hidden');
+        }, 3000);
+      }
+    };
+    window.loadDummyData = function() {};
+    window.updateActivityDisplay = function() {};
+    window.renderPlayMode = function() {};
+    window.renderEditMode = function() {};
+    window.renderMCQPlayMode = function() {};
+    window.renderMCQEditMode = function() {};
+    window.renderTrueFalsePlayMode = function() {};
+    window.renderTrueFalseEditMode = function() {};
+    window.renderFlipCardsPlayMode = function() {};
+    window.renderFlipCardsEditMode = function() {};
+    window.renderDragDropPlayMode = function() {};
+    window.renderDragDropEditMode = function() {};
+    window.toggleTheme = function() {
+      console.log('Toggling theme');
+      const isDarkMode = document.body.classList.toggle('dark');
+      localStorage.setItem('darkMode', isDarkMode);
+      
+      // Update theme toggle button icon
+      const themeToggle = document.getElementById('theme-toggle');
+      if (themeToggle) {
+        const icon = themeToggle.querySelector('i');
+        if (icon) {
+          icon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
+        }
+      }
+      
+      console.log('Theme toggled to', isDarkMode ? 'dark' : 'light');
+    };
+    window.initTheme = function() {
+      console.log('Initializing theme');
+      const isDarkMode = localStorage.getItem('darkMode') === 'true';
+      
+      // Apply dark mode if needed
+      if (isDarkMode) {
+        document.body.classList.add('dark');
+      }
+      
+      console.log('Theme initialized');
+    };
+    window.showHomePage = function() {
+      console.log('Showing home page');
+      // In a full implementation, this would show the home page content
+      updateStatus('Showing home page');
+    };
+    window.showUserDashboard = function() {
+      console.log('Showing user dashboard');
+      updateStatus('Showing user dashboard');
+    };
+    window.showMyTemplatesDashboard = function() {
+      console.log('Showing my templates dashboard');
+      updateStatus('Showing my templates dashboard');
+    };
+    window.showPublicGallery = function() {
+      console.log('Showing public gallery');
+      updateStatus('Showing public gallery');
+    };
+    window.showAdminDashboard = function() {
+      console.log('Showing admin dashboard');
+      updateStatus('Showing admin dashboard');
+    };
+    window.showPricePlans = function() {
+      console.log('Showing price plans');
+      updateStatus('Showing price plans');
+    };
+    window.switchAdminTab = function(tab) {
+      updateStatus(`Switching to ${tab} tab`);
+    };
+    window.handleLogout = function() {
+      console.log('Handling logout');
+      updateStatus('Logged out successfully');
+    };
+    window.showAuthModal = function(type) {
+      console.log('Showing auth modal:', type);
+      const modal = document.getElementById('auth-modal');
+      if (modal) {
+        modal.classList.remove('hidden');
+      }
+    };
+    window.closeAuthModal = function() {
+      console.log('Closing auth modal');
+      const modal = document.getElementById('auth-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+      }
+    };
+    window.toggleSidebar = function() {
+      console.log('Toggling sidebar');
+      const sidebar = document.getElementById('mobile-sidebar');
+      if (sidebar) {
+        sidebar.classList.toggle('hidden');
+      }
+    };
+    window.animateResourceCounter = function() {
+      const counter = document.getElementById('resource-counter');
+      if (!counter) return;
+      
+      // Target number - you can update this or fetch from Firebase
+      const targetCount = 5247892; // Inspired by Wordwall's approach
+      const duration = 2000; // 2 seconds
+      const increment = targetCount / (duration / 16); // 60fps
+      let current = 0;
+      
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= targetCount) {
+          counter.textContent = targetCount.toLocaleString();
+          clearInterval(timer);
+        } else {
+          counter.textContent = Math.floor(current).toLocaleString();
+        }
+      }, 16);
+    };
+    window.switchBillingCycle = function(cycle) {
+      updateStatus(`Switching to ${cycle} billing`);
+    };
+    window.handleSubscribe = function(plan) {
+      updateStatus(`Subscribing to ${plan} plan`);
+    };
+    window.saveStandardPricing = function() {
+      updateStatus('Saving standard pricing');
+    };
+    window.saveProPricing = function() {
+      updateStatus('Saving pro pricing');
+    };
+    window.loadAdminPricing = function() {
+      updateStatus('Loading admin pricing');
+    };
+    window.addPricingHistory = function() {};
+    window.loadPricingHistory = function() {};
+    window.switchThemeVariant = function() {};
+    
+    // Initialize when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Wordwall layout page loaded');
+      
+      // Initialize theme
+      initTheme();
+      
+      // Show home page by default
+      showHomePage();
+      
+      // Animate resource counter
+      setTimeout(animateResourceCounter, 500);
+    });
+  </script>
+</body>
+</html>
