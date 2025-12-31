@@ -723,6 +723,10 @@
       .icon-volume {
         width: 16px;
         height: 16px;
+        position: relative;
+        display: inline-block;
+        color: var(--text);
+        vertical-align: middle;
       }
       
       .icon-volume::before {
@@ -750,6 +754,10 @@
       .icon-volume-mute {
         width: 16px;
         height: 16px;
+        position: relative;
+        display: inline-block;
+        color: var(--text);
+        vertical-align: middle;
       }
       
       .icon-volume-mute::before {
@@ -786,12 +794,12 @@
         clip-path: polygon(0 0, 100% 20%, 100% 80%, 0 100%);
       }
       
-      .icon-volume-mute .slash {
+      .icon-volume-mute::after {
         content: '';
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 14px;
+        top: 50%;
+        left: 2px;
+        width: 12px;
         height: 2px;
         background: currentColor;
         transform: rotate(45deg);
@@ -1029,6 +1037,79 @@
         background: linear-gradient(135deg, #ffe588 0%, #ffeba1 100%);
         color: #4f3e00;
         border: 2px solid #ffd53b;
+      }
+    }
+    
+    /* Crossword Puzzle Styles */
+    .crossword-container {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    
+    .crossword-grid {
+      display: grid;
+      gap: 0;
+      border: 2px solid var(--text);
+      max-width: 100%;
+      overflow: auto;
+    }
+    
+    .crossword-cell {
+      aspect-ratio: 1;
+      border-right: 1px solid var(--text);
+      border-bottom: 1px solid var(--text);
+      text-align: center;
+      vertical-align: middle;
+      font-weight: bold;
+      font-size: 1.2em;
+      position: relative;
+      background-color: var(--card);
+      outline: none;
+      user-select: none;
+    }
+    
+    /* Add borders to the top row and left column to complete the grid */
+    .crossword-grid > .crossword-cell:nth-child(-n+10) { /* Top row */
+      border-top: 1px solid var(--text);
+    }
+    
+    .crossword-grid > .crossword-cell:nth-child(10n+1) { /* Left column */
+      border-left: 1px solid var(--text);
+    }
+    
+    .crossword-cell:focus {
+      background-color: var(--primary);
+      color: white;
+      border-color: var(--primary-hover);
+    }
+    
+    .crossword-cell[data-solution] {
+      background-color: var(--drag-bg);
+    }
+    
+    .crossword-clues {
+      flex: 1;
+      min-width: 250px;
+    }
+    
+    .crossword-across, .crossword-down {
+      margin-bottom: 1.5rem;
+    }
+    
+    .crossword-clues div {
+      cursor: pointer;
+      padding: 0.25rem;
+      border-radius: 0.25rem;
+      transition: background-color 0.2s;
+    }
+    
+    .crossword-clues div:hover {
+      background-color: var(--hover-bg);
+    }
+    
+    @media (max-width: 768px) {
+      .crossword-container {
+        flex-direction: column;
       }
     }
   </style>
@@ -3074,6 +3155,7 @@
         template: "crossword",
         title: "Crossword Puzzle",
         description: "Solve the crossword using the clues provided",
+        gridSize: 10,
         words: [
           {word: "SCIENCE", clue: "The study of the natural world", startX: 0, startY: 0, direction: "across"},
           {word: "HISTORY", clue: "The study of past events", startX: 0, startY: 2, direction: "across"},
@@ -5335,6 +5417,23 @@ Created with Tamer Educational Activities
         default:
           playArea.innerHTML = '<div class="text-center py-12 text-muted">Unsupported template type.</div>';
       }
+      
+      // Add general play controls
+      if (playControls) {
+        playControls.innerHTML = `
+          <button class="btn btn-primary" onclick="toggleMode()">
+            <i class="fas fa-edit mr-2"></i>
+            Edit Mode
+          </button>
+          <button class="btn btn-ghost sound-toggle-btn" onclick="toggleSound()" title="${audioEnabled ? 'Mute Sound' : 'Unmute Sound'}">
+            <i class="fas ${audioEnabled ? 'fa-volume-up' : 'fa-volume-mute'}"></i>
+          </button>
+          <button class="btn btn-ghost" onclick="showHomePage()">
+            <i class="fas fa-home mr-2"></i>
+            Home
+          </button>
+        `;
+      }
     };
     
     // Render edit mode based on template
@@ -5429,6 +5528,36 @@ Created with Tamer Educational Activities
         default:
           editor.innerHTML = '<div class="text-center py-12 text-muted">Unsupported template type.</div>';
       }
+      
+      // Add general edit controls
+      const generalControls = document.createElement('div');
+      generalControls.className = 'mt-6 p-4 rounded-lg';
+      generalControls.style = 'background-color: var(--button-bg); border: 1px solid var(--button-border);';
+      generalControls.innerHTML = `
+        <div class="flex flex-wrap gap-3">
+          <button class="btn btn-primary" onclick="updateActivityDisplay()">
+            <i class="fas fa-save mr-2"></i>
+            Save Changes
+          </button>
+          <button class="btn btn-secondary" onclick="showHomePage()">
+            <i class="fas fa-arrow-left mr-2"></i>
+            Back to Home
+          </button>
+          <button class="btn btn-accent" onclick="openThemeCustomizer()">
+            <i class="fas fa-palette mr-2"></i>
+            Customize Theme
+          </button>
+          <button class="btn btn-ghost" onclick="duplicateCurrentActivity()">
+            <i class="fas fa-copy mr-2"></i>
+            Duplicate
+          </button>
+          <button class="btn btn-danger" onclick="deleteCurrentActivity()">
+            <i class="fas fa-trash mr-2"></i>
+            Delete
+          </button>
+        </div>
+      `;
+      editor.appendChild(generalControls);
     };
     
     // Update activity title
@@ -7110,18 +7239,138 @@ Created with Tamer Educational Activities
     
     // Crossword Play Mode
     window.renderCrosswordPlayMode = function() {
+      // Check if there are any words to place
+      if (!activityData.words || activityData.words.length === 0) {
+        playArea.innerHTML = `
+          <div class="card">
+            <h4 class="text-xl font-bold mb-4">${activityData.description || 'Crossword Puzzle'}</h4>
+            <div class="text-center p-8 text-muted">
+              <p>No words have been added to this crossword puzzle yet.</p>
+              <p class="mt-2">Switch to Edit mode to add words and clues.</p>
+            </div>
+          </div>
+        `;
+        return;
+      }
+      
+      // Calculate required grid size based on word positions
+      let maxGridSize = activityData.gridSize || 15;
+      activityData.words.forEach(wordObj => {
+        const { word, startX, startY, direction } = wordObj;
+        const x = startX || 0;
+        const y = startY || 0;
+        
+        if (direction === 'across') {
+          maxGridSize = Math.max(maxGridSize, x + word.length, y + 1);
+        } else { // down
+          maxGridSize = Math.max(maxGridSize, x + 1, y + word.length);
+        }
+      });
+      
+      // Ensure grid is at least 10x10
+      maxGridSize = Math.max(maxGridSize, 10);
+      
+      // Create the crossword grid based on the words
+      const gridSize = maxGridSize;
+      const grid = Array(gridSize).fill().map(() => Array(gridSize).fill(''));
+      
+      // Place words on the grid
+      activityData.words.forEach(wordObj => {
+        const { word, startX, startY, direction } = wordObj;
+        const x = startX || 0;
+        const y = startY || 0;
+        
+        for (let i = 0; i < word.length; i++) {
+          if (direction === 'across') {
+            if (x + i < gridSize && y < gridSize) {
+              grid[y][x + i] = word[i];
+            }
+          } else { // down
+            if (x < gridSize && y + i < gridSize) {
+              grid[y + i][x] = word[i];
+            }
+          }
+        }
+      });
+      
       playArea.innerHTML = `
         <div class="card">
           <h4 class="text-xl font-bold mb-4">${activityData.description || 'Crossword Puzzle'}</h4>
-          <div class="grid grid-cols-10 gap-1 mb-4" id="crossword-grid"></div>
-          <div class="mt-4">
-            <h5 class="font-bold mb-2">Clues:</h5>
-            ${activityData.words.map((w, i) => `
-              <div class="text-sm mb-1"><strong>${i+1}. ${w.direction}:</strong> ${w.clue}</div>
-            `).join('')}
+          <div class="crossword-container">
+            <div class="crossword-grid" style="grid-template-columns: repeat(${gridSize}, 1fr); grid-template-rows: repeat(${gridSize}, 1fr);" id="crossword-grid">
+              ${grid.map((row, y) => 
+                row.map((cell, x) => `
+                  <div class="crossword-cell" 
+                       data-x="${x}" 
+                       data-y="${y}" 
+                       contenteditable="true"
+                       maxlength="1"
+                       style="border: 1px solid var(--text); text-align: center; padding: 0; margin: 0; min-width: 30px; min-height: 30px;">
+                    ${cell || ''}
+                  </div>`
+                ).join('')
+              ).join('')}
+            </div>
+            <div class="crossword-clues mt-6">
+              <div class="crossword-across">
+                <h5 class="font-bold mb-2">Across:</h5>
+                ${activityData.words.filter(w => w.direction === 'across').map((w, i) => `
+                  <div class="text-sm mb-1" onclick="highlightWord('${w.word}', 'across', ${w.startX}, ${w.startY})">
+                    <strong>${w.startY + 1}.${w.startX + 1}-A:</strong> ${w.clue}
+                  </div>
+                `).join('')}
+              </div>
+              <div class="crossword-down mt-4">
+                <h5 class="font-bold mb-2">Down:</h5>
+                ${activityData.words.filter(w => w.direction === 'down').map((w, i) => `
+                  <div class="text-sm mb-1" onclick="highlightWord('${w.word}', 'down', ${w.startX}, ${w.startY})">
+                    <strong>${w.startY + 1}.${w.startX + 1}-D:</strong> ${w.clue}
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+            <div class="mt-6">
+              <button class="btn btn-primary" onclick="checkCrosswordAnswers()">Check Answers</button>
+              <button class="btn btn-secondary ml-2" onclick="clearCrossword()">Clear Grid</button>
+            </div>
           </div>
         </div>
       `;
+      
+      // Add event listeners to cells
+      document.querySelectorAll('.crossword-cell').forEach(cell => {
+        cell.addEventListener('input', function() {
+          // Only allow single characters
+          if (this.textContent.length > 1) {
+            this.textContent = this.textContent.slice(0, 1);
+          }
+          // Only allow uppercase letters
+          if (this.textContent && !/^[A-Z]$/.test(this.textContent)) {
+            this.textContent = this.textContent.toUpperCase().replace(/[^A-Z]/g, '');
+          }
+        });
+        
+        cell.addEventListener('keydown', function(e) {
+          if (e.key === 'ArrowRight' || e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            const x = parseInt(this.getAttribute('data-x'));
+            const y = parseInt(this.getAttribute('data-y'));
+            let newX = x, newY = y;
+            
+            switch(e.key) {
+              case 'ArrowRight': newX++; break;
+              case 'ArrowLeft': newX--; break;
+              case 'ArrowDown': newY++; break;
+              case 'ArrowUp': newY--; break;
+            }
+            
+            const nextCell = document.querySelector(`.crossword-cell[data-x="${newX}"][data-y="${newY}"]`);
+            if (nextCell) {
+              nextCell.focus();
+            }
+          }
+        });
+      });
     };
     
     window.renderCrosswordEditMode = function() {
@@ -7129,9 +7378,644 @@ Created with Tamer Educational Activities
         <div class="card">
           <h4 class="text-lg font-bold mb-4">Crossword Words</h4>
           <p class="text-sm text-muted mb-4">Add words and clues for your crossword puzzle</p>
-          <button class="btn btn-primary" onclick="alert('Crossword editor - Add your words and clues here')">Add Word</button>
+          <div class="flex flex-wrap gap-3 mb-4">
+            <div class="flex-1 min-w-[200px]">
+              <label class="block text-sm text-muted mb-2">Grid Size</label>
+              <input type="number" id="crossword-grid-size" value="${activityData.gridSize || 15}" class="w-full px-4 py-2 rounded-lg" style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);" min="5" max="20" oninput="updateCrosswordGridSize(this.value)">
+            </div>
+            <div class="flex items-end">
+              <button class="btn btn-accent" onclick="generateCrosswordFromTopic()">
+                <i class="fas fa-magic mr-2"></i>
+                Generate from Topic
+              </button>
+            </div>
+          </div>
+          <div id="crossword-words-list">
+            ${(activityData.words || []).map((word, i) => `
+              <div class="card p-3 mb-2">
+                <div class="flex justify-between items-center mb-2">
+                  <span class="font-bold">${word.word}</span>
+                  <button class="btn btn-sm btn-ghost" onclick="removeCrosswordWord(${i})">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="block text-xs text-muted mb-1">Word</label>
+                    <input type="text" value="${word.word}" class="w-full px-2 py-1 rounded text-sm" style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);" oninput="updateCrosswordWord(${i}, 'word', this.value.toUpperCase())">
+                  </div>
+                  <div>
+                    <label class="block text-xs text-muted mb-1">Clue</label>
+                    <input type="text" value="${word.clue}" class="w-full px-2 py-1 rounded text-sm" style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);" oninput="updateCrosswordWord(${i}, 'clue', this.value)">
+                  </div>
+                  <div>
+                    <label class="block text-xs text-muted mb-1">Direction</label>
+                    <select class="w-full px-2 py-1 rounded text-sm" style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);" onchange="updateCrosswordWord(${i}, 'direction', this.value)">
+                      <option value="across" ${word.direction === 'across' ? 'selected' : ''}>Across</option>
+                      <option value="down" ${word.direction === 'down' ? 'selected' : ''}>Down</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-xs text-muted mb-1">Start X</label>
+                    <input type="number" value="${word.startX || 0}" class="w-full px-2 py-1 rounded text-sm" style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);" min="0" oninput="updateCrosswordWord(${i}, 'startX', parseInt(this.value))">
+                  </div>
+                  <div>
+                    <label class="block text-xs text-muted mb-1">Start Y</label>
+                    <input type="number" value="${word.startY || 0}" class="w-full px-2 py-1 rounded text-sm" style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);" min="0" oninput="updateCrosswordWord(${i}, 'startY', parseInt(this.value))">
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+          <button class="btn btn-primary" onclick="addCrosswordWord()">
+            <i class="fas fa-plus mr-2"></i>
+            Add Word
+          </button>
         </div>
       `;
+    };
+    
+    // Function to add a new word to the crossword
+    window.addCrosswordWord = function() {
+      const word = prompt('Enter the word:');
+      if (!word || word.trim() === '') {
+        alert('Word cannot be empty. Word not added.');
+        return;
+      }
+      
+      if (!activityData.words) activityData.words = [];
+      activityData.words.push({
+        word: word.trim().toUpperCase(),
+        clue: 'Enter clue for ' + word.trim(),
+        startX: 0,
+        startY: 0,
+        direction: 'across'
+      });
+      
+      // Save the updated data and refresh UI
+      updateActivityDisplay();
+      renderEditMode();
+    };
+    
+    // Function to generate crossword based on topic
+    window.generateCrosswordFromTopic = function() {
+      const topic = prompt('Enter a topic for your crossword (e.g., Science, History, Math, etc.):');
+      if (!topic || topic.trim() === '') {
+        alert('Topic cannot be empty. Please enter a valid topic.');
+        return;
+      }
+      
+      // Show loading message
+      const editContainer = document.querySelector('#edit-container');
+      if (editContainer) {
+        editContainer.innerHTML = '<div class="text-center p-8 text-muted"><p>Generating crossword for topic: <strong>' + topic + '</strong></p><p class="mt-2">Please wait...</p></div>';
+      }
+      
+      // Simulate API call with timeout for demo purposes
+      // In a real implementation, this would call an actual API
+      setTimeout(() => {
+        // Sample word/clue pairs based on common educational topics
+        const topicWords = {
+          'science': [
+            {word: 'BIOLOGY', clue: 'Study of living organisms'},
+            {word: 'CHEMISTRY', clue: 'Study of matter and its properties'},
+            {word: 'PHYSICS', clue: 'Study of energy and motion'},
+            {word: 'ATOMIC', clue: 'Smallest unit of matter'},
+            {word: 'CELL', clue: 'Basic unit of life'},
+            {word: 'ELEMENT', clue: 'Substance made of one type of atom'},
+            {word: 'REACTION', clue: 'Process where substances change'},
+            {word: 'MOLECULE', clue: 'Two or more atoms bonded together'}
+          ],
+          'history': [
+            {word: 'REVOLUTION', clue: 'Major change in government'},
+            {word: 'ANCIENT', clue: 'From long ago'},
+            {word: 'EMPIRE', clue: 'Large political unit'},
+            {word: 'CIVILIZATION', clue: 'Advanced society'},
+            {word: 'MONARCH', clue: 'King or queen'},
+            {word: 'BATTLE', clue: 'Fight between armies'},
+            {word: 'TREATY', clue: 'Agreement between countries'},
+            {word: 'EXPLORER', clue: 'Person who travels to discover'}
+          ],
+          'math': [
+            {word: 'ALGEBRA', clue: 'Math with letters'},
+            {word: 'GEOMETRY', clue: 'Math of shapes'},
+            {word: 'CALCULUS', clue: 'Advanced math of change'},
+            {word: 'EQUATION', clue: 'Mathematical statement'},
+            {word: 'THEOREM', clue: 'Provable mathematical statement'},
+            {word: 'FRACTION', clue: 'Part of a whole'},
+            {word: 'INTEGER', clue: 'Whole number'},
+            {word: 'TRIGONOMETRY', clue: 'Math of triangles'}
+          ],
+          'literature': [
+            {word: 'NOVEL', clue: 'Long fictional story'},
+            {word: 'POETRY', clue: 'Rhythmic literary form'},
+            {word: 'CHARACTER', clue: 'Person in a story'},
+            {word: 'PLOT', clue: 'Sequence of events'},
+            {word: 'METAPHOR', clue: 'Figure of speech'},
+            {word: 'SYMBOLISM', clue: 'Use of symbols'},
+            {word: 'NARRATOR', clue: 'Story teller'},
+            {word: 'STANZA', clue: 'Group of lines in poem'}
+          ],
+          'geography': [
+            {word: 'CONTINENT', clue: 'Large land mass'},
+            {word: 'MOUNTAIN', clue: 'High landform'},
+            {word: 'RIVER', clue: 'Flowing water'},
+            {word: 'OCEAN', clue: 'Large body of salt water'},
+            {word: 'COUNTRY', clue: 'Sovereign state'},
+            {word: 'CAPITAL', clue: 'Seat of government'},
+            {word: 'CLIMATE', clue: 'Weather patterns'},
+            {word: 'LATITUDE', clue: 'Distance from equator'}
+          ],
+          'information technology': [
+            {word: 'ALGORITHM', clue: 'Step-by-step procedure for calculations'},
+            {word: 'DATABASE', clue: 'Organized collection of data'},
+            {word: 'ENCRYPTION', clue: 'Process of encoding information'},
+            {word: 'FIREWALL', clue: 'Network security system'},
+            {word: 'GIGABYTE', clue: 'Unit of digital information storage'},
+            {word: 'HTML', clue: 'Markup language for web pages'},
+            {word: 'INTERNET', clue: 'Global network of computers'},
+            {word: 'JAVASCRIPT', clue: 'Programming language for web development'}
+          ],
+          'it': [
+            {word: 'BINARY', clue: 'Base-2 number system'},
+            {word: 'CLOUD', clue: 'Internet-based computing services'},
+            {word: 'DEBUGGING', clue: 'Process of finding and fixing errors'},
+            {word: 'ETHERNET', clue: 'Networking technology for local area networks'},
+            {word: 'FIRMWARE', clue: 'Software in hardware devices'},
+            {word: 'GUI', clue: 'Graphical user interface'},
+            {word: 'HYPERLINK', clue: 'Reference to data'},
+            {word: 'IPADDRESS', clue: 'Unique network address'}
+          ],
+          'general': [
+            {word: 'KNOWLEDGE', clue: 'Facts and information acquired through experience'},
+            {word: 'LEARNING', clue: 'Acquiring knowledge or skills through study'},
+            {word: 'EDUCATION', clue: 'Systematic instruction to develop knowledge'},
+            {word: 'SKILL', clue: 'An ability developed through training'},
+            {word: 'PRACTICE', clue: 'Repeated performance to acquire proficiency'},
+            {word: 'STUDY', clue: 'Dedicated effort to acquire knowledge'},
+            {word: 'THINKING', clue: 'Process of using ones mind to consider ideas'},
+            {word: 'UNDERSTANDING', clue: 'Grasping the nature of something'}
+          ]
+        };
+        
+        // Use words for the specific topic or default to general education
+        let selectedWords = [];
+        
+        // Check if exact topic match exists
+        if (topicWords[topic.toLowerCase()]) {
+          selectedWords = [...topicWords[topic.toLowerCase()]];
+        } else {
+          // Check for partial matches (e.g., "info tech" matches "it" or "information technology")
+          const lowerTopic = topic.toLowerCase();
+          let foundMatch = false;
+          
+          for (let topicKey in topicWords) {
+            if (lowerTopic.includes(topicKey) || topicKey.includes(lowerTopic)) {
+              selectedWords = [...topicWords[topicKey]];
+              foundMatch = true;
+              break;
+            }
+          }
+          
+          // If no partial match, use a general education list
+          if (!foundMatch) {
+            const allWords = [];
+            for (let key in topicWords) {
+              allWords.push(...topicWords[key]);
+            }
+            // Pick 8 random words from all topics
+            for (let i = 0; i < 8; i++) {
+              const randomIndex = Math.floor(Math.random() * allWords.length);
+              selectedWords.push(allWords[randomIndex]);
+            }
+          }
+        }
+        
+        // Initialize activity data with generated words
+        if (!activityData.words) activityData.words = [];
+        
+        // Add the generated words (limit to 8 to avoid overcrowding)
+        const wordsToAdd = selectedWords.slice(0, 8);
+        
+        // Clear existing words and add new ones
+        activityData.words = [];
+        
+        // Fixed grid size to 10 as per requirements
+        const gridSize = 10;
+        
+        // Create a grid to track where letters are placed
+        const grid = Array(gridSize).fill().map(() => Array(gridSize).fill(''));
+        
+        // Track which words have been used to avoid duplicates
+        const usedWords = new Set();
+        
+        // Place the first word horizontally in the center
+        if (wordsToAdd.length > 0) {
+          const firstWord = wordsToAdd[0];
+          usedWords.add(firstWord.word);
+          
+          // Make sure the first word fits in the grid
+          if (firstWord.word.length <= gridSize) {
+            const startX = Math.floor((gridSize - firstWord.word.length) / 2);
+            const startY = Math.floor(gridSize / 2);
+            
+            activityData.words.push({
+              word: firstWord.word,
+              clue: firstWord.clue,
+              startX: startX,
+              startY: startY,
+              direction: 'across'
+            });
+            
+            // Place the word on the grid
+            for (let i = 0; i < firstWord.word.length; i++) {
+              grid[startY][startX + i] = firstWord.word[i];
+            }
+          }
+        }
+        
+
+        
+        // Place remaining words to intersect with existing words
+        for (let i = 1; i < wordsToAdd.length; i++) {
+          const currentWord = wordsToAdd[i];
+          
+          // Skip if this word is already used
+          if (usedWords.has(currentWord.word)) {
+            continue;
+          }
+          
+          let placed = false;
+          
+          // Try to place the word vertically to intersect with existing words
+          for (let y = 0; y < gridSize; y++) {
+            for (let x = 0; x < gridSize; x++) {
+              if (grid[y][x] !== '') {
+                // Check if this letter exists in the current word
+                for (let wIdx = 0; wIdx < currentWord.word.length; wIdx++) {
+                  if (currentWord.word[wIdx] === grid[y][x]) {
+                    // Try to place the word vertically through this intersection
+                    const wordStartY = y - wIdx;
+                    const wordEndY = wordStartY + currentWord.word.length - 1;
+                    
+                    // Check if the word fits vertically
+                    if (wordStartY >= 0 && wordEndY < gridSize) {
+                      // Check if placement is valid (no conflicts)
+                      let validPlacement = true;
+                      for (let j = 0; j < currentWord.word.length; j++) {
+                        const checkY = wordStartY + j;
+                        if (checkY >= 0 && checkY < gridSize && x >= 0 && x < gridSize) {
+                          if (grid[checkY][x] !== '' && grid[checkY][x] !== currentWord.word[j]) {
+                            validPlacement = false;
+                            break;
+                          }
+                        } else {
+                          validPlacement = false;
+                          break;
+                        }
+                      }
+                      
+                      // Check horizontal neighbors to avoid unintended words
+                      if (validPlacement) {
+                        for (let j = 0; j < currentWord.word.length; j++) {
+                          const checkY = wordStartY + j;
+                          if (x > 0 && checkY >= 0 && checkY < gridSize && grid[checkY][x-1] !== '') {
+                            validPlacement = false;
+                            break;
+                          }
+                          if (x < gridSize-1 && checkY >= 0 && checkY < gridSize && grid[checkY][x+1] !== '') {
+                            validPlacement = false;
+                            break;
+                          }
+                        }
+                      }
+                      
+                      if (validPlacement) {
+                        // Place the word vertically
+                        activityData.words.push({
+                          word: currentWord.word,
+                          clue: currentWord.clue,
+                          startX: x,
+                          startY: wordStartY,
+                          direction: 'down'
+                        });
+                        usedWords.add(currentWord.word);
+                        
+                        // Update the grid
+                        for (let j = 0; j < currentWord.word.length; j++) {
+                          const checkY = wordStartY + j;
+                          if (checkY >= 0 && checkY < gridSize && x >= 0 && x < gridSize) {
+                            grid[checkY][x] = currentWord.word[j];
+                          }
+                        }
+                        placed = true;
+                        break;
+                      }
+                    }
+                  }
+                }
+              }
+              if (placed) break;
+            }
+            if (placed) break;
+          }
+          
+          // If we couldn't place vertically, try to place horizontally
+          if (!placed) {
+            // Find a suitable position for horizontal placement
+            for (let y = 0; y < gridSize; y++) {
+              for (let x = 0; x < gridSize; x++) {
+                // Check if we can place horizontally without exceeding grid
+                if (x + currentWord.word.length <= gridSize) {
+                  // Check if placement is valid
+                  let validPlacement = true;
+                  
+                  for (let j = 0; j < currentWord.word.length; j++) {
+                    if (grid[y][x+j] !== '' && grid[y][x+j] !== currentWord.word[j]) {
+                      validPlacement = false;
+                      break;
+                    }
+                  }
+                  
+                  // Check vertical neighbors to avoid unintended words
+                  if (validPlacement) {
+                    if (y > 0) {
+                      for (let j = 0; j < currentWord.word.length; j++) {
+                        if (grid[y-1][x+j] !== '') {
+                          validPlacement = false;
+                          break;
+                        }
+                      }
+                    }
+                    if (y < gridSize-1 && validPlacement) {
+                      for (let j = 0; j < currentWord.word.length; j++) {
+                        if (grid[y+1][x+j] !== '') {
+                          validPlacement = false;
+                          break;
+                        }
+                      }
+                    }
+                  }
+                  
+                  if (validPlacement) {
+                    // Place the word horizontally
+                    activityData.words.push({
+                      word: currentWord.word,
+                      clue: currentWord.clue,
+                      startX: x,
+                      startY: y,
+                      direction: 'across'
+                    });
+                    usedWords.add(currentWord.word);
+                    
+                    // Update the grid
+                    for (let j = 0; j < currentWord.word.length; j++) {
+                      grid[y][x+j] = currentWord.word[j];
+                    }
+                    placed = true;
+                    break;
+                  }
+                }
+              }
+              if (placed) break;
+            }
+          }
+          
+          // If still couldn't place the word with intersection logic, try a random direction
+          if (!placed && activityData.words.length < 8) { // Limit to 8 words
+            // Try to place it in a random direction if it fits
+            if (currentWord.word.length <= gridSize) {
+              let placedRandomly = false;
+              // Try a few random positions with random direction
+              for (let attempts = 0; attempts < 20 && !placedRandomly; attempts++) {
+                const isVertical = Math.random() > 0.5; // Randomly choose direction
+                
+                if (isVertical && currentWord.word.length <= gridSize) {
+                  // Try vertical placement
+                  const randomX = Math.floor(Math.random() * gridSize);
+                  const randomY = Math.floor(Math.random() * (gridSize - currentWord.word.length + 1));
+                  
+                  // Check if this position is valid for vertical placement
+                  let validPlacement = true;
+                  for (let j = 0; j < currentWord.word.length; j++) {
+                    if (grid[randomY + j][randomX] !== '') {
+                      validPlacement = false;
+                      break;
+                    }
+                  }
+                  
+                  if (validPlacement) {
+                    activityData.words.push({
+                      word: currentWord.word,
+                      clue: currentWord.clue,
+                      startX: randomX,
+                      startY: randomY,
+                      direction: 'down'
+                    });
+                    usedWords.add(currentWord.word);
+                    
+                    // Place the word on the grid
+                    for (let j = 0; j < currentWord.word.length; j++) {
+                      grid[randomY + j][randomX] = currentWord.word[j];
+                    }
+                    placedRandomly = true;
+                  }
+                } else if (!isVertical) {
+                  // Try horizontal placement
+                  const randomX = Math.floor(Math.random() * (gridSize - currentWord.word.length + 1));
+                  const randomY = Math.floor(Math.random() * gridSize);
+                  
+                  // Check if this position is valid for horizontal placement
+                  let validPlacement = true;
+                  for (let j = 0; j < currentWord.word.length; j++) {
+                    if (grid[randomY][randomX + j] !== '') {
+                      validPlacement = false;
+                      break;
+                    }
+                  }
+                  
+                  if (validPlacement) {
+                    activityData.words.push({
+                      word: currentWord.word,
+                      clue: currentWord.clue,
+                      startX: randomX,
+                      startY: randomY,
+                      direction: 'across'
+                    });
+                    usedWords.add(currentWord.word);
+                    
+                    // Place the word on the grid
+                    for (let j = 0; j < currentWord.word.length; j++) {
+                      grid[randomY][randomX + j] = currentWord.word[j];
+                    }
+                    placedRandomly = true;
+                  }
+                }
+              }
+            }
+          }
+        }
+        
+        // Update display and refresh UI
+        updateActivityDisplay();
+        renderEditMode();
+        
+        alert(`Crossword generated for topic: ${topic}. ${activityData.words.length} words added.`);
+      }, 1500); // Simulate API delay
+    };
+    
+    // Function to remove a word from the crossword
+    window.removeCrosswordWord = function(index) {
+      if (activityData.words && activityData.words.length > index) {
+        activityData.words.splice(index, 1);
+        updateActivityDisplay();
+        renderEditMode();
+      }
+    };
+    
+    // Function to update a crossword word property
+    window.updateCrosswordWord = function(index, property, value) {
+      if (activityData.words && activityData.words.length > index) {
+        if (property === 'word') {
+          // Ensure the word is uppercase and not empty
+          const upperValue = value.toUpperCase();
+          if (upperValue.trim() !== '') {
+            activityData.words[index][property] = upperValue;
+            // Update the activity display to save changes
+            updateActivityDisplay();
+          }
+        } else {
+          activityData.words[index][property] = value;
+          // Update the activity display to save changes
+          updateActivityDisplay();
+        }
+      }
+    };
+    
+    // Function to update the grid size (now fixed at 10)
+    window.updateCrosswordGridSize = function(size) {
+      // Grid size is fixed at 10, so we don't update it
+      // This function remains for compatibility but has no effect
+    };
+    
+    // Function to highlight a word in the crossword
+    window.highlightWord = function(word, direction, startX, startY) {
+      // Remove previous highlights
+      document.querySelectorAll('.crossword-cell').forEach(cell => {
+        cell.style.backgroundColor = '';
+        cell.style.color = '';
+      });
+      
+      // Highlight the word
+      for (let i = 0; i < word.length; i++) {
+        let x, y;
+        if (direction === 'across') {
+          x = startX + i;
+          y = startY;
+        } else { // down
+          x = startX;
+          y = startY + i;
+        }
+        
+        const cell = document.querySelector(`.crossword-cell[data-x="${x}"][data-y="${y}"]`);
+        if (cell) {
+          cell.style.backgroundColor = 'var(--primary)';
+          cell.style.color = 'white';
+          
+          // Scroll to the first cell of the word
+          if (i === 0) {
+            cell.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }
+      }
+    };
+    
+    // Function to check crossword answers
+    window.checkCrosswordAnswers = function() {
+      if (!activityData.words || activityData.words.length === 0) {
+        alert('No words to check in this crossword puzzle.');
+        return;
+      }
+      
+      const cells = document.querySelectorAll('.crossword-cell');
+      let correctCount = 0;
+      let totalCount = 0;
+      
+      // Reset all cells to default appearance
+      cells.forEach(cell => {
+        cell.style.backgroundColor = '';
+        cell.style.color = '';
+        cell.style.border = '1px solid var(--text)';
+      });
+      
+      // Check each word in the crossword
+      activityData.words.forEach(wordObj => {
+        const { word, startX, startY, direction } = wordObj;
+        let isCorrect = true;
+        
+        for (let i = 0; i < word.length; i++) {
+          let x, y;
+          if (direction === 'across') {
+            x = startX + i;
+            y = startY;
+          } else { // down
+            x = startX;
+            y = startY + i;
+          }
+          
+          const cell = document.querySelector(`.crossword-cell[data-x="${x}"][data-y="${y}"]`);
+          if (cell) {
+            totalCount++;
+            const userLetter = cell.textContent.toUpperCase();
+            const correctLetter = word[i];
+            
+            if (userLetter === correctLetter) {
+              cell.style.backgroundColor = 'var(--success-bg)';
+              cell.style.color = 'var(--success)';
+              correctCount++;
+            } else {
+              cell.style.backgroundColor = 'var(--error-bg)';
+              cell.style.color = 'var(--error)';
+              isCorrect = false;
+            }
+          }
+        }
+        
+        // Highlight the clue if the word is correct
+        if (isCorrect) {
+          const clues = direction === 'across' ? 
+            document.querySelectorAll('.crossword-across .text-sm') : 
+            document.querySelectorAll('.crossword-down .text-sm');
+          
+          clues.forEach(clue => {
+            if (clue.textContent.includes(wordObj.clue)) {
+              clue.style.color = 'var(--success)';
+              clue.style.fontWeight = 'bold';
+            }
+          });
+        }
+      });
+      
+      // Show feedback
+      const percentage = Math.round((correctCount / totalCount) * 100);
+      alert(`You got ${correctCount} out of ${totalCount} letters correct (${percentage}%).`);
+    };
+    
+    // Function to clear the crossword grid
+    window.clearCrossword = function() {
+      const cells = document.querySelectorAll('.crossword-cell');
+      cells.forEach(cell => {
+        cell.textContent = '';
+        cell.style.backgroundColor = '';
+        cell.style.color = '';
+        cell.style.border = '1px solid var(--text)';
+      });
+      
+      // Reset clue styles
+      document.querySelectorAll('.crossword-clues .text-sm').forEach(clue => {
+        clue.style.color = '';
+        clue.style.fontWeight = '';
+      });
     };
     
     // Timeline Play Mode
@@ -7255,21 +8139,55 @@ Created with Tamer Educational Activities
     
     // Word Search Play Mode
     window.renderWordSearchPlayMode = function() {
+      if (!activityData.words || activityData.words.length === 0) {
+        playArea.innerHTML = '<div class="text-center py-12 text-muted">No words configured for this word search.</div>';
+        return;
+      }
+      
+      // Generate the word search grid
+      const gridSize = activityData.gridSize || 15;
+      const words = activityData.words || [];
+      
+      // Create empty grid
+      let grid = Array(gridSize).fill().map(() => Array(gridSize).fill(''));
+      
+      // Place words in the grid
+      words.forEach(word => {
+        placeWordInGrid(grid, word.toUpperCase(), gridSize);
+      });
+      
+      // Fill empty spaces with random letters
+      for (let row = 0; row < gridSize; row++) {
+        for (let col = 0; col < gridSize; col++) {
+          if (grid[row][col] === '') {
+            grid[row][col] = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+          }
+        }
+      }
+      
       playArea.innerHTML = `
         <div class="card">
           <h4 class="text-xl font-bold mb-4">${activityData.description || 'Word Search'}</h4>
-          <div class="grid" style="grid-template-columns: repeat(${activityData.gridSize}, 1fr); gap: 2px; max-width: 500px; margin: 0 auto;">
-            ${Array(activityData.gridSize * activityData.gridSize).fill(0).map(() => `
-              <div class="w-10 h-10 border flex items-center justify-center font-bold cursor-pointer hover:bg-primary/20">
-                ${String.fromCharCode(65 + Math.floor(Math.random() * 26))}
-              </div>
-            `).join('')}
+          <div class="grid" style="grid-template-columns: repeat(${gridSize}, 1fr); gap: 2px; max-width: 800px; margin: 0 auto;">
+            ${grid.map((row, r) => 
+              row.map((cell, c) => `
+                <div class="w-8 h-8 border flex items-center justify-center font-bold cursor-pointer hover:bg-primary/20 word-cell" 
+                     style="background-color: var(--button-bg); border: 1px solid var(--button-border);"
+                     data-row="${r}" 
+                     data-col="${c}" 
+                     onclick="selectWordCell(${r}, ${c})">
+                  ${cell}
+                </div>
+              `).join('')
+            ).join('')}
           </div>
           <div class="mt-6">
             <h5 class="font-bold mb-2">Words to Find:</h5>
             <div class="flex flex-wrap gap-2">
-              ${activityData.words.map(word => `
-                <span class="pill">${word}</span>
+              ${words.map(word => `
+                <span class="pill word-item" id="word-${word.toLowerCase()}" style="background-color: var(--button-bg); border: 1px solid var(--button-border); padding: 0.5rem 1rem; border-radius: 9999px;">
+                  ${word}
+                </span>
               `).join('')}
             </div>
           </div>
@@ -7277,64 +8195,533 @@ Created with Tamer Educational Activities
       `;
     };
     
+    // Helper function to place a word in the grid
+    function placeWordInGrid(grid, word, gridSize) {
+      const directions = [
+        [0, 1],   // horizontal
+        [1, 0],   // vertical
+        [1, 1],   // diagonal down-right
+        [-1, 1],  // diagonal up-right
+        [0, -1],  // horizontal backwards
+        [-1, 0],  // vertical backwards
+        [-1, -1], // diagonal up-left
+        [1, -1]   // diagonal down-left
+      ];
+      
+      let placed = false;
+      let attempts = 0;
+      
+      while (!placed && attempts < 100) {
+        attempts++;
+        
+        // Random direction
+        const [dx, dy] = directions[Math.floor(Math.random() * directions.length)];
+        
+        // Random starting position
+        let startRow = Math.floor(Math.random() * gridSize);
+        let startCol = Math.floor(Math.random() * gridSize);
+        
+        // Adjust starting position based on direction to ensure word fits
+        if (dx > 0 && startRow + word.length > gridSize) continue;
+        if (dx < 0 && startRow - word.length < -1) continue;
+        if (dy > 0 && startCol + word.length > gridSize) continue;
+        if (dy < 0 && startCol - word.length < -1) continue;
+        
+        // Check if word can be placed
+        let canPlace = true;
+        for (let i = 0; i < word.length; i++) {
+          const row = startRow + i * dx;
+          const col = startCol + i * dy;
+          
+          if (grid[row][col] !== '' && grid[row][col] !== word[i]) {
+            canPlace = false;
+            break;
+          }
+        }
+        
+        if (canPlace) {
+          // Place the word
+          for (let i = 0; i < word.length; i++) {
+            const row = startRow + i * dx;
+            const col = startCol + i * dy;
+            grid[row][col] = word[i];
+          }
+          placed = true;
+        }
+      }
+    };
+    
+    // Variables for word selection
+    let selectedCells = [];
+    let isSelecting = false;
+    
+    // Select word cell
+    window.selectWordCell = function(row, col) {
+      const cell = document.querySelector(`.word-cell[data-row="${row}"][data-col="${col}"]`);
+      
+      if (!isSelecting) {
+        // Start selection
+        isSelecting = true;
+        selectedCells = [{row, col, element: cell}];
+        cell.style.backgroundColor = 'var(--primary)';
+        cell.style.color = 'white';
+      } else {
+        // End selection
+        if (selectedCells.length === 1) {
+          // If only one cell was selected, start a new selection
+          selectedCells[0].element.style.backgroundColor = 'var(--button-bg)';
+          selectedCells[0].element.style.color = 'inherit';
+          selectedCells = [{row, col, element: cell}];
+          cell.style.backgroundColor = 'var(--primary)';
+          cell.style.color = 'white';
+        } else {
+          // Calculate direction and check if it matches a word
+          const startCell = selectedCells[0];
+          const endCell = {row, col, element: cell};
+          
+          // Calculate direction
+          const dRow = endCell.row - startCell.row;
+          const dCol = endCell.col - startCell.col;
+          
+          // Normalize direction
+          const maxStep = Math.max(Math.abs(dRow), Math.abs(dCol));
+          const stepRow = maxStep !== 0 ? dRow / maxStep : 0;
+          const stepCol = maxStep !== 0 ? dCol / maxStep : 0;
+          
+          // Get the word from the grid
+          let foundWord = '';
+          for (let i = 0; i <= maxStep; i++) {
+            const r = startCell.row + i * stepRow;
+            const c = startCell.col + i * stepCol;
+            const gridCell = document.querySelector(`.word-cell[data-row="${r}"][data-col="${c}"]`);
+            if (gridCell) {
+              foundWord += gridCell.textContent;
+            }
+          }
+          
+          // Check if the found word matches any of the target words
+          const words = activityData.words || [];
+          const matchedWord = words.find(w => 
+            w.toUpperCase() === foundWord || 
+            w.toUpperCase() === foundWord.split('').reverse().join('')
+          );
+          
+          if (matchedWord) {
+            // Word found - highlight all cells and mark word as found
+            selectedCells.forEach(cell => {
+              cell.element.style.backgroundColor = 'var(--success)';
+              cell.element.style.color = 'white';
+            });
+            
+            // Mark word as found
+            const wordElement = document.getElementById(`word-${matchedWord.toLowerCase()}`);
+            if (wordElement) {
+              wordElement.style.textDecoration = 'line-through';
+              wordElement.style.opacity = '0.6';
+            }
+            
+            // Check if all words are found
+            const remainingWords = document.querySelectorAll('.word-item:not([style*="line-through"])');
+            if (remainingWords.length === 0) {
+              // All words found
+              setTimeout(() => {
+                playArea.innerHTML += `<div class="text-center mt-6 text-xl font-bold text-success">🎉 All words found! Great job!</div>`;
+              }, 500);
+            }
+          } else {
+            // Reset selection
+            selectedCells.forEach(cell => {
+              cell.element.style.backgroundColor = 'var(--button-bg)';
+              cell.element.style.color = 'inherit';
+            });
+          }
+          
+          // Reset selection
+          selectedCells = [];
+          isSelecting = false;
+        }
+      }
+    };
+    
     window.renderWordSearchEditMode = function() {
+      // Initialize activity data if it doesn't exist
+      if (!activityData.words) activityData.words = [];
+      if (!activityData.gridSize) activityData.gridSize = 15;
+      if (!activityData.description) activityData.description = 'Word Search Puzzle';
+      
       editor.innerHTML += `
+        <div class="card mb-6">
+          <h4 class="text-lg font-bold mb-4">Word Search Configuration</h4>
+          
+          <div class="mb-4">
+            <label class="block text-sm text-muted mb-2">Title/Description</label>
+            <input type="text" value="${activityData.description}" 
+                   class="w-full px-4 py-2 rounded-lg outline-none focus:border-primary transition-colors" 
+                   style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);"
+                   oninput="updateWordSearch('description', this.value)">
+          </div>
+          
+          <div class="mb-4">
+            <label class="block text-sm text-muted mb-2">Grid Size</label>
+            <input type="number" value="${activityData.gridSize}" min="5" max="25" 
+                   class="w-full px-4 py-2 rounded-lg outline-none focus:border-primary transition-colors" 
+                   style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);"
+                   oninput="updateWordSearch('gridSize', parseInt(this.value))">
+            <p class="text-xs text-muted mt-1">Recommended: 10-20 for best experience</p>
+          </div>
+        </div>
+        
+        <div class="card mb-6">
+          <div class="flex justify-between items-center mb-4">
+            <h4 class="text-lg font-bold">Words to Find</h4>
+            <button class="btn btn-sm btn-accent" onclick="addWordSearchWord()">
+              <i class="fas fa-plus mr-2"></i>
+              Add Word
+            </button>
+          </div>
+          
+          <div id="wordsearch-words-list" class="space-y-3">
+            ${activityData.words && activityData.words.length > 0 ? activityData.words.map((word, index) => `
+              <div class="p-3 rounded-lg" style="background-color: var(--button-bg); border: 1px solid var(--button-border);">
+                <div class="flex justify-between items-center mb-2">
+                  <div class="font-bold">Word ${index + 1}</div>
+                  <button class="btn btn-sm btn-error" onclick="removeWordSearchWord(${index})">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+                <input type="text" value="${word}" 
+                       class="w-full px-3 py-2 rounded-lg outline-none focus:border-primary transition-colors" 
+                       style="background-color: var(--card); border: 1px solid var(--card-border); color: var(--text);"
+                       oninput="updateWordSearchWord(${index}, this.value)">
+              </div>
+            `).join('') : '<div class="text-center py-8 text-muted">No words added yet. Click "Add Word" to get started.</div>'}
+          </div>
+        </div>
+        
         <div class="card">
-          <h4 class="text-lg font-bold mb-4">Word Search</h4>
-          <p class="text-sm text-muted mb-4">Add words to hide in the grid</p>
-          <button class="btn btn-primary" onclick="alert('Word search editor - Add words here')">Add Word</button>
+          <h4 class="text-lg font-bold mb-4">Preview</h4>
+          <div class="text-center text-sm text-muted p-8">
+            Switch to Play Mode to see the generated word search puzzle
+          </div>
         </div>
       `;
     };
     
+    // Update word search settings
+    window.updateWordSearch = function(field, value) {
+      if (activityData) {
+        activityData[field] = value;
+      }
+    };
+    
+    // Add word search word
+    window.addWordSearchWord = function() {
+      if (!activityData.words) activityData.words = [];
+      activityData.words.push('NEWWORD');
+      renderEditMode();
+    };
+    
+    // Remove word search word
+    window.removeWordSearchWord = function(index) {
+      if (activityData.words && activityData.words[index] !== undefined) {
+        activityData.words.splice(index, 1);
+        renderEditMode();
+      }
+    };
+    
+    // Update word search word
+    window.updateWordSearchWord = function(index, value) {
+      if (activityData.words && activityData.words[index] !== undefined) {
+        activityData.words[index] = value;
+      }
+    };
+    
     // Survey Play Mode
     window.renderSurveyPlayMode = function() {
+      if (!activityData.questions || activityData.questions.length === 0) {
+        playArea.innerHTML = '<div class="text-center py-12 text-muted">No questions configured for this survey.</div>';
+        return;
+      }
+      
       playArea.innerHTML = `
         <div class="card">
           <h4 class="text-xl font-bold mb-4">${activityData.description || 'Survey'}</h4>
+          <form id="survey-form">
           ${activityData.questions.map((q, i) => `
             <div class="mb-6 p-4 rounded-lg" style="background-color: var(--drag-bg);">
               <label class="block font-bold mb-3">${i+1}. ${q.question}</label>
               ${q.type === 'rating' ? `
                 <div class="flex gap-2">
-                  ${Array(q.scale).fill(0).map((_, j) => `
-                    <button class="btn btn-ghost">★ ${j+1}</button>
+                  ${Array(q.scale || 5).fill(0).map((_, j) => `
+                    <button type="button" class="btn btn-ghost rating-btn" data-question="${i}" data-value="${j+1}" onclick="selectRating(${i}, ${j+1})">
+                      ${'★'.repeat(j+1)}${'☆'.repeat((q.scale || 5)-(j+1))} ${j+1}
+                    </button>
                   `).join('')}
                 </div>
+                <div class="mt-2">
+                  <span class="text-sm text-muted" id="rating-label-${i}">Select a rating</span>
+                </div>
               ` : q.type === 'multiple' ? `
-                <select class="w-full px-4 py-2 rounded-lg" style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);">
-                  <option>Select an option...</option>
-                  ${q.options.map(opt => `<option>${opt}</option>`).join('')}
+                <select class="w-full px-4 py-2 rounded-lg" style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);" data-question="${i}" onchange="selectMultipleChoice(${i}, this.value)">
+                  <option value="">Select an option...</option>
+                  ${q.options.map((opt, optIndex) => `<option value="${optIndex}">${opt}</option>`).join('')}
                 </select>
+              ` : q.type === 'checkbox' ? `
+                <div class="space-y-2">
+                  ${q.options.map((opt, optIndex) => `
+                    <div class="flex items-center">
+                      <input type="checkbox" id="q${i}-opt${optIndex}" class="mr-2" data-question="${i}" data-option="${optIndex}" onchange="selectCheckbox(${i}, ${optIndex})">
+                      <label for="q${i}-opt${optIndex}">${opt}</label>
+                    </div>
+                  `).join('')}
+                </div>
               ` : `
-                <textarea class="w-full px-4 py-2 rounded-lg" style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);" rows="3"></textarea>
+                <textarea class="w-full px-4 py-2 rounded-lg" style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);" rows="3" data-question="${i}" onchange="saveTextResponse(${i}, this.value)"></textarea>
               `}
             </div>
           `).join('')}
-          <button class="btn btn-primary w-full">Submit Survey</button>
+          <button type="button" class="btn btn-primary w-full" onclick="submitSurvey()">Submit Survey</button>
+          </form>
+        </div>
+      `;
+      
+      // Initialize survey responses object
+      if (!window.surveyResponses) window.surveyResponses = {};
+      
+      // Initialize responses for each question
+      activityData.questions.forEach((q, i) => {
+        window.surveyResponses[i] = null;
+      });
+    };
+    
+    // Variables to track survey responses
+    window.surveyResponses = {};
+    
+    // Select rating for survey question
+    window.selectRating = function(questionIndex, value) {
+      // Update visual feedback
+      const ratingButtons = document.querySelectorAll(`[data-question="${questionIndex}"].rating-btn`);
+      ratingButtons.forEach(btn => {
+        if (parseInt(btn.getAttribute('data-value')) <= value) {
+          btn.classList.add('text-yellow-500', 'bg-yellow-100');
+          btn.classList.remove('btn-ghost');
+        } else {
+          btn.classList.remove('text-yellow-500', 'bg-yellow-100');
+          btn.classList.add('btn-ghost');
+        }
+      });
+      
+      // Update label
+      const label = document.getElementById(`rating-label-${questionIndex}`);
+      if (label) {
+        label.textContent = `Selected: ${value} star${value > 1 ? 's' : ''}`;
+      }
+      
+      // Save response
+      window.surveyResponses[questionIndex] = value;
+    };
+    
+    // Select multiple choice option
+    window.selectMultipleChoice = function(questionIndex, value) {
+      window.surveyResponses[questionIndex] = value;
+    };
+    
+    // Select checkbox option
+    window.selectCheckbox = function(questionIndex, optionIndex) {
+      const checkbox = document.querySelector(`[data-question="${questionIndex}"][data-option="${optionIndex}"]`);
+      if (checkbox) {
+        if (!window.surveyResponses[questionIndex]) {
+          window.surveyResponses[questionIndex] = [];
+        }
+        
+        if (checkbox.checked) {
+          window.surveyResponses[questionIndex].push(optionIndex);
+        } else {
+          window.surveyResponses[questionIndex] = window.surveyResponses[questionIndex].filter(opt => opt !== optionIndex);
+        }
+      }
+    };
+    
+    // Save text response
+    window.saveTextResponse = function(questionIndex, value) {
+      window.surveyResponses[questionIndex] = value;
+    };
+    
+    // Submit survey
+    window.submitSurvey = function() {
+      // Check if all required questions are answered
+      let allAnswered = true;
+      activityData.questions.forEach((q, i) => {
+        if (window.surveyResponses[i] === null || window.surveyResponses[i] === undefined || 
+            (Array.isArray(window.surveyResponses[i]) && window.surveyResponses[i].length === 0) ||
+            (typeof window.surveyResponses[i] === 'string' && window.surveyResponses[i].trim() === '')) {
+          allAnswered = false;
+        }
+      });
+      
+      if (!allAnswered) {
+        alert('Please answer all questions before submitting.');
+        return;
+      }
+      
+      // Show success message
+      playArea.innerHTML = `
+        <div class="text-center py-12">
+          <div class="text-2xl font-bold mb-4">🎉 Thank You!</div>
+          <div class="text-lg mb-6">Your survey has been submitted successfully.</div>
+          <div class="text-sm text-muted">Responses have been recorded.</div>
+        </div>
+      `;
+      
+      // Reset responses
+      window.surveyResponses = {};
+    };
+    
+    window.renderSurveyEditMode = function() {
+      // Initialize activity data if it doesn't exist
+      if (!activityData.questions) activityData.questions = [];
+      if (!activityData.description) activityData.description = 'Survey';
+      
+      editor.innerHTML += `
+        <div class="card mb-6">
+          <h4 class="text-lg font-bold mb-4">Survey Configuration</h4>
+          
+          <div class="mb-4">
+            <label class="block text-sm text-muted mb-2">Title/Description</label>
+            <input type="text" value="${activityData.description}" 
+                   class="w-full px-4 py-2 rounded-lg outline-none focus:border-primary transition-colors" 
+                   style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);"
+                   oninput="updateSurvey('description', this.value)">
+          </div>
+        </div>
+        
+        <div class="card mb-6">
+          <div class="flex justify-between items-center mb-4">
+            <h4 class="text-lg font-bold">Survey Questions</h4>
+            <button class="btn btn-sm btn-accent" onclick="addSurveyQuestion()">
+              <i class="fas fa-plus mr-2"></i>
+              Add Question
+            </button>
+          </div>
+          
+          <div id="survey-questions-list" class="space-y-4">
+            ${activityData.questions && activityData.questions.length > 0 ? activityData.questions.map((q, index) => `
+              <div class="p-4 rounded-lg" style="background-color: var(--button-bg); border: 1px solid var(--button-border);">
+                <div class="flex justify-between items-start mb-3">
+                  <div class="font-bold">Question ${index + 1}</div>
+                  <button class="btn btn-sm btn-error" onclick="removeSurveyQuestion(${index})">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+                
+                <div class="mb-3">
+                  <label class="block text-sm text-muted mb-2">Question Text</label>
+                  <input type="text" value="${q.question || ''}" 
+                         class="w-full px-3 py-2 rounded-lg outline-none focus:border-primary transition-colors" 
+                         style="background-color: var(--card); border: 1px solid var(--card-border); color: var(--text);"
+                         oninput="updateSurveyQuestion(${index}, 'question', this.value)">
+                </div>
+                
+                <div class="mb-3">
+                  <label class="block text-sm text-muted mb-2">Question Type</label>
+                  <select class="w-full px-3 py-2 rounded-lg outline-none focus:border-primary transition-colors" 
+                          style="background-color: var(--card); border: 1px solid var(--card-border); color: var(--text);"
+                          onchange="updateSurveyQuestion(${index}, 'type', this.value)">
+                    <option value="text" ${q.type === 'text' ? 'selected' : ''}>Text Response</option>
+                    <option value="multiple" ${q.type === 'multiple' ? 'selected' : ''}>Multiple Choice</option>
+                    <option value="checkbox" ${q.type === 'checkbox' ? 'selected' : ''}>Checkboxes</option>
+                    <option value="rating" ${q.type === 'rating' ? 'selected' : ''}>Rating Scale</option>
+                  </select>
+                </div>
+                
+                ${q.type === 'multiple' || q.type === 'checkbox' ? `
+                <div class="mb-3">
+                  <label class="block text-sm text-muted mb-2">Options (one per line)</label>
+                  <textarea class="w-full px-3 py-2 rounded-lg outline-none focus:border-primary transition-colors" 
+                            style="background-color: var(--card); border: 1px solid var(--card-border); color: var(--text);" 
+                            rows="4" 
+                            onchange="updateSurveyQuestionOptions(${index}, this.value)">${q.options ? q.options.join('\n') : ''}</textarea>
+                </div>
+                ` : ''}
+                
+                ${q.type === 'rating' ? `
+                <div class="mb-3">
+                  <label class="block text-sm text-muted mb-2">Scale (number of stars)</label>
+                  <input type="number" value="${q.scale || 5}" min="3" max="10" 
+                         class="w-full px-3 py-2 rounded-lg outline-none focus:border-primary transition-colors" 
+                         style="background-color: var(--card); border: 1px solid var(--card-border); color: var(--text);"
+                         oninput="updateSurveyQuestion(${index}, 'scale', parseInt(this.value))">
+                </div>
+                ` : ''}
+              </div>
+            `).join('') : '<div class="text-center py-8 text-muted">No questions added yet. Click "Add Question" to get started.</div>'}
+          </div>
+        </div>
+        
+        <div class="card">
+          <h4 class="text-lg font-bold mb-4">Preview</h4>
+          <div class="text-center text-sm text-muted p-8">
+            Switch to Play Mode to test the survey
+          </div>
         </div>
       `;
     };
     
-    window.renderSurveyEditMode = function() {
-      editor.innerHTML += `
-        <div class="card">
-          <h4 class="text-lg font-bold mb-4">Survey Questions</h4>
-          <p class="text-sm text-muted mb-4">Create survey questions</p>
-          <button class="btn btn-primary" onclick="alert('Survey editor - Add questions here')">Add Question</button>
-        </div>
-      `;
+    // Update survey settings
+    window.updateSurvey = function(field, value) {
+      if (activityData) {
+        activityData[field] = value;
+      }
+    };
+    
+    // Add survey question
+    window.addSurveyQuestion = function() {
+      if (!activityData.questions) activityData.questions = [];
+      activityData.questions.push({
+        question: 'New survey question?',
+        type: 'text',
+        options: ['Option 1', 'Option 2', 'Option 3'],
+        scale: 5
+      });
+      renderEditMode();
+    };
+    
+    // Remove survey question
+    window.removeSurveyQuestion = function(index) {
+      if (activityData.questions && activityData.questions[index] !== undefined) {
+        activityData.questions.splice(index, 1);
+        renderEditMode();
+      }
+    };
+    
+    // Update survey question
+    window.updateSurveyQuestion = function(index, field, value) {
+      if (activityData.questions && activityData.questions[index] !== undefined) {
+        activityData.questions[index][field] = value;
+      }
+    };
+    
+    // Update survey question options
+    window.updateSurveyQuestionOptions = function(index, value) {
+      if (activityData.questions && activityData.questions[index] !== undefined) {
+        activityData.questions[index].options = value.split('\n').filter(opt => opt.trim() !== '');
+      }
     };
     
     // Accordion FAQ Play Mode
     window.renderAccordionPlayMode = function() {
+      if (!activityData.items || activityData.items.length === 0) {
+        playArea.innerHTML = '<div class="text-center py-12 text-muted">No items configured for this accordion.</div>';
+        return;
+      }
+      
       playArea.innerHTML = `
         <div class="card">
           <h4 class="text-xl font-bold mb-4">${activityData.description || 'FAQ'}</h4>
           ${activityData.items.map((item, i) => `
             <div class="mb-2">
-              <button class="w-full text-left p-4 rounded-lg font-bold hover:bg-primary/10 transition-all" style="background-color: var(--button-bg); border: 1px solid var(--button-border);" onclick="toggleAccordion(${i})">
-                <i class="fas fa-chevron-down mr-2"></i>${item.question}
+              <button class="w-full text-left p-4 rounded-lg font-bold hover:bg-primary/10 transition-all accordion-header" style="background-color: var(--button-bg); border: 1px solid var(--button-border);" onclick="toggleAccordionItem(${i})">
+                <i class="fas fa-chevron-down mr-2" id="accordion-icon-${i}"></i>${item.question}
               </button>
               <div id="accordion-${i}" class="hidden p-4 rounded-lg mt-1" style="background-color: var(--drag-bg);">
                 ${item.answer}
@@ -7343,55 +8730,581 @@ Created with Tamer Educational Activities
           `).join('')}
         </div>
       `;
+      
+      // Initialize all accordion items as closed
+      activityData.items.forEach((_, i) => {
+        const panel = document.getElementById(`accordion-${i}`);
+        if (panel) panel.classList.add('hidden');
+      });
+    };
+    
+    // Toggle accordion item
+    window.toggleAccordionItem = function(index) {
+      const panel = document.getElementById(`accordion-${index}`);
+      const icon = document.getElementById(`accordion-icon-${index}`);
+      
+      if (panel) {
+        if (panel.classList.contains('hidden')) {
+          panel.classList.remove('hidden');
+          if (icon) icon.className = 'fas fa-chevron-up mr-2';
+        } else {
+          panel.classList.add('hidden');
+          if (icon) icon.className = 'fas fa-chevron-down mr-2';
+        }
+      }
     };
     
     window.renderAccordionEditMode = function() {
+      // Initialize activity data if it doesn't exist
+      if (!activityData.items) activityData.items = [];
+      if (!activityData.description) activityData.description = 'FAQ';
+      
       editor.innerHTML += `
+        <div class="card mb-6">
+          <h4 class="text-lg font-bold mb-4">Accordion Configuration</h4>
+          
+          <div class="mb-4">
+            <label class="block text-sm text-muted mb-2">Title/Description</label>
+            <input type="text" value="${activityData.description}" 
+                   class="w-full px-4 py-2 rounded-lg outline-none focus:border-primary transition-colors" 
+                   style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);"
+                   oninput="updateAccordion('description', this.value)">
+          </div>
+        </div>
+        
+        <div class="card mb-6">
+          <div class="flex justify-between items-center mb-4">
+            <h4 class="text-lg font-bold">Accordion Items</h4>
+            <button class="btn btn-sm btn-accent" onclick="addAccordionItem()">
+              <i class="fas fa-plus mr-2"></i>
+              Add Item
+            </button>
+          </div>
+          
+          <div id="accordion-items-list" class="space-y-4">
+            ${activityData.items && activityData.items.length > 0 ? activityData.items.map((item, index) => `
+              <div class="p-4 rounded-lg" style="background-color: var(--button-bg); border: 1px solid var(--button-border);">
+                <div class="flex justify-between items-start mb-3">
+                  <div class="font-bold">Item ${index + 1}</div>
+                  <button class="btn btn-sm btn-error" onclick="removeAccordionItem(${index})">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+                
+                <div class="mb-3">
+                  <label class="block text-sm text-muted mb-2">Question/Title</label>
+                  <input type="text" value="${item.question || ''}" 
+                         class="w-full px-3 py-2 rounded-lg outline-none focus:border-primary transition-colors" 
+                         style="background-color: var(--card); border: 1px solid var(--card-border); color: var(--text);"
+                         oninput="updateAccordionItem(${index}, 'question', this.value)">
+                </div>
+                
+                <div class="mb-3">
+                  <label class="block text-sm text-muted mb-2">Answer/Content</label>
+                  <textarea class="w-full px-3 py-2 rounded-lg outline-none focus:border-primary transition-colors" 
+                            style="background-color: var(--card); border: 1px solid var(--card-border); color: var(--text);" 
+                            rows="4" 
+                            oninput="updateAccordionItem(${index}, 'answer', this.value)">${item.answer || ''}</textarea>
+                </div>
+              </div>
+            `).join('') : '<div class="text-center py-8 text-muted">No items added yet. Click "Add Item" to get started.</div>'}
+          </div>
+        </div>
+        
         <div class="card">
-          <h4 class="text-lg font-bold mb-4">Accordion FAQ</h4>
-          <p class="text-sm text-muted mb-4">Add questions and answers</p>
-          <button class="btn btn-primary" onclick="alert('Accordion editor - Add FAQ items here')">Add FAQ</button>
+          <h4 class="text-lg font-bold mb-4">Preview</h4>
+          <div class="text-center text-sm text-muted p-8">
+            Switch to Play Mode to test the accordion
+          </div>
         </div>
       `;
+    };
+    
+    // Update accordion settings
+    window.updateAccordion = function(field, value) {
+      if (activityData) {
+        activityData[field] = value;
+      }
+    };
+    
+    // Add accordion item
+    window.addAccordionItem = function() {
+      if (!activityData.items) activityData.items = [];
+      activityData.items.push({
+        question: 'New question?',
+        answer: 'New answer here...'
+      });
+      renderEditMode();
+    };
+    
+    // Remove accordion item
+    window.removeAccordionItem = function(index) {
+      if (activityData.items && activityData.items[index] !== undefined) {
+        activityData.items.splice(index, 1);
+        renderEditMode();
+      }
+    };
+    
+    // Update accordion item
+    window.updateAccordionItem = function(index, field, value) {
+      if (activityData.items && activityData.items[index] !== undefined) {
+        activityData.items[index][field] = value;
+      }
     };
     
     // Image Hotspot Play Mode
     window.renderImageHotspotPlayMode = function() {
       playArea.innerHTML = `
         <div class="card">
-          <h4 class="text-xl font-bold mb-4">${activityData.description || 'Interactive Image'}</h4>
-          <div class="relative" style="background: url('${activityData.imageUrl}') center/cover; height: 600px; border-radius: 8px;">
+          <h4 class="text-xl font-bold mb-4">${activityData.title || 'Interactive Image Hotspots'}</h4>
+          <div class="relative" style="background: url('${activityData.imageUrl}') center/cover; height: 600px; border-radius: 8px; border: 1px solid var(--card-border);">
             ${activityData.hotspots.map((spot, i) => `
-              <div class="absolute" style="left: ${spot.x}%; top: ${spot.y}%;">
-                <button class="w-12 h-12 rounded-full bg-primary text-white hover:scale-110 transition-all" onclick="showHotspot(${i})">
-                  <i class="fas fa-${spot.icon}"></i>
+              <div class="absolute transform -translate-x-1/2 -translate-y-1/2" style="left: ${spot.x}%; top: ${spot.y}%">
+                <button class="w-8 h-8 rounded-full bg-primary text-white hover:scale-110 transition-all flex items-center justify-center shadow-lg" 
+                        style="border: 2px solid white;" 
+                        onclick="showHotspot(${i})" 
+                        title="${spot.title || 'Hotspot ' + (i+1)}">
+                  <i class="fas fa-${spot.icon || 'info'} text-xs"></i>
                 </button>
               </div>
             `).join('')}
           </div>
-          <div id="hotspot-info" class="mt-4 p-4 rounded-lg hidden" style="background-color: var(--button-bg); border: 1px solid var(--button-border);">
-            <h5 class="font-bold mb-2" id="hotspot-title"></h5>
-            <p class="text-sm text-muted" id="hotspot-desc"></p>
+          <div id="hotspot-info" class="mt-4 p-4 rounded-lg hidden" style="background-color: var(--card); border: 1px solid var(--card-border);">
+            <h5 class="font-bold mb-2 text-lg" id="hotspot-title"></h5>
+            <p class="text-sm" id="hotspot-desc"></p>
           </div>
         </div>
       `;
     };
     
     window.renderImageHotspotEditMode = function() {
-      editor.innerHTML += `
-        <div class="card">
-          <h4 class="text-lg font-bold mb-4">Image Hotspots</h4>
-          <p class="text-sm text-muted mb-4">Upload image and add interactive hotspots</p>
-          <button class="btn btn-primary" onclick="alert('Hotspot editor - Add hotspots here')">Add Hotspot</button>
+      // Initialize activity data if it doesn't exist
+      if (!activityData.imageUrl) {
+        activityData.imageUrl = 'https://via.placeholder.com/800x600?text=Upload+Your+Image';
+      }
+      if (!activityData.hotspots) {
+        activityData.hotspots = [
+          {x: 25, y: 30, title: 'Hotspot 1', description: 'Information about this area', icon: 'info'},
+          {x: 60, y: 50, title: 'Hotspot 2', description: 'Details about this feature', icon: 'star'},
+          {x: 80, y: 70, title: 'Hotspot 3', description: 'Learn more here', icon: 'question'}
+        ];
+      }
+      
+      editor.innerHTML += '<div class="card">' +
+        '<h4 class="text-lg font-bold mb-4">Image Hotspots Editor</h4>' +
+        '<p class="text-sm text-muted mb-4">Upload image and add interactive hotspots</p>' +
+        
+        '<div class="mb-4">' +
+          '<label class="block text-sm text-muted mb-2">Image URL</label>' +
+          '<input type="text" ' +
+                 'id="imagehotspot-url" ' +
+                 'value="' + activityData.imageUrl + '" ' +
+                 'class="w-full px-4 py-2 rounded-lg mb-2" ' +
+                 'style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);" ' +
+                 'placeholder="Enter image URL" ' +
+                 'onchange="updateImageHotspotUrl(this.value)">' +
+          '<label class="block text-sm text-muted mb-2">Or Upload Image</label>' +
+          '<input type="file" ' +
+                 'id="imagehotspot-upload" ' +
+                 'accept="image/*" ' +
+                 'class="w-full px-4 py-2 rounded-lg" ' +
+                 'style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);" ' +
+                 'onchange="uploadImageHotspotFile(this)">' +
+        '</div>' +
+        
+        '<div class="mb-4">' +
+          '<label class="block text-sm text-muted mb-2">Image Preview</label>' +
+          '<div class="relative" id="imagehotspot-preview" style="background: url(\'' + activityData.imageUrl + '\') center/cover; height: 400px; border-radius: 8px; border: 1px solid var(--card-border); position: relative;">' +
+            (activityData.hotspots ? activityData.hotspots.map((spot, i) => 
+              '<div class="absolute transform -translate-x-1/2 -translate-y-1/2" style="left: ' + spot.x + '%; top: ' + spot.y + '%">' +
+                '<button class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center shadow-lg" ' +
+                        'style="border: 2px solid white;" ' +
+                        'onclick="editHotspot(' + i + ')" ' +
+                        'title="' + (spot.title || 'Hotspot ' + (i+1)) + '">' +
+                  '<i class="fas fa-' + (spot.icon || 'info') + ' text-xs"></i>' +
+                '</button>' +
+              '</div>'
+            ).join('') : '') +
+            '<div id="new-hotspot-marker" class="absolute hidden transform -translate-x-1/2 -translate-y-1/2" style="border: 2px dashed var(--primary); width: 20px; height: 20px;">' +
+              '<div class="w-full h-full rounded-full bg-primary/20 flex items-center justify-center">' +
+                '<i class="fas fa-plus text-primary"></i>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+          '<p class="text-xs text-muted mt-2">Click on the image to add a new hotspot, or click existing hotspots to edit them</p>' +
+        '</div>' +
+        
+        '<div class="mb-4">' +
+          '<button class="btn btn-primary" onclick="addNewHotspot()">' +
+            '<i class="fas fa-plus mr-2"></i>' +
+            'Add New Hotspot' +
+          '</button>' +
+          '<button class="btn btn-secondary ml-2" onclick="document.getElementById(\'new-hotspot-marker\').classList.toggle(\'hidden\')">' +
+            '<i class="fas fa-map-marker mr-2"></i>' +
+            'Toggle Marker' +
+          '</button>' +
+        '</div>' +
+        
+        '<div id="hotspot-editor" class="mb-4 p-4 rounded-lg" style="background-color: var(--card); display: none;">' +
+          '<h5 class="font-bold mb-3">Edit Hotspot</h5>' +
+          '<div class="grid grid-cols-1 md:grid-cols-2 gap-4">' +
+            '<div>' +
+              '<label class="block text-sm text-muted mb-2">Title</label>' +
+              '<input type="text" id="hotspot-title" class="w-full px-3 py-2 rounded-lg" style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);">' +
+            '</div>' +
+            '<div>' +
+              '<label class="block text-sm text-muted mb-2">Icon</label>' +
+              '<select id="hotspot-icon" class="w-full px-3 py-2 rounded-lg" style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);">' +
+                '<option value="info">Info</option>' +
+                '<option value="question">Question</option>' +
+                '<option value="star">Star</option>' +
+                '<option value="exclamation">Exclamation</option>' +
+                '<option value="lightbulb">Lightbulb</option>' +
+                '<option value="book">Book</option>' +
+                '<option value="check">Check</option>' +
+                '<option value="plus">Plus</option>' +
+              '</select>' +
+            '</div>' +
+            '<div class="md:col-span-2">' +
+              '<label class="block text-sm text-muted mb-2">Description</label>' +
+              '<textarea id="hotspot-description" class="w-full px-3 py-2 rounded-lg" rows="3" style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);"></textarea>' +
+            '</div>' +
+          '</div>' +
+          '<div class="flex gap-2 mt-3">' +
+            '<button class="btn btn-primary" onclick="saveHotspot()">Save</button>' +
+            '<button class="btn btn-ghost" onclick="cancelHotspotEdit()">Cancel</button>' +
+            '<button class="btn btn-danger ml-auto" onclick="deleteCurrentHotspot()">Delete</button>' +
+          '</div>' +
+          '<input type="hidden" id="current-hotspot-index">' +
+        '</div>' +
+        
+        '<div id="hotspots-list" class="mt-4">' +
+          '<h5 class="font-bold mb-3">Hotspots</h5>' +
+          (activityData.hotspots ? activityData.hotspots.map((spot, i) => 
+            '<div class="card p-3 mb-2 flex justify-between items-center">' +
+              '<div>' +
+                '<div class="font-bold">' + spot.title + '</div>' +
+                '<div class="text-xs text-muted">' + (spot.description.substring(0, 50) + (spot.description.length > 50 ? '...' : '')) + '</div>' +
+              '</div>' +
+              '<div class="flex gap-2">' +
+                '<button class="btn btn-sm btn-ghost" onclick="editHotspot(' + i + ')">' +
+                  '<i class="fas fa-edit"></i>' +
+                '</button>' +
+                '<button class="btn btn-sm btn-ghost" onclick="removeHotspot(' + i + ')">' +
+                  '<i class="fas fa-trash"></i>' +
+                '</button>' +
+              '</div>' +
+            '</div>'
+          ).join('') : '') +
+        '</div>' +
+      '</div>';
+      
+      // Add click event to the image for adding new hotspots
+      const imageContainer = document.getElementById('imagehotspot-preview');
+      if (imageContainer) {
+        imageContainer.onclick = function(e) {
+          if (e.target !== this && !e.target.closest('.w-8.h-8')) {
+            const rect = this.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            
+            // Show the marker at the clicked position
+            const marker = document.getElementById('new-hotspot-marker');
+            marker.style.left = x + '%';
+            marker.style.top = y + '%';
+            marker.classList.remove('hidden');
+            
+            // Ask for hotspot details
+            setTimeout(() => {
+              const title = prompt('Enter hotspot title:');
+              if (title) {
+                const description = prompt('Enter hotspot description:');
+                if (description !== null) {
+                  const icon = prompt('Enter icon name (info, question, star, etc.):', 'info');
+                  addHotspotAtPosition(x, y, title, description, icon || 'info');
+                  marker.classList.add('hidden');
+                }
+              }
+            }, 300);
+          }
+        };
+      }
+    };
+    
+    // Theme customization functions
+    let currentThemeModal = null;
+    
+    window.applyTemplateTheme = function(themeData) {
+      try {
+        // Apply theme to the current activity
+        if (!activityData || !activityData.theme) {
+          if (!activityData) activityData = {};
+          activityData.theme = {};
+        }
+        
+        // Merge new theme data with existing
+        Object.assign(activityData.theme, themeData);
+        
+        // Update CSS variables if possible
+        const styleElement = document.createElement('style');
+        styleElement.id = 'template-theme-styles';
+        styleElement.textContent = `
+          #play-area > div, #editor {
+            ${themeData.backgroundColor ? `background-color: ${themeData.backgroundColor} !important;` : ''}
+            ${themeData.textColor ? `color: ${themeData.textColor} !important;` : ''}
+            ${themeData.fontFamily ? `font-family: ${themeData.fontFamily} !important;` : ''}
+          }
+          
+          #play-area .card, #editor .card {
+            ${themeData.cardBackgroundColor ? `background-color: ${themeData.cardBackgroundColor} !important;` : ''}
+            ${themeData.cardBorderColor ? `border-color: ${themeData.cardBorderColor} !important;` : ''}
+          }
+          
+          #play-area .btn, #editor .btn {
+            ${themeData.buttonColor ? `background-color: ${themeData.buttonColor} !important;` : ''}
+            ${themeData.buttonTextColor ? `color: ${themeData.buttonTextColor} !important;` : ''}
+          }
+        `;
+        
+        // Remove existing theme styles
+        const existingStyles = document.getElementById('template-theme-styles');
+        if (existingStyles) existingStyles.remove();
+        
+        // Add new theme styles
+        document.head.appendChild(styleElement);
+      } catch (error) {
+        console.error('Error in applyTemplateTheme:', error);
+      }
+    };
+    
+    window.openThemeCustomizer = function() {
+      // Create theme customization modal
+      const modal = document.createElement('div');
+      modal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50';
+      modal.id = 'theme-customizer-modal'; // Add an ID for easier reference
+      modal.innerHTML = `
+        <div class="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto" style="background-color: var(--background); color: var(--text); border: 1px solid var(--divider);">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-bold">Template Theme Customization</h3>
+            <button onclick="closeThemeCustomizer()" class="text-gray-500 hover:text-gray-700">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm text-muted mb-2">Background Color</label>
+              <input type="color" id="theme-bg-color" class="w-full h-10" value="${activityData.theme?.backgroundColor || '#ffffff'}">
+            </div>
+            
+            <div>
+              <label class="block text-sm text-muted mb-2">Text Color</label>
+              <input type="color" id="theme-text-color" class="w-full h-10" value="${activityData.theme?.textColor || '#000000'}">
+            </div>
+            
+            <div>
+              <label class="block text-sm text-muted mb-2">Card Background</label>
+              <input type="color" id="theme-card-bg" class="w-full h-10" value="${activityData.theme?.cardBackgroundColor || '#f8f9fa'}">
+            </div>
+            
+            <div>
+              <label class="block text-sm text-muted mb-2">Card Border Color</label>
+              <input type="color" id="theme-card-border" class="w-full h-10" value="${activityData.theme?.cardBorderColor || '#dee2e6'}">
+            </div>
+            
+            <div>
+              <label class="block text-sm text-muted mb-2">Button Color</label>
+              <input type="color" id="theme-button-color" class="w-full h-10" value="${activityData.theme?.buttonColor || '#0ea5e9'}">
+            </div>
+            
+            <div>
+              <label class="block text-sm text-muted mb-2">Button Text Color</label>
+              <input type="color" id="theme-button-text" class="w-full h-10" value="${activityData.theme?.buttonTextColor || '#ffffff'}">
+            </div>
+            
+            <div>
+              <label class="block text-sm text-muted mb-2">Font Family</label>
+              <select id="theme-font-family" class="w-full px-3 py-2 rounded-lg" style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);">
+                <option value="Arial, sans-serif" ${activityData.theme?.fontFamily === 'Arial, sans-serif' ? 'selected' : ''}>Arial</option>
+                <option value="'Times New Roman', serif" ${activityData.theme?.fontFamily === 'Times New Roman, serif' ? 'selected' : ''}>Times New Roman</option>
+                <option value="'Courier New', monospace" ${activityData.theme?.fontFamily === 'Courier New, monospace' ? 'selected' : ''}>Courier New</option>
+                <option value="Georgia, serif" ${activityData.theme?.fontFamily === 'Georgia, serif' ? 'selected' : ''}>Georgia</option>
+                <option value="Verdana, sans-serif" ${activityData.theme?.fontFamily === 'Verdana, sans-serif' ? 'selected' : ''}>Verdana</option>
+              </select>
+            </div>
+            
+            <div class="flex gap-2 mt-6">
+              <button class="btn btn-primary flex-1" onclick="saveThemeCustomization()">Apply Theme</button>
+              <button class="btn btn-ghost flex-1" onclick="resetTemplateTheme()">Reset</button>
+            </div>
+          </div>
         </div>
       `;
+      
+      // Store reference to the modal
+      currentThemeModal = modal;
+      document.body.appendChild(modal);
+    };
+    
+    window.closeThemeCustomizer = function() {
+      // Try to use the stored reference first
+      if (currentThemeModal) {
+        currentThemeModal.remove();
+        currentThemeModal = null; // Clear the reference
+        return;
+      }
+      
+      // Fallback: try to find by ID
+      let modal = document.getElementById('theme-customizer-modal');
+      if (modal) {
+        modal.remove();
+        currentThemeModal = null; // Clear the reference if it was somehow different
+        return;
+      }
+      
+      // Fallback: try to find by class
+      modal = document.querySelector('.fixed.inset-0.bg-black\/50');
+      if (modal && modal.innerHTML && modal.innerHTML.includes('Template Theme Customization')) {
+        modal.remove();
+        currentThemeModal = null;
+        return;
+      }
+      
+      // Final fallback: find by content
+      const allDivs = document.querySelectorAll('div');
+      for (let div of allDivs) {
+        if (div.innerHTML && div.innerHTML.includes('Template Theme Customization')) {
+          div.remove();
+          currentThemeModal = null;
+          break;
+        }
+      }
+    };
+    
+    window.saveThemeCustomization = function() {
+      try {
+        const themeData = {
+          backgroundColor: document.getElementById('theme-bg-color').value,
+          textColor: document.getElementById('theme-text-color').value,
+          cardBackgroundColor: document.getElementById('theme-card-bg').value,
+          cardBorderColor: document.getElementById('theme-card-border').value,
+          buttonColor: document.getElementById('theme-button-color').value,
+          buttonTextColor: document.getElementById('theme-button-text').value,
+          fontFamily: document.getElementById('theme-font-family').value
+        };
+        
+        console.log('Applying theme data:', themeData);
+        applyTemplateTheme(themeData);
+        updateActivityDisplay();
+        console.log('Theme applied, attempting to close modal');
+        closeThemeCustomizer();
+        console.log('Modal close function called');
+      } catch (error) {
+        console.error('Error in saveThemeCustomization:', error);
+        // Ensure modal is closed even if there's an error
+        closeThemeCustomizer();
+      }
+    };
+    
+    window.resetTemplateTheme = function() {
+      try {
+        activityData.theme = {};
+        applyTemplateTheme({});
+        updateActivityDisplay();
+        closeThemeCustomizer();
+      } catch (error) {
+        console.error('Error in resetTemplateTheme:', error);
+        // Ensure modal is closed even if there's an error
+        closeThemeCustomizer();
+      }
+    };
+    
+    // Audio/sound management functions
+    let audioEnabled = true;
+    let audioContext;
+    
+    // Initialize audio context
+    function initAudioContext() {
+      if (!audioContext && typeof AudioContext !== 'undefined') {
+        audioContext = new AudioContext();
+      }
+    }
+    
+    // Play sound effect
+    window.playSound = function(type) {
+      if (!audioEnabled) return;
+      
+      initAudioContext();
+      
+      try {
+        // Create a simple beep sound
+        if (audioContext) {
+          const oscillator = audioContext.createOscillator();
+          const gainNode = audioContext.createGain();
+          
+          oscillator.connect(gainNode);
+          gainNode.connect(audioContext.destination);
+          
+          oscillator.type = 'sine';
+          
+          if (type === 'correct') {
+            oscillator.frequency.value = 800; // Higher pitch for correct
+            gainNode.gain.value = 0.3;
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 0.1); // Short beep
+          } else if (type === 'incorrect') {
+            oscillator.frequency.value = 400; // Lower pitch for incorrect
+            gainNode.gain.value = 0.3;
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 0.15); // Slightly longer beep
+          } else {
+            oscillator.frequency.value = 600; // Default sound
+            gainNode.gain.value = 0.2;
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 0.05);
+          }
+        }
+      } catch (e) {
+        console.log('Audio playback not supported or blocked:', e);
+        // Fallback: just log the sound attempt
+      }
+    };
+    
+    // Toggle sound on/off
+    window.toggleSound = function() {
+      audioEnabled = !audioEnabled;
+      
+      // Update the sound toggle button UI
+      const soundBtn = document.querySelector('.sound-toggle-btn');
+      if (soundBtn) {
+        soundBtn.innerHTML = audioEnabled ? '<i class="fas fa-volume-up"></i>' : '<i class="fas fa-volume-mute"></i>';
+        soundBtn.title = audioEnabled ? 'Mute Sound' : 'Unmute Sound';
+      }
+      
+      // Show feedback message
+      const feedback = document.createElement('div');
+      feedback.className = 'fixed top-4 right-4 bg-primary text-white px-4 py-2 rounded-lg shadow-lg z-50';
+      feedback.textContent = audioEnabled ? 'Sound enabled' : 'Sound muted';
+      document.body.appendChild(feedback);
+      
+      setTimeout(() => {
+        feedback.remove();
+      }, 2000);
     };
     
     // Helper functions for new templates
     window.toggleAccordion = function(index) {
       const panel = document.getElementById(`accordion-${index}`);
+      const icon = document.getElementById(`accordion-icon-${index}`);
+      
       if (panel) {
-        panel.classList.toggle('hidden');
+        if (panel.classList.contains('hidden')) {
+          panel.classList.remove('hidden');
+          if (icon) icon.className = 'fas fa-chevron-up mr-2';
+        } else {
+          panel.classList.add('hidden');
+          if (icon) icon.className = 'fas fa-chevron-down mr-2';
+        }
       }
     };
     
@@ -7406,6 +9319,93 @@ Created with Tamer Educational Activities
       info.classList.remove('hidden');
     };
     
+    window.updateImageHotspotUrl = function(url) {
+      activityData.imageUrl = url;
+      updateActivityDisplay();
+      renderEditMode();
+    };
+    
+    window.uploadImageHotspotFile = function(input) {
+      const file = input.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          activityData.imageUrl = e.target.result;
+          updateActivityDisplay();
+          renderEditMode();
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+    
+    window.addNewHotspot = function() {
+      alert('Please click on the image where you want to place the new hotspot.');
+      // The actual hotspot creation will happen in the image click handler
+      // This function just provides instructions to the user
+    };
+    
+    window.addHotspotAtPosition = function(x, y, title, description, icon) {
+      if (!activityData.hotspots) activityData.hotspots = [];
+      activityData.hotspots.push({
+        x: x,
+        y: y,
+        title: title,
+        description: description,
+        icon: icon
+      });
+      updateActivityDisplay();
+      renderEditMode();
+    };
+    
+    window.editHotspot = function(index) {
+      const hotspot = activityData.hotspots[index];
+      
+      document.getElementById('hotspot-title').value = hotspot.title;
+      document.getElementById('hotspot-description').value = hotspot.description;
+      document.getElementById('hotspot-icon').value = hotspot.icon;
+      document.getElementById('current-hotspot-index').value = index;
+      
+      document.getElementById('hotspot-editor').style.display = 'block';
+    };
+    
+    window.saveHotspot = function() {
+      const index = parseInt(document.getElementById('current-hotspot-index').value);
+      if (index >= 0 && index < activityData.hotspots.length) {
+        activityData.hotspots[index].title = document.getElementById('hotspot-title').value;
+        activityData.hotspots[index].description = document.getElementById('hotspot-description').value;
+        activityData.hotspots[index].icon = document.getElementById('hotspot-icon').value;
+        
+        updateActivityDisplay();
+        renderEditMode();
+        cancelHotspotEdit();
+      }
+    };
+    
+    window.cancelHotspotEdit = function() {
+      document.getElementById('hotspot-editor').style.display = 'none';
+      document.getElementById('current-hotspot-index').value = '';
+    };
+    
+    window.deleteCurrentHotspot = function() {
+      const index = parseInt(document.getElementById('current-hotspot-index').value);
+      if (index >= 0 && index < activityData.hotspots.length) {
+        if (confirm('Are you sure you want to delete this hotspot?')) {
+          activityData.hotspots.splice(index, 1);
+          updateActivityDisplay();
+          renderEditMode();
+          cancelHotspotEdit();
+        }
+      }
+    };
+    
+    window.removeHotspot = function(index) {
+      if (confirm('Are you sure you want to remove this hotspot?')) {
+        activityData.hotspots.splice(index, 1);
+        updateActivityDisplay();
+        renderEditMode();
+      }
+    };
+    
     // ===== End NEW TEMPLATES RENDER FUNCTIONS =====
     
     // ===== Interactive Video Functions =====
@@ -7417,6 +9417,7 @@ Created with Tamer Educational Activities
     let checkInterval = null;
     
     // Interactive Video Play Mode
+    
     window.renderInteractiveVideoPlayMode = function() {
       if (!activityData.videoUrl) {
         playArea.innerHTML = '<div class="text-center py-12 text-muted">No video configured.</div>';
