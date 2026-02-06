@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<manifest identifier="_61bFtgAY5Py_course_id" version="1.0" xmlns="http://www.imsproject.org/xsd/imscp_rootv1p1p2" xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_rootv1p2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsproject.org/xsd/imscp_rootv1p1p2 imscp_rootv1p1p2.xsd http://www.imsglobal.org/xsd/imsmd_rootv1p2p1 imsmd_rootv1p2p1.xsd http://www.adlnet.org/xsd/adlcp_rootv1p2 adlcp_rootv1p2.xsd">
+  <metadata>
+    <schema>ADL SCORM</schema>
+    <schemaversion>1.2</schemaversion>
+    <lom xmlns="http://www.imsglobal.org/xsd/imsmd_rootv1p2p1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsmd_rootv1p2p1 imsmd_rootv1p2p1.xsd">
+      <general>
+        <title>
+          <langstring xml:lang="x-none">Tiger_IQ_game template</langstring>
+        </title>
+      </general>
+      <lifecycle>
+        <version>
+          <langstring xml:lang="x-none">1</langstring>
+        </version>
+        <status>
+          <source>
+            <langstring xml:lang="x-none">LOMv1.0</langstring>
+          </source>
+          <value>
+            <langstring xml:lang="x-none">Final</langstring>
+          </value>
+        </status>
+      </lifecycle>
+      <metametadata>
+        <metadatascheme>ADL SCORM 1.2</metadatascheme>
+      </metametadata>
+      <educational>
+        <typicallearningtime>
+          <datetime>PT0H0M0S</datetime>
+        </typicallearningtime>
+      </educational>
+      <rights>
+        <cost>
+          <source>
+            <langstring xml:lang="x-none">LOMv1.0</langstring>
+          </source>
+          <value>
+            <langstring xml:lang="x-none">yes</langstring>
+          </value>
+        </cost>
+        <copyrightandotherrestrictions>
+          <source>
+            <langstring xml:lang="x-none">LOMv1.0</langstring>
+          </source>
+          <value>
+            <langstring xml:lang="x-none">yes</langstring>
+          </value>
+        </copyrightandotherrestrictions>
+      </rights>
+    </lom>
+  </metadata>
+  <organizations default="Tiger_IQ_game_template_ORG">
+    <organization identifier="Tiger_IQ_game_template_ORG">
+      <title>Tiger_IQ_game template</title>
+      <item identifier="Tiger_IQ_SCO" isvisible="true" identifierref="__61bFtgAY5Py_course_id_RES">
+        <title>Tiger_IQ_game template</title>
+      </item>
+    </organization>
+  </organizations>
+  <resources>
+    <resource identifier="__61bFtgAY5Py_course_id_RES" type="webcontent" href="index_lms.html" adlcp:scormtype="sco">
+      <file href="story_content/thumbnail.jpg" />
+      <file href="mobile/5xZAeuEj41I.png" />
+      <file href="mobile/6cGjljIdNrZ.png" />
+      <file href="mobile/5oJF5i9cTCc.png" />
+      <file href="story_content/6bAE8GJitdK_44100_80_0.mp3" />
+      <file href="mobile/5rXLnZ3gfPC.png" />
+      <file href="mobile/5dqKP1T1BbA_80.jpg" />
+      <file href="mobile/69MQmiJI1Db.png" />
+      <file href="mobile/66BzhjVzFAs.png" />
+      <file href="mobile/5ky9W6HVxLT.png" />
+      <file href="mobile/6Ad3Fdfzmf5.png" />
+      <file href="mobile/6IKAQ8Lx675.png" />
+      <file href="mobile/6YJZyqZvQVq.png" />
+      <file href="mobile/6X5BvOV5YdV.png" />
+      <file href="mobile/5YHxxX6pL9q.png" />
+      <file href="mobile/6Bp5062e4xV.png" />
+      <file href="mobile/6djpqs41Wd6.png" />
+      <file href="mobile/5wTo9a1Xy7B.png" />
+      <file href="mobile/6UMFFFjUvBx.png" />
+      <file href="mobile/6Fse6IwuXtk.png" />
+      <file href="mobile/6gHeB9NRZaW.png" />
+      <file href="mobile/6bhwFcr1GcT.png" />
+      <file href="story_content/64Qt5BkjGZW_44100_80_0.mp3" />
+      <file href="mobile/6gIMEk0EBYX.png" />
+      <file href="mobile/5qJucDwj56L.png" />
+      <file href="mobile/6Igv5danUjw.png" />
+      <file href="mobile/5ZBsjiByZHU.png" />
+      <file href="mobile/6PNiHhWgaDh.png" />
+      <file href="mobile/6iY3zLeNFE4.png" />
+      <file href="mobile/6n48CV9gx9u.png" />
+      <file href="mobile/6NQo31gUXfk.png" />
+      <file href="mobile/5l2b0YWj2rZ.png" />
+      <file href="mobile/5aboF0nkjFf.png" />
+      <file href="mobile/6IhoeLSw63T.png" />
+      <file href="mobile/5zAyqntF6UF.png" />
+      <file href="mobile/5gLIrGuTSgJ.png" />
+      <file href="mobile/62d2SM22z4e.png" />
+      <file href="mobile/6VqV7oKtSTd.png" />
+      <file href="mobile/6qHRKw3NC6m.png" />
+      <file href="mobile/6DH34c2oBmm.png" />
+      <file href="mobile/6lMGas7mn0A.png" />
+      <file href="mobile/6IDtVtpeycA.png" />
+      <file href="mobile/6Z3Cr5jHEQs.png" />
+      <file href="story_content/6Zv4xIAM54i_44100_80_0.mp3" />
+      <file href="story_content/5gegZbyQNMH_44100_80_0.mp3" />
+      <file href="story_content/6AuTsycr7kr_44100_80_0.mp3" />
+      <file href="mobile/63CGnjJULNH.png" />
+      <file href="mobile/5n1CmPaGuSS.png" />
+      <file href="mobile/61hj3QDNrbe.png" />
+      <file href="story_content/67JjOvUM9Dn_44100_80_0.mp3" />
+      <file href="mobile/6qcXddOmMA2.png" />
+      <file href="mobile/6asnOxsUm5u_FFFFFF_P_0_85_374_176.png" />
+      <file href="mobile/61FYPZjW4K9.png" />
+      <file href="meta.xml" />
+      <file href="story_content/triggers.js" />
+      <file href="story_content/user.js" />
+      <file href="html5/data/css/output.min.css" />
+      <file href="html5/data/js/5ipTt8MedSZ.js" />
+      <file href="html5/data/js/5oeOPIUJu2z.js" />
+      <file href="html5/data/js/65pKUC27BP7.js" />
+      <file href="html5/data/js/66sU7JfMt50.js" />
+      <file href="html5/data/js/6jVNcpdxmJD.js" />
+      <file href="html5/data/js/6NJO5Aq1a8V.js" />
+      <file href="html5/data/js/6pbYiQ7pXF7.js" />
+      <file href="html5/data/js/6UimGxQWFaG.js" />
+      <file href="html5/data/js/data.js" />
+      <file href="html5/data/js/frame.js" />
+      <file href="html5/data/js/paths.js" />
+      <file href="html5/lib/scripts/bootstrapper.min.js" />
+      <file href="html5/lib/scripts/frame.desktop.min.js" />
+      <file href="html5/lib/scripts/frame.mobile.min.js" />
+      <file href="html5/lib/scripts/slides.min.js" />
+      <file href="html5/lib/stylesheets/desktop.min.css" />
+      <file href="html5/lib/stylesheets/mobile.min.css" />
+      <file href="html5/lib/stylesheets/mobile-fonts/open-sans-bold.woff" />
+      <file href="html5/lib/stylesheets/mobile-fonts/open-sans-light.woff" />
+      <file href="html5/lib/stylesheets/mobile-fonts/open-sans-regular.woff" />
+      <file href="analytics-frame.html" />
+      <file href="story.html" />
+      <file href="index_lms.html" />
+      <file href="lms/AICCComm.html" />
+      <file href="lms/blank.html" />
+      <file href="lms/browsersniff.js" />
+      <file href="lms/goodbye.html" />
+      <file href="lms/scormdriver.js" />
+    </resource>
+  </resources>
+</manifest>

@@ -1,0 +1,30 @@
+{
+  "name": "gaming-template",
+  "version": "1.0.0",
+  "description": "[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)\r [![Firebase](https://img.shields.io/badge/Firebase-Ready-orange.svg)](https://firebase.google.com/)\r [![Tailwind CSS](https://img.shields.io/badge/Tailwind-v3-38B2AC.svg)](https://tailwindcss.com/)",
+  "main": "index.js",
+  "scripts": {
+    "build-css": "postcss src/input.css -o dist/output.css",
+    "build-css-prod": "postcss src/input.css -o dist/output.css --no-map",
+    "watch-css": "postcss src/input.css -o dist/output.css --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Karan2907/Tamer-Educational-Activities.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Karan2907/Tamer-Educational-Activities/issues"
+  },
+  "homepage": "https://github.com/Karan2907/Tamer-Educational-Activities#readme",
+  "devDependencies": {
+    "autoprefixer": "^10.4.24",
+    "postcss": "^8.5.6",
+    "postcss-cli": "^11.0.1",
+    "tailwindcss": "^3.4.19"
+  }
+}

@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worksheet Export Demo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.5rem;
+        }
+        
+        .header p {
+            margin: 0;
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .demo-section {
+            margin-bottom: 40px;
+            padding: 25px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+        
+        .demo-section h2 {
+            color: #2c3e50;
+            margin-top: 0;
+            border-bottom: 2px solid #4facfe;
+            padding-bottom: 10px;
+        }
+        
+        .sample-data {
+            background: white;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 4px solid #4facfe;
+        }
+        
+        .sample-data h3 {
+            margin-top: 0;
+            color: #34495e;
+        }
+        
+        .sample-data pre {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #4facfe;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        .btn:hover {
+            background: #3a8fd9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-card i {
+            font-size: 2rem;
+            color: #4facfe;
+            margin-bottom: 15px;
+        }
+        
+        .feature-card h3 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+        }
+        
+        .instructions {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #2196f3;
+            margin: 20px 0;
+        }
+        
+        .instructions h3 {
+            margin-top: 0;
+            color: #0d47a1;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        .export-demo {
+            text-align: center;
+            padding: 30px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+        }
+        
+        .export-demo h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .template-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .template-btn {
+            padding: 10px 20px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        
+        .template-btn:hover {
+            background: #545b62;
+            transform: scale(1.05);
+        }
+        
+        .template-btn.active {
+            background: #4facfe;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #2c3e50;
+            color: white;
+            margin-top: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-file-alt"></i> Worksheet Export Demo</h1>
+            <p>Generate printable educational worksheets from any activity template</p>
+        </div>
+        
+        <div class="content">
+            <div class="instructions">
+                <h3><i class="fas fa-info-circle"></i> How to Use Worksheet Export</h3>
+                <ol>
+                    <li>Select an activity template type from the buttons below</li>
+                    <li>Click "Load Sample Data" to populate with example content</li>
+                    <li>Configure export options (answers, auto-print, etc.)</li>
+                    <li>Click "Preview Worksheet" to see the generated HTML</li>
+                    <li>Click "Download Worksheet" to save as printable HTML file</li>
+                </ol>
+            </div>
+            
+            <div class="demo-section">
+                <h2><i class="fas fa-lightbulb"></i> Key Features</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <i class="fas fa-file-pdf"></i>
+                        <h3>Multi-Template Support</h3>
+                        <p>Works with all 10+ activity templates including MCQ, Flash Cards, Crossword, Timeline, and more</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-print"></i>
+                        <h3>Print-Optimized</h3>
+                        <p>Designed for clean printing with proper spacing, fonts, and layout for educational use</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-cogs"></i>
+                        <h3>Customizable Options</h3>
+                        <p>Toggle answers, auto-print, instructions, and other formatting options</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-download"></i>
+                        <h3>Easy Distribution</h3>
+                        <p>Download as HTML files that work offline and can be printed anywhere</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="demo-section">
+                <h2><i class="fas fa-code"></i> Sample Activity Data</h2>
+                <div class="sample-data">
+                    <h3>MCQ Example Data Structure</h3>
+                    <pre>{
+  "title": "World Geography Quiz",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What is the capital of France?",
+      "options": [
+        {"text": "London"},
+        {"text": "Berlin"},
+        {"text": "Paris"},
+        {"text": "Madrid"}
+      ],
+      "correctAnswer": "Paris",
+      "explanation": "Paris has been the capital of France since 508 AD."
+    },
+    {
+      "id": "q2",
+      "question": "Which ocean is the largest?",
+      "options": [
+        {"text": "Atlantic Ocean"},
+        {"text": "Indian Ocean"},
+        {"text": "Arctic Ocean"},
+        {"text": "Pacific Ocean"}
+      ],
+      "correctAnswer": "Pacific Ocean",
+      "explanation": "The Pacific Ocean covers about 30% of the Earth's surface."
+    }
+  ]
+}</pre>
+                </div>
+                
+                <div class="sample-data">
+                    <h3>Flash Cards Example Data Structure</h3>
+                    <pre>{
+  "title": "Biology Terms",
+  "cards": [
+    {
+      "front": "Photosynthesis",
+      "back": "The process by which plants convert sunlight into energy"
+    },
+    {
+      "front": "Mitochondria",
+      "back": "The powerhouse of the cell that produces ATP"
+    },
+    {
+      "front": "DNA",
+      "back": "Deoxyribonucleic acid - the molecule containing genetic instructions"
+    }
+  ]
+}</pre>
+                </div>
+            </div>
+            
+            <div class="export-demo">
+                <h2><i class="fas fa-file-export"></i> Try Worksheet Export</h2>
+                <p>Select a template type to generate a sample worksheet:</p>
+                
+                <div class="template-buttons">
+                    <button class="template-btn" data-template="mcq">MCQ</button>
+                    <button class="template-btn" data-template="flashcards">Flash Cards</button>
+                    <button class="template-btn" data-template="dragdrop">Drag Drop</button>
+                    <button class="template-btn" data-template="crossword">Crossword</button>
+                    <button class="template-btn" data-template="timeline">Timeline</button>
+                    <button class="template-btn" data-template="labeldiagram">Label Diagram</button>
+                    <button class="template-btn" data-template="contentreveal">Content Reveal</button>
+                    <button class="template-btn" data-template="survey">Survey</button>
+                    <button class="template-btn" data-template="pickmany">Pick Many</button>
+                    <button class="template-btn" data-template="gamearena">Game Arena</button>
+                </div>
+                
+                <button id="load-sample" class="btn btn-secondary" disabled>
+                    <i class="fas fa-database"></i> Load Sample Data
+                </button>
+                
+                <div id="worksheet-export-container" style="margin-top: 30px;">
+                    <!-- Worksheet export UI will be loaded here -->
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Educational Gaming Platform - Worksheet Export Feature</p>
+            <p><i class="fas fa-check-circle"></i> Production Ready | <i class="fas fa-shield-alt"></i> Secure | <i class="fas fa-mobile-alt"></i> Mobile Friendly</p>
+        </footer>
+    </div>
+
+    <!-- Load required services -->
+    <script src="./js/services/worksheet-export-service.js"></script>
+    <script src="./js/services/export-system-service.js"></script>
+    <script src="./js/components/worksheet-export-ui.js"></script>
+    
+    <script>
+        // Demo application
+        class WorksheetDemoApp {
+            constructor() {
+                this.exportService = new ExportSystemService();
+                this.exportUI = new WorksheetExportUI(this.exportService);
+                this.currentTemplate = null;
+                this.sampleData = this.generateSampleData();
+                
+                this.initialize();
+            }
+            
+            initialize() {
+                // Initialize services
+                this.exportService.initialize();
+                
+                // Initialize UI
+                this.exportUI.initialize('worksheet-export-container');
+                
+                // Bind events
+                this.bindEvents();
+            }
+            
+            bindEvents() {
+                // Template selection
+                document.querySelectorAll('.template-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        this.selectTemplate(e.target.dataset.template);
+                    });
+                });
+                
+                // Load sample data button
+                document.getElementById('load-sample').addEventListener('click', () => {
+                    this.loadSampleData();
+                });
+            }
+            
+            selectTemplate(templateType) {
+                // Update active button
+                document.querySelectorAll('.template-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector(`[data-template="${templateType}"]`).classList.add('active');
+                
+                this.currentTemplate = templateType;
+                document.getElementById('load-sample').disabled = false;
+                
+                console.log(`Selected template: ${templateType}`);
+            }
+            
+            loadSampleData() {
+                if (!this.currentTemplate) {
+                    alert('Please select a template first');
+                    return;
+                }
+                
+                const activityData = this.sampleData[this.currentTemplate];
+                if (activityData) {
+                    this.exportUI.setActivityData(activityData, this.currentTemplate);
+                    console.log('Sample data loaded for', this.currentTemplate);
+                }
+            }
+            
+            generateSampleData() {
+                return {
+                    mcq: {
+                        title: "World Geography Quiz",
+                        questions: [
+                            {
+                                id: "q1",
+                                question: "What is the capital of France?",
+                                options: [
+                                    {text: "London"},
+                                    {text: "Berlin"},
+                                    {text: "Paris"},
+                                    {text: "Madrid"}
+                                ],
+                                correctAnswer: "Paris",
+                                explanation: "Paris has been the capital of France since 508 AD."
+                            },
+                            {
+                                id: "q2",
+                                question: "Which ocean is the largest?",
+                                options: [
+                                    {text: "Atlantic Ocean"},
+                                    {text: "Indian Ocean"},
+                                    {text: "Arctic Ocean"},
+                                    {text: "Pacific Ocean"}
+                                ],
+                                correctAnswer: "Pacific Ocean",
+                                explanation: "The Pacific Ocean covers about 30% of the Earth's surface."
+                            }
+                        ]
+                    },
+                    
+                    flashcards: {
+                        title: "Biology Terms",
+                        cards: [
+                            {
+                                front: "Photosynthesis",
+                                back: "The process by which plants convert sunlight into energy"
+                            },
+                            {
+                                front: "Mitochondria",
+                                back: "The powerhouse of the cell that produces ATP"
+                            },
+                            {
+                                front: "DNA",
+                                back: "Deoxyribonucleic acid - the molecule containing genetic instructions"
+                            }
+                        ]
+                    },
+                    
+                    dragdrop: {
+                        title: "Animal Classification",
+                        items: [
+                            {text: "Eagle"},
+                            {text: "Shark"},
+                            {text: "Rose"},
+                            {text: "Oak Tree"}
+                        ],
+                        categories: [
+                            {name: "Animals", description: "Living organisms that move"},
+                            {name: "Plants", description: "Living organisms that produce food through photosynthesis"}
+                        ]
+                    },
+                    
+                    crossword: {
+                        title: "Science Vocabulary",
+                        gridSize: 10,
+                        clues: [
+                            {number: 1, direction: "across", clue: "Process by which plants make food"},
+                            {number: 2, direction: "down", clue: "Basic unit of life"},
+                            {number: 3, direction: "across", clue: "Force that pulls objects toward Earth"}
+                        ]
+                    },
+                    
+                    timeline: {
+                        title: "American Presidents",
+                        events: [
+                            {title: "George Washington becomes first President", date: "1789"},
+                            {title: "Abraham Lincoln elected", date: "1860"},
+                            {title: "John F. Kennedy elected", date: "1960"}
+                        ]
+                    },
+                    
+                    labeldiagram: {
+                        title: "Human Heart",
+                        items: [
+                            {label: "Aorta"},
+                            {label: "Left Ventricle"},
+                            {label: "Right Atrium"},
+                            {label: "Pulmonary Artery"}
+                        ]
+                    },
+                    
+                    contentreveal: {
+                        title: "Photosynthesis Process",
+                        panels: [
+                            {
+                                title: "What is Photosynthesis?",
+                                content: "Photosynthesis is the process by which plants convert light energy into chemical energy stored in glucose.",
+                                questions: [
+                                    "What do plants need for photosynthesis?",
+                                    "What is produced during photosynthesis?"
+                                ]
+                            }
+                        ]
+                    },
+                    
+                    survey: {
+                        title: "Learning Preferences Survey",
+                        questions: [
+                            {
+                                question: "How do you prefer to learn new information?",
+                                type: "multiple_choice",
+                                options: ["Visual (diagrams, videos)", "Auditory (lectures, discussions)", "Kinesthetic (hands-on activities)"]
+                            },
+                            {
+                                question: "Rate your comfort level with technology",
+                                type: "rating"
+                            }
+                        ]
+                    },
+                    
+                    pickmany: {
+                        title: "Safety Equipment Quiz",
+                        questions: [
+                            {
+                                question: "Which of the following are essential safety equipment in a chemistry lab? (Select all that apply)",
+                                options: [
+                                    {text: "Safety goggles"},
+                                    {text: "Lab coat"},
+                                    {text: "Running shoes"},
+                                    {text: "Chemical-resistant gloves"}
+                                ]
+                            }
+                        ]
+                    },
+                    
+                    gamearena: {
+                        title: "Math Challenge Problems",
+                        challenges: [
+                            {
+                                title: "Algebra Problem",
+                                description: "Solve for x: 2x + 5 = 15",
+                                points: 10
+                            },
+                            {
+                                title: "Geometry Challenge",
+                                description: "Calculate the area of a circle with radius 5cm",
+                                points: 15
+                            }
+                        ]
+                    }
+                };
+            }
+        }
+        
+        // Initialize the demo when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new WorksheetDemoApp();
+        });
+    </script>
+</body>
+</html>

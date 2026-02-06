@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<manifest identifier="_6DE6dk5N8Gy_course_id" version="1.0" xmlns="http://www.imsproject.org/xsd/imscp_rootv1p1p2" xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_rootv1p2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsproject.org/xsd/imscp_rootv1p1p2 imscp_rootv1p1p2.xsd http://www.imsglobal.org/xsd/imsmd_rootv1p2p1 imsmd_rootv1p2p1.xsd http://www.adlnet.org/xsd/adlcp_rootv1p2 adlcp_rootv1p2.xsd">
+  <metadata>
+    <schema>ADL SCORM</schema>
+    <schemaversion>1.2</schemaversion>
+    <lom xmlns="http://www.imsglobal.org/xsd/imsmd_rootv1p2p1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsmd_rootv1p2p1 imsmd_rootv1p2p1.xsd">
+      <general>
+        <title>
+          <langstring xml:lang="x-none">ELHC 273c | Jonathan Hill</langstring>
+        </title>
+      </general>
+      <lifecycle>
+        <version>
+          <langstring xml:lang="x-none">1</langstring>
+        </version>
+        <status>
+          <source>
+            <langstring xml:lang="x-none">LOMv1.0</langstring>
+          </source>
+          <value>
+            <langstring xml:lang="x-none">Final</langstring>
+          </value>
+        </status>
+      </lifecycle>
+      <metametadata>
+        <metadatascheme>ADL SCORM 1.2</metadatascheme>
+      </metametadata>
+      <educational>
+        <typicallearningtime>
+          <datetime>PT0H0M0S</datetime>
+        </typicallearningtime>
+      </educational>
+      <rights>
+        <cost>
+          <source>
+            <langstring xml:lang="x-none">LOMv1.0</langstring>
+          </source>
+          <value>
+            <langstring xml:lang="x-none">yes</langstring>
+          </value>
+        </cost>
+        <copyrightandotherrestrictions>
+          <source>
+            <langstring xml:lang="x-none">LOMv1.0</langstring>
+          </source>
+          <value>
+            <langstring xml:lang="x-none">yes</langstring>
+          </value>
+        </copyrightandotherrestrictions>
+      </rights>
+    </lom>
+  </metadata>
+  <organizations default="ELHC_273c_|_Jonathan_Hill_ORG">
+    <organization identifier="ELHC_273c_|_Jonathan_Hill_ORG">
+      <title>ELHC 273c | Jonathan Hill</title>
+      <item identifier="ELHC_273c_SCO" isvisible="true" identifierref="__6DE6dk5N8Gy_course_id_RES">
+        <title>ELHC 273c | Jonathan Hill</title>
+      </item>
+    </organization>
+  </organizations>
+  <resources>
+    <resource identifier="__6DE6dk5N8Gy_course_id_RES" type="webcontent" href="index_lms.html" adlcp:scormtype="sco">
+      <file href="story_content/thumbnail.jpg" />
+      <file href="mobile/6BWWGLZjjVd_B-100.png" />
+      <file href="story_content/6DhCBwpqQSx_44100_48_0.mp3" />
+      <file href="mobile/6BWWGLZjjVd.png" />
+      <file href="mobile/6BvccXlZ8bD_P_127_256_64_91.png" />
+      <file href="mobile/6h7gV6zBPDr.gif" />
+      <file href="mobile/5xeFRhfQ0VL.gif" />
+      <file href="mobile/6Ll4dXtYUbQ.gif" />
+      <file href="mobile/69SrfZjzoOs_RG.png" />
+      <file href="mobile/69SrfZjzoOs.png" />
+      <file href="mobile/6YxWi8WJxZ6.png" />
+      <file href="mobile/6R4yJ1qQoFw.png" />
+      <file href="mobile/6R4yJ1qQoFw_X.png" />
+      <file href="mobile/6YxWi8WJxZ6_X.png" />
+      <file href="story_content/6Ism1Vqlso7_44100_48_0.mp3" />
+      <file href="story_content/5vARHKnFXTo_44100_48_0.mp3" />
+      <file href="story_content/6FgZHJ2zRYx_44100_48_0.mp3" />
+      <file href="mobile/6BWWGLZjjVd_P_0_0_297_707.png" />
+      <file href="story_content/5XI5BunLBK3_44100_48_0.mp3" />
+      <file href="mobile/6BWWGLZjjVd_P_0_0_1604_707.png" />
+      <file href="story_content/5mjhYw4p2HL_44100_48_0.mp3" />
+      <file href="mobile/6BWWGLZjjVd_X_P_657_0_1024_707.png" />
+      <file href="mobile/5Ylv8JcpeGa.png" />
+      <file href="mobile/63K78qv7N28.png" />
+      <file href="mobile/63K78qv7N28_B20.png" />
+      <file href="mobile/6IH9LqWHs4a.png" />
+      <file href="mobile/6IH9LqWHs4a_B20.png" />
+      <file href="mobile/6hxrxLM9rG6.png" />
+      <file href="mobile/6hxrxLM9rG6_B20.png" />
+      <file href="meta.xml" />
+      <file href="story_content/triggers.js" />
+      <file href="story_content/user.js" />
+      <file href="html5/data/css/output.min.css" />
+      <file href="html5/data/js/5mjrPbQZpln.js" />
+      <file href="html5/data/js/5XFo3NGCWSg.js" />
+      <file href="html5/data/js/67iDTTIJQSC.js" />
+      <file href="html5/data/js/6bbea0FNUop.js" />
+      <file href="html5/data/js/6luoZ66Pt2x.js" />
+      <file href="html5/data/js/data.js" />
+      <file href="html5/data/js/frame.js" />
+      <file href="html5/data/js/paths.js" />
+      <file href="html5/lib/scripts/bootstrapper.min.js" />
+      <file href="html5/lib/scripts/frame.desktop.min.js" />
+      <file href="html5/lib/scripts/frame.mobile.min.js" />
+      <file href="html5/lib/scripts/slides.min.js" />
+      <file href="html5/lib/stylesheets/desktop.min.css" />
+      <file href="html5/lib/stylesheets/mobile.min.css" />
+      <file href="html5/lib/stylesheets/mobile-fonts/open-sans-bold.woff" />
+      <file href="html5/lib/stylesheets/mobile-fonts/open-sans-light.woff" />
+      <file href="html5/lib/stylesheets/mobile-fonts/open-sans-regular.woff" />
+      <file href="analytics-frame.html" />
+      <file href="story.html" />
+      <file href="index_lms.html" />
+      <file href="lms/AICCComm.html" />
+      <file href="lms/blank.html" />
+      <file href="lms/browsersniff.js" />
+      <file href="lms/goodbye.html" />
+      <file href="lms/scormdriver.js" />
+    </resource>
+  </resources>
+</manifest>

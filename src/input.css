@@ -1,0 +1,163 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply text-text min-h-screen;
+    background: linear-gradient(to bottom, var(--background), var(--background-gradient));
+  }
+  
+  /* Theme variables - Comprehensive Education Colors */
+  :root {
+    --background: #0f1419;
+    --background-gradient: #1a1f2e;
+    --card: #1e2433;
+    --card-border: #2d3548;
+    --button-bg: #252d3d;
+    --button-border: #3d4a5f;
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --divider: #334155;
+    --drag-border: #475569;
+    --drop-border: #64748b;
+    --drag-bg: #1e293b;
+    --drop-bg: #1e293b;
+    --hover-bg: #334155;
+    
+    /* Semantic colors */
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --secondary: #6366f1;
+    --secondary-hover: #4f46e5;
+    --accent: #14b8a6;
+    --accent-hover: #0d9488;
+    --success: #10b981;
+    --success-hover: #059669;
+    --warn: #f59e0b;
+    --warn-hover: #d97706;
+    --error: #f43f5e;
+    --error-hover: #e11d48;
+  }
+  
+  .theme-light {
+    --background: #f8fafc;
+    --background-gradient: #f1f5f9;
+    --card: #ffffff;
+    --card-border: #e2e8f0;
+    --button-bg: #ffffff;
+    --button-border: #cbd5e1;
+    --text: #0f172a;
+    --muted: #64748b;
+    --divider: #e2e8f0;
+    --drag-border: #94a3b8;
+    --drop-border: #94a3b8;
+    --drag-bg: #f8fafc;
+    --drop-bg: #f8fafc;
+    --hover-bg: #f1f5f9;
+    
+    /* Semantic colors */
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --secondary: #6366f1;
+    --secondary-hover: #4f46e5;
+    --accent: #14b8a6;
+    --accent-hover: #0d9488;
+    --success: #10b981;
+    --success-hover: #059669;
+    --warn: #f59e0b;
+    --warn-hover: #d97706;
+    --error: #f43f5e;
+    --error-hover: #e11d48;
+  }
+  
+  body.theme-light {
+    background: linear-gradient(to bottom, var(--background), var(--background-gradient));
+    color: var(--text);
+  }
+  
+  body {
+    background: linear-gradient(to bottom, var(--background), var(--background-gradient));
+    color: var(--text);
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-xl p-6 shadow-lg transition-all hover:shadow-xl;
+    background-color: var(--card);
+    border: 1px solid var(--card-border);
+  }
+  .btn {
+    @apply px-6 py-3 rounded-lg cursor-pointer transition-colors font-medium;
+    background-color: var(--button-bg);
+    border: 1px solid var(--button-border);
+    color: var(--text);
+  }
+  .btn-primary {
+    background: var(--primary);
+    @apply border-transparent text-white font-bold transition-all shadow-md hover:shadow-lg;
+  }
+  .btn-primary:hover {
+    background: var(--primary-hover);
+  }
+  .btn-secondary {
+    background: var(--secondary);
+    @apply border-transparent text-white font-bold transition-all shadow-md hover:shadow-lg;
+  }
+  .btn-secondary:hover {
+    background: var(--secondary-hover);
+  }
+  .btn-accent {
+    background: var(--accent);
+    @apply border-transparent text-white font-bold transition-all shadow-md hover:shadow-lg;
+  }
+  .btn-accent:hover {
+    background: var(--accent-hover);
+  }
+  .btn-success {
+    background: var(--success);
+    @apply border-transparent text-white font-bold transition-all shadow-md hover:shadow-lg;
+  }
+  .btn-success:hover {
+    background: var(--success-hover);
+  }
+  .btn-warn {
+    background: var(--warn);
+    @apply border-transparent text-white font-bold transition-all shadow-md hover:shadow-lg;
+  }
+  .btn-warn:hover {
+    background: var(--warn-hover);
+  }
+  .btn-error {
+    background: var(--error);
+    @apply border-transparent text-white font-bold transition-all shadow-md hover:shadow-lg;
+  }
+  .btn-error:hover {
+    background: var(--error-hover);
+  }
+  .btn-ghost {
+    @apply bg-transparent;
+    background-color: transparent;
+  }
+  .btn-ghost:hover {
+    background-color: var(--hover-bg);
+  }
+  .pill {
+    @apply px-3 py-1 rounded-full text-sm;
+    border: 1px solid var(--button-border);
+    color: var(--muted);
+  }
+  .divider {
+    @apply h-px my-6;
+    background-color: var(--divider);
+  }
+  .flip-card {
+    @apply rounded-lg p-6 cursor-pointer min-h-[120px] flex items-center justify-center transition-all hover:scale-105;
+    background-color: var(--button-bg);
+    border: 1px solid var(--button-border);
+  }
+  .flip-card:hover {
+    border-color: var(--primary);
+  }
+}
