@@ -47,7 +47,7 @@ node_modules/
 package-lock.json
 
 # Build outputs (if you add build process later)
-dist/
+# dist/ - Keep dist folder for Vercel deployment
 build/
 
 # Environment variables (if you add them later)
