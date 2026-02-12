@@ -286,6 +286,23 @@
       
       font-family: 'Courier New', monospace;
     }
+    
+    /* SCORM-Specific Color Customization */
+    .scorm-custom-colors {
+      --scorm-background: #1a1a2e;
+      --scorm-card-bg: #16213e;
+      --scorm-text: #f1f5f9;
+    }
+    
+    .scorm-info-bg {
+      background-color: var(--scorm-card-bg) !important;
+      border: 1px solid var(--card-border) !important;
+    }
+    
+    .scorm-iframe-wrapper {
+      background-color: var(--scorm-background) !important;
+      border: 2px solid var(--card-border) !important;
+    }
   
     /* Template Card Styles */
     .template-card {
@@ -692,10 +709,10 @@
     </nav>
     
     <div class="flex items-center gap-2">
-      <button id="theme-toggle" class="btn btn-ghost p-2" onclick="toggleTheme()">
+      <button id="theme-toggle" class="btn btn-ghost p-2 py-1" onclick="toggleTheme()">
         <i class="fas fa-moon"></i>
       </button>
-      <select id="theme-variant-selector-header" class="px-2 py-1 rounded-lg outline-none transition-colors text-xs hidden xl:block" style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);" onchange="switchThemeVariant(this.value)">
+      <select id="theme-variant-selector-header" class="px-2 py-2 pr-3 rounded-lg outline-none transition-colors text-xs hidden xl:block" style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);" onchange="switchThemeVariant(this.value)">
         <option value="default">Default</option>
         <option value="minimal">Minimal</option>
         <option value="chalkboard">Chalkboard</option>
@@ -2010,7 +2027,7 @@
     <div class="card max-w-md w-full mx-4" onclick="event.stopPropagation()">
       <div class="flex justify-between items-center mb-6">
         <h2 id="auth-modal-title" class="text-2xl font-bold">Sign Up</h2>
-        <button onclick="closeAuthModal()" class="btn btn-ghost p-2">
+        <button onclick="closeAuthModal()" class="btn btn-ghost p-2 py-1">
           <i class="fas fa-times"></i>
         </button>
       </div>
@@ -2312,7 +2329,7 @@
     <div class="card max-w-md w-full mx-4" onclick="event.stopPropagation()">
       <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold">Share Activity</h2>
-        <button onclick="closeShareModal()" class="btn btn-ghost p-2">
+        <button onclick="closeShareModal()" class="btn btn-ghost p-2 py-1">
           <i class="fas fa-times"></i>
         </button>
       </div>
@@ -2357,7 +2374,7 @@
     <div class="card max-w-2xl w-full mx-4" onclick="event.stopPropagation()">
       <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold">Embed Code</h2>
-        <button onclick="closeEmbedModal()" class="btn btn-ghost p-2">
+        <button onclick="closeEmbedModal()" class="btn btn-ghost p-2 py-1">
           <i class="fas fa-times"></i>
         </button>
       </div>
@@ -2402,7 +2419,7 @@
     <div class="card max-w-md w-full mx-4" onclick="event.stopPropagation()">
       <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold">Convert Template</h2>
-        <button onclick="closeConvertModal()" class="btn btn-ghost p-2">
+        <button onclick="closeConvertModal()" class="btn btn-ghost p-2 py-1">
           <i class="fas fa-times"></i>
         </button>
       </div>
@@ -2441,6 +2458,89 @@
           <button class="btn btn-primary flex-1" onclick="confirmTemplateConversion()">
             <i class="fas fa-exchange-alt mr-2"></i>
             Convert
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Color Customization Modal -->
+  <div id="color-editor-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" onclick="closeColorEditor(event)">
+    <div class="card max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold">
+          <i class="fas fa-palette mr-2" style="color: var(--primary);"></i>
+          <span id="color-modal-title">SCORM Color Customization</span>
+        </h2>
+        <button onclick="closeColorEditor()" class="btn btn-ghost p-2 py-1">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="space-y-6">
+        <!-- Live Preview Info -->
+        <div class="p-4 rounded-lg" style="background-color: var(--drag-bg); border: 1px solid var(--card-border);">
+          <p class="text-sm">
+            <i class="fas fa-info-circle mr-2" style="color: var(--primary);"></i>
+            <strong>Live Preview:</strong> Customize colors for SCORM viewer and content. Changes apply to both the wrapper and iframe content (if accessible).
+          </p>
+        </div>
+        
+        <!-- Color Controls -->
+        <div class="grid grid-cols-1 gap-4">
+          <!-- Background Color -->
+          <div>
+            <label class="block text-sm font-bold mb-2">Background Color</label>
+            <div class="flex gap-2">
+              <input type="color" id="color-background" class="w-16 h-10 rounded cursor-pointer" 
+                     onchange="updateColorFromPicker('background', this.value)">
+              <input type="text" id="color-background-hex" 
+                     class="flex-1 px-3 py-2 rounded-lg outline-none font-mono text-sm" 
+                     style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);"
+                     placeholder="#1a1a2e"
+                     oninput="updateColorFromHex('background', this.value)">
+            </div>
+          </div>
+          
+          <!-- Card Background Color -->
+          <div>
+            <label class="block text-sm font-bold mb-2">Card Background</label>
+            <div class="flex gap-2">
+              <input type="color" id="color-card-bg" class="w-16 h-10 rounded cursor-pointer" 
+                     onchange="updateColorFromPicker('card-bg', this.value)">
+              <input type="text" id="color-card-bg-hex" 
+                     class="flex-1 px-3 py-2 rounded-lg outline-none font-mono text-sm" 
+                     style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);"
+                     placeholder="#16213e"
+                     oninput="updateColorFromHex('card-bg', this.value)">
+            </div>
+          </div>
+          
+          <!-- Text Color -->
+          <div>
+            <label class="block text-sm font-bold mb-2">Text Color</label>
+            <div class="flex gap-2">
+              <input type="color" id="color-text" class="w-16 h-10 rounded cursor-pointer" 
+                     onchange="updateColorFromPicker('text', this.value)">
+              <input type="text" id="color-text-hex" 
+                     class="flex-1 px-3 py-2 rounded-lg outline-none font-mono text-sm" 
+                     style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);"
+                     placeholder="#f1f5f9"
+                     oninput="updateColorFromHex('text', this.value)">
+            </div>
+          </div>
+          
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="flex gap-3">
+          <button class="btn btn-ghost flex-1" onclick="resetColors()">
+            <i class="fas fa-undo mr-2"></i>
+            Reset to Default
+          </button>
+          <button class="btn btn-primary flex-1" onclick="closeColorEditor()">
+            <i class="fas fa-check mr-2"></i>
+            Done
           </button>
         </div>
       </div>
@@ -3492,6 +3592,421 @@
         }, { once: true });
       }
     };
+    
+    // ===== Color Customization Functions =====
+    
+    // Default color scheme for SCORM
+    const defaultColors = {
+      background: '#1a1a2e',
+      'card-bg': '#16213e',
+      text: '#f1f5f9'
+    };
+    
+    // Color presets
+    const colorPresets = {
+      dark: {
+        background: '#1a1a2e',
+        'card-bg': '#16213e',
+        text: '#f1f5f9'
+      },
+      light: {
+        background: '#f8fafc',
+        'card-bg': '#ffffff',
+        text: '#0f172a'
+      },
+      ocean: {
+        background: '#0c4a6e',
+        'card-bg': '#075985',
+        text: '#e0f2fe'
+      },
+      nature: {
+        background: '#14532d',
+        'card-bg': '#166534',
+        text: '#ecfccb'
+      }
+    };
+    
+    // Open color editor modal
+    window.openColorEditor = function() {
+      const modal = document.getElementById('color-editor-modal');
+      if (modal) {
+        // Load current colors from localStorage or use defaults
+        loadCurrentColors();
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    };
+    
+    // Close color editor modal
+    window.closeColorEditor = function(event) {
+      const modal = document.getElementById('color-editor-modal');
+      if (event && event.target !== modal) {
+        return;
+      }
+      
+      // Apply all current colors before closing (in case user typed but didn't press enter)
+      applyAllColors();
+      
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    };
+    
+    // Apply only changed colors from the modal inputs
+    function applyAllColors() {
+      // Only apply colors that have been explicitly changed (non-empty values)
+      for (const key of Object.keys(defaultColors)) {
+        const hexElem = document.getElementById(`color-${key}-hex`);
+        if (hexElem && hexElem.value && hexElem.dataset.changed === 'true') {
+          // Apply only the changed color
+          applyColor(key, hexElem.value);
+        }
+      }
+      // Save all colors to localStorage
+      saveColors();
+    }
+    
+    // Load current colors into the editor (template-specific)
+    function loadCurrentColors() {
+      const savedColors = localStorage.getItem(getColorStorageKey());
+      
+      // Reset all inputs to empty first
+      for (const key of Object.keys(defaultColors)) {
+        const pickerElem = document.getElementById(`color-${key}`);
+        const hexElem = document.getElementById(`color-${key}-hex`);
+        
+        if (pickerElem) pickerElem.value = defaultColors[key];
+        if (hexElem) {
+          hexElem.value = '';
+          hexElem.dataset.changed = 'false';
+        }
+      }
+      
+      // If there are saved colors, load them and mark as changed
+      if (savedColors) {
+        const colors = JSON.parse(savedColors);
+        for (const [key, value] of Object.entries(colors)) {
+          const pickerElem = document.getElementById(`color-${key}`);
+          const hexElem = document.getElementById(`color-${key}-hex`);
+          
+          if (pickerElem) pickerElem.value = value;
+          if (hexElem) {
+            hexElem.value = value;
+            hexElem.dataset.changed = 'true'; // Mark saved colors as changed
+          }
+        }
+      }
+    }
+    
+    // Update color from color picker
+    window.updateColorFromPicker = function(colorKey, value) {
+      // Update hex input
+      const hexElem = document.getElementById(`color-${colorKey}-hex`);
+      if (hexElem) {
+        hexElem.value = value;
+        hexElem.dataset.changed = 'true';
+      }
+      
+      // Save first, then apply (so injectColorsIntoIframes can read from localStorage)
+      saveColors();
+      applyColor(colorKey, value);
+    };
+    
+    // Update color from hex input
+    window.updateColorFromHex = function(colorKey, value) {
+      // Validate hex format
+      if (!/^#[0-9A-F]{6}$/i.test(value) && value.length === 7) return;
+      
+      // Update color picker
+      const pickerElem = document.getElementById(`color-${colorKey}`);
+      if (pickerElem && value.length === 7) {
+        pickerElem.value = value;
+        // Mark as changed
+        const hexElem = document.getElementById(`color-${colorKey}-hex`);
+        if (hexElem) hexElem.dataset.changed = 'true';
+        // Save first, then apply (so injectColorsIntoIframes can read from localStorage)
+        saveColors();
+        applyColor(colorKey, value);
+      }
+    };
+    
+    // Apply a single color to SCORM-specific CSS variables
+    function applyColor(colorKey, value) {
+      const cssVarMap = {
+        'background': '--scorm-background',
+        'card-bg': '--scorm-card-bg',
+        'text': '--scorm-text'
+      };
+      
+      const cssVar = cssVarMap[colorKey];
+      if (cssVar) {
+        // Find all SCORM containers and update their CSS custom properties
+        const scormContainers = document.querySelectorAll('.scorm-custom-colors');
+        scormContainers.forEach(container => {
+          container.style.setProperty(cssVar, value);
+        });
+        
+        // Inject colors into SCORM iframes
+        injectColorsIntoIframes();
+        
+        // For text color, also try to directly apply to iframe content for immediate effect
+        if (colorKey === 'text') {
+          applyTextColorDirectly(value);
+        }
+      }
+    }
+    
+    // Directly apply text color to iframe elements for immediate effect
+    function applyTextColorDirectly(colorValue) {
+      const iframes = document.querySelectorAll('.scorm-custom-colors iframe');
+      iframes.forEach(iframe => {
+        try {
+          const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+          if (iframeDoc && iframeDoc.body) {
+            // Apply inline style to body for immediate text color change
+            iframeDoc.body.style.color = colorValue;
+            iframeDoc.body.style.setProperty('color', colorValue, 'important');
+            
+            // Also apply to all child elements
+            const allElements = iframeDoc.body.querySelectorAll('*');
+            allElements.forEach(el => {
+              if (el.children.length === 0 || el.textContent.trim()) {
+                el.style.setProperty('color', colorValue, 'important');
+                el.style.setProperty('-webkit-text-fill-color', colorValue, 'important');
+              }
+            });
+          }
+        } catch (error) {
+          // Cross-origin restriction - cannot access iframe content
+          console.warn('Cannot apply text color directly to iframe:', error.message);
+        }
+      });
+    }
+    
+    // Inject CSS into SCORM iframes to change internal colors (template-specific)
+    function injectColorsIntoIframes() {
+      const savedColors = localStorage.getItem(getColorStorageKey());
+      
+      // If no saved colors for this template, don't inject anything - let SCORM use original colors
+      if (!savedColors) {
+        return;
+      }
+      
+      const colors = JSON.parse(savedColors);
+      
+      // Only inject if at least one color has been explicitly set
+      const hasCustomColors = Object.keys(colors).length > 0;
+      if (!hasCustomColors) {
+        return;
+      }
+      
+      // Find all iframes in SCORM containers
+      const iframes = document.querySelectorAll('.scorm-custom-colors iframe');
+      
+      iframes.forEach(iframe => {
+        try {
+          // Try to access iframe document (will fail if cross-origin)
+          const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+          
+          if (iframeDoc) {
+            // Remove existing custom style if present
+            let styleElement = iframeDoc.getElementById('scorm-custom-colors-style');
+            
+            if (!styleElement) {
+              styleElement = iframeDoc.createElement('style');
+              styleElement.id = 'scorm-custom-colors-style';
+              iframeDoc.head.appendChild(styleElement);
+            }
+            
+            // Generate CSS to override SCORM content colors - only for changed colors
+            let cssRules = [];
+            
+            if (colors.background) {
+              cssRules.push(`
+                body {
+                  background-color: ${colors.background} !important;
+                }
+                .slide, .screen, .page, [class*="slide"], [class*="screen"] {
+                  background-color: ${colors.background} !important;
+                }
+              `);
+            }
+            
+            if (colors.text) {
+              cssRules.push(`
+                /* Text color override with maximum specificity - Storyline/SCORM compatible */
+                html, body, body *, body *::before, body *::after {
+                  color: ${colors.text} !important;
+                  -webkit-text-fill-color: ${colors.text} !important;
+                }
+                /* Target all possible slide containers */
+                .slide, .screen, .page, .stage, .content-wrapper,
+                [class*="slide"], [class*="screen"], [class*="page"], [class*="stage"],
+                [class*="Slide"], [class*="Screen"], [class*="Page"] {
+                  color: ${colors.text} !important;
+                }
+                .slide *, .screen *, .page *, .stage *, .content-wrapper *,
+                [class*="slide"] *, [class*="screen"] *, [class*="page"] *,
+                [class*="Slide"] *, [class*="Screen"] *, [class*="Page"] * {
+                  color: ${colors.text} !important;
+                }
+                /* All text elements */
+                p, span, div, h1, h2, h3, h4, h5, h6, label, li, td, th, a, button, 
+                strong, b, em, i, u, small, big, sub, sup {
+                  color: ${colors.text} !important;
+                  -webkit-text-fill-color: ${colors.text} !important;
+                }
+                /* Storyline-specific text elements */
+                .text, .caption, .title, .subtitle, .description, .content, 
+                .question, .answer, .feedback, .instruction,
+                [class*="text"], [class*="caption"], [class*="title"],
+                [class*="content"], [class*="label"], [class*="button"],
+                [class*="Text"], [class*="Caption"], [class*="Title"] {
+                  color: ${colors.text} !important;
+                  -webkit-text-fill-color: ${colors.text} !important;
+                }
+                /* SVG text elements */
+                svg text, text {
+                  fill: ${colors.text} !important;
+                  color: ${colors.text} !important;
+                }
+                /* Force override inline styles */
+                [style*="color"] {
+                  color: ${colors.text} !important;
+                  -webkit-text-fill-color: ${colors.text} !important;
+                }
+                /* Override CSS custom properties */
+                * {
+                  --text-color: ${colors.text} !important;
+                  --color-text: ${colors.text} !important;
+                  --font-color: ${colors.text} !important;
+                  --foreground-color: ${colors.text} !important;
+                }
+              `);
+            }
+            
+            if (colors['card-bg']) {
+              cssRules.push(`
+                .card, .panel, .container, [class*="card"], [class*="panel"] {
+                  background-color: ${colors['card-bg']} !important;
+                }
+                .nav, .navigation, [class*="nav"] {
+                  background-color: ${colors['card-bg']} !important;
+                }
+                input, textarea, select {
+                  background-color: ${colors['card-bg']} !important;
+                }
+              `);
+            }
+            
+            // Combine all CSS rules
+            const css = cssRules.length > 0 ? `/* SCORM Custom Color Overrides */\n${cssRules.join('\n')}` : '';
+            styleElement.textContent = css;
+          }
+        } catch (error) {
+          // Cross-origin restriction - cannot access iframe content
+          console.warn('Cannot inject styles into cross-origin iframe:', error.message);
+        }
+      });
+    }
+    
+    // Apply color preset
+    window.applyColorPreset = function(presetName) {
+      const preset = colorPresets[presetName];
+      if (!preset) return;
+      
+      // Update all color inputs and apply colors
+      for (const [key, value] of Object.entries(preset)) {
+        const pickerElem = document.getElementById(`color-${key}`);
+        const hexElem = document.getElementById(`color-${key}-hex`);
+        
+        if (pickerElem) pickerElem.value = value;
+        if (hexElem) {
+          hexElem.value = value;
+          hexElem.dataset.changed = 'true'; // Mark preset colors as changed
+        }
+        
+        applyColor(key, value);
+      }
+      
+      saveColors();
+      updateStatus(`Applied ${presetName.charAt(0).toUpperCase() + presetName.slice(1)} theme`);
+    };
+    
+    // Reset colors to default (template-specific)
+    window.resetColors = function() {
+      // if (!confirm('Reset all colors to default?')) return;
+      
+      try {
+        // Clear custom colors for THIS template only
+        localStorage.removeItem(getColorStorageKey());
+        
+        // Reset all color inputs to original SCORM defaults (empty/no override)
+        for (const [key, value] of Object.entries(defaultColors)) {
+          const pickerElem = document.getElementById(`color-${key}`);
+          const hexElem = document.getElementById(`color-${key}-hex`);
+          
+          if (pickerElem) pickerElem.value = value;
+          if (hexElem) hexElem.value = value;
+        }
+        
+        // Remove all custom color styles from SCORM containers
+        const scormContainers = document.querySelectorAll('.scorm-custom-colors');
+        scormContainers.forEach(container => {
+          container.style.removeProperty('--scorm-background');
+          container.style.removeProperty('--scorm-card-bg');
+          container.style.removeProperty('--scorm-text');
+        });
+        
+        // Remove injected styles from iframes (restore original SCORM colors)
+        const iframes = document.querySelectorAll('.scorm-custom-colors iframe');
+        iframes.forEach(iframe => {
+          try {
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            if (iframeDoc) {
+              const styleElement = iframeDoc.getElementById('scorm-custom-colors-style');
+              if (styleElement) {
+                styleElement.remove();
+              }
+            }
+          } catch (error) {
+            console.warn('Cannot remove styles from cross-origin iframe');
+          }
+        });
+        
+        updateStatus('Colors reset to original SCORM');
+      } catch (error) {
+        console.error('Error resetting colors:', error);
+        updateStatus('Error resetting colors');
+      }
+    };
+    
+    // Get template-specific storage key
+    function getColorStorageKey() {
+      // Use current template name for storage
+      return `scormCustomColors_${currentTemplate}`;
+    }
+    
+    // Save colors to localStorage (template-specific) - only save changed colors
+    function saveColors() {
+      const colors = {};
+      
+      for (const key of Object.keys(defaultColors)) {
+        const hexElem = document.getElementById(`color-${key}-hex`);
+        // Only save colors that have been explicitly changed by the user
+        if (hexElem && hexElem.value && hexElem.dataset.changed === 'true') {
+          colors[key] = hexElem.value;
+        }
+      }
+      
+      // Save with template-specific key
+      localStorage.setItem(getColorStorageKey(), JSON.stringify(colors));
+    }
+    
+    // Initialize colors on page load - DON'T apply by default, only if user has customized
+    function initializeColors() {
+      // Do nothing on load - let SCORM use its original colors
+      // Colors will only be applied when user actively changes them
+    }
     
     // ===== Sharing Functions =====
     
@@ -6364,12 +6879,12 @@ Created with Tamer Educational Activities
       }
       
       const container = document.createElement('div');
-      container.className = 'scorm-container';
+      container.className = 'scorm-container scorm-custom-colors';
       container.innerHTML = `
-        <div class="mb-4 p-4 rounded-lg" style="background-color: var(--button-bg); border: 1px solid var(--button-border);">
+        <div class="mb-4 p-4 rounded-lg scorm-info-bg">
           <p class="text-sm text-muted mb-2">${activityData.description || 'SCORM Package'}</p>
         </div>
-        <div class="relative rounded-lg overflow-hidden" style="background-color: var(--background); border: 2px solid var(--card-border);">
+        <div class="relative rounded-lg overflow-hidden scorm-iframe-wrapper">
           <iframe 
             src="${activityData.scormUrl}" 
             style="width: ${activityData.width || '100%'}; height: ${activityData.height || '600px'}; border: none;"
@@ -6382,6 +6897,17 @@ Created with Tamer Educational Activities
       playArea.innerHTML = '';
       playArea.appendChild(container);
       
+      // Add iframe load event listener to inject colors when SCORM loads
+      const iframe = container.querySelector('iframe');
+      if (iframe) {
+        iframe.addEventListener('load', function() {
+          // Wait a bit for SCORM to fully initialize, then inject colors
+          setTimeout(() => {
+            injectColorsIntoIframes();
+          }, 500);
+        });
+      }
+      
       // Add fullscreen button
       if (playControls) {
         playControls.innerHTML = `
@@ -6392,6 +6918,10 @@ Created with Tamer Educational Activities
           <button class="btn btn-ghost" onclick="refreshSCORM()">
             <i class="fas fa-sync-alt mr-2"></i>
             Reload
+          </button>
+          <button class="btn btn-ghost" onclick="openColorEditor()" title="Customize colors">
+            <i class="fas fa-palette mr-2"></i>
+            Edit Scorm
           </button>
         `;
       }
@@ -6458,7 +6988,7 @@ Created with Tamer Educational Activities
       previewCard.className = 'card';
       previewCard.innerHTML = `
         <h4 class="text-lg font-bold mb-4">Preview</h4>
-        <div class="relative rounded-lg overflow-hidden" style="background-color: var(--background); border: 2px solid var(--card-border); height: 400px;">
+        <div class="relative rounded-lg overflow-hidden scorm-custom-colors" style="background-color: var(--scorm-background, var(--background)); border: 2px solid var(--card-border); height: 400px;">
           <iframe 
             src="${activityData.scormUrl || 'about:blank'}" 
             style="width: 100%; height: 100%; border: none;"
@@ -6469,6 +6999,11 @@ Created with Tamer Educational Activities
       `;
       
       editor.appendChild(previewCard);
+      
+      // Apply custom colors to the edit mode preview
+      setTimeout(() => {
+        injectColorsIntoIframes();
+      }, 100);
     };
     
     // Update SCORM Viewer settings
@@ -6502,7 +7037,37 @@ Created with Tamer Educational Activities
     window.refreshSCORM = function() {
       const iframe = document.querySelector('.scorm-container iframe');
       if (iframe) {
+        // Remove custom color styles from iframe before reloading
+        try {
+          const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+          if (iframeDoc) {
+            const styleElement = iframeDoc.getElementById('scorm-custom-colors-style');
+            if (styleElement) {
+              styleElement.remove();
+            }
+          }
+        } catch (error) {
+          console.warn('Cannot remove styles from cross-origin iframe');
+        }
+        
+        // Remove custom colors from SCORM container
+        const scormContainer = document.querySelector('.scorm-custom-colors');
+        if (scormContainer) {
+          scormContainer.style.removeProperty('--scorm-background');
+          scormContainer.style.removeProperty('--scorm-card-bg');
+          scormContainer.style.removeProperty('--scorm-primary');
+          scormContainer.style.removeProperty('--scorm-text');
+          scormContainer.style.removeProperty('--scorm-success');
+          scormContainer.style.removeProperty('--scorm-error');
+        }
+        
+        // Reload the iframe
         iframe.src = iframe.src;
+        
+        // Show status message
+        if (typeof updateStatus === 'function') {
+          updateStatus('SCORM reloaded with original colors');
+        }
       }
     };
     
@@ -6521,14 +7086,14 @@ Created with Tamer Educational Activities
       }
       
       const container = document.createElement('div');
-      container.className = 'game-arena-container';
+      container.className = 'game-arena-container scorm-custom-colors';
       container.innerHTML = `
-        <div class="mb-4 p-4 rounded-lg" style="background-color: var(--button-bg); border: 1px solid var(--button-border);">
+        <div class="mb-4 p-4 rounded-lg scorm-info-bg">
           <p class="text-sm text-muted mb-2">${activityData.description || 'Interactive Game Arena Activity'}</p>
           <p class="text-xs text-muted">${activityData.instructions || 'Complete the game challenges to test your knowledge'}</p>
         </div>
         
-        <div class="relative rounded-lg overflow-hidden" style="background-color: var(--background); border: 2px solid var(--card-border);">
+        <div class="relative rounded-lg overflow-hidden scorm-iframe-wrapper">
           <iframe 
             src="${activityData.packagePath}/story.html" 
             style="width: ${activityData.width || '100%'}; height: ${activityData.height || '700px'}; border: none;"
@@ -6541,6 +7106,17 @@ Created with Tamer Educational Activities
       playArea.innerHTML = '';
       playArea.appendChild(container);
       
+      // Add iframe load event listener to inject colors when Game Arena loads
+      const iframe = container.querySelector('iframe');
+      if (iframe) {
+        iframe.addEventListener('load', function() {
+          // Wait a bit for Game Arena to fully initialize, then inject colors
+          setTimeout(() => {
+            injectColorsIntoIframes();
+          }, 500);
+        });
+      }
+      
       // Add fullscreen button
       if (playControls) {
         playControls.innerHTML = `
@@ -6551,6 +7127,10 @@ Created with Tamer Educational Activities
           <button class="btn btn-ghost" onclick="refreshGameArena()">
             <i class="fas fa-sync-alt mr-2"></i>
             Reload
+          </button>
+          <button class="btn btn-ghost" onclick="openColorEditor()" title="Customize colors">
+            <i class="fas fa-palette mr-2"></i>
+            Edit Scrom
           </button>
         `;
       }
@@ -6626,7 +7206,7 @@ Created with Tamer Educational Activities
       previewCard.className = 'card';
       previewCard.innerHTML = `
         <h4 class="text-lg font-bold mb-4">Preview</h4>
-        <div class="relative rounded-lg overflow-hidden" style="background-color: var(--background); border: 2px solid var(--card-border); height: 400px;">
+        <div class="relative rounded-lg overflow-hidden scorm-custom-colors" style="background-color: var(--scorm-background, var(--background)); border: 2px solid var(--card-border); height: 400px;">
           <iframe 
             src="${activityData.packagePath || 'Game Arena'}/story.html" 
             style="width: 100%; height: 100%; border: none;"
@@ -6637,6 +7217,11 @@ Created with Tamer Educational Activities
       `;
       
       editor.appendChild(previewCard);
+      
+      // Apply custom colors to the edit mode preview
+      setTimeout(() => {
+        injectColorsIntoIframes();
+      }, 100);
     };
     
     // Update Game Arena settings
@@ -8870,6 +9455,9 @@ Created with Tamer Educational Activities
       
       // Load theme variant
       loadThemeVariant();
+      
+      // Initialize custom colors
+      initializeColors();
     });
   </script>
 </body>
