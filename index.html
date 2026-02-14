@@ -6992,23 +6992,23 @@ Created with Tamer Educational Activities
       }
     };
     
+    // <div class="mb-4">
+    //   <label class="block text-sm text-muted mb-2">SCORM Package URL</label>
+    //   <input type="text" value="${activityData.scormUrl || ''}" 
+    //         disabled class="w-full px-4 py-2 rounded-lg outline-none focus:border-primary transition-colors" 
+    //          style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);"
+    //          oninput="updateSCORMViewer('scormUrl', this.value, false)"
+    //          onchange="updateSCORMViewer('scormUrl', this.value, true)"
+    //          placeholder="scorm/story.html or full URL">
+    //   <p class="text-xs text-muted mt-1">Path to your SCORM package entry point (story.html or index_lms.html)</p>
+    // </div>
+
     // SCORM Viewer Edit Mode
     window.renderSCORMViewerEditMode = function() {
       const configCard = document.createElement('div');
       configCard.className = 'card mb-6';
       configCard.innerHTML = `
         <h4 class="text-lg font-bold mb-4">SCORM Package Configuration</h4>
-        
-        <div class="mb-4">
-          <label class="block text-sm text-muted mb-2">SCORM Package URL</label>
-          <input type="text" value="${activityData.scormUrl || ''}" 
-                 class="w-full px-4 py-2 rounded-lg outline-none focus:border-primary transition-colors" 
-                 style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);"
-                 oninput="updateSCORMViewer('scormUrl', this.value, false)"
-                 onchange="updateSCORMViewer('scormUrl', this.value, true)"
-                 placeholder="scorm/story.html or full URL">
-          <p class="text-xs text-muted mt-1">Path to your SCORM package entry point (story.html or index_lms.html)</p>
-        </div>
         <div class="mb-4">
           <label class="block text-sm text-muted mb-2">Description</label>
           <input type="text" value="${activityData.description || ''}"  disabled
