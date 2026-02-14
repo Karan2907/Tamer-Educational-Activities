@@ -1469,7 +1469,7 @@
           <div class="flex gap-3">
             <button class="btn btn-ghost" onclick="toggleMode()">
               <i class="fas fa-exchange-alt mr-2"></i>
-              <span id="mode-toggle-text">Switch to Play Mode</span>
+              <span id="mode-toggle-text">Switch to Edit Mode</span>
             </button>
           </div>
         </div>
@@ -2145,7 +2145,7 @@
       <div class="flex gap-3">
         <button class="btn btn-ghost" onclick="toggleMode()">
           <i class="fas fa-exchange-alt mr-2"></i>
-          <span id="mode-toggle-text">Switch to Play Mode</span>
+          <span id="mode-toggle-text">Switch to Edit Mode</span>
         </button>
         <button class="btn btn-accent" onclick="toggleActivitySettings()">
           <i class="fas fa-cog mr-2"></i>
@@ -2645,6 +2645,9 @@
     let soundEnabled = true;
     let backgroundMusic = null;
     
+    // Play controls expanded state (for conditional button display)
+    let scormControlsExpanded = false;
+    
     // DOM Elements
     const playMode = document.getElementById('play-mode');
     const editMode = document.getElementById('edit-mode');
@@ -2739,7 +2742,7 @@
       interactivevideo: {
         template: "interactivevideo",
         title: "Interactive Video Lesson",
-        videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ&source_ve_path=MTc4NDI0",
         videoType: "youtube",
         description: "Watch the video and answer questions at specific timestamps",
         questions: [
@@ -4176,7 +4179,7 @@
       const height = document.getElementById('embed-height').value || '600';
       const shareLink = generateShareLink(window.currentEmbedTemplate.userId, window.currentEmbedTemplate.type);
       
-      const embedCode = `<iframe src="${shareLink}" width="${width}" height="${height}" frameborder="0" allowfullscreen></iframe>`;
+      const embedCode = `<iframe src="${shareLink}" width="${width}" height="${height}" frameborder="0"  allowfullscreen autoplay></iframe>`;
       
       const textarea = document.getElementById('embed-code-textarea');
       if (textarea) {
@@ -4186,7 +4189,7 @@
       // Update preview
       const preview = document.getElementById('embed-preview');
       if (preview) {
-        preview.innerHTML = `<iframe src="${shareLink}" width="100%" height="300" frameborder="0" allowfullscreen></iframe>`;
+        preview.innerHTML = `<iframe src="${shareLink}" width="100%" height="300" frameborder="0" autoplay allowfullscreen></iframe>`;
       }
     };
     
@@ -5211,10 +5214,30 @@ Created with Tamer Educational Activities
       if (uid) {
         // console.log('UID exists, loading activity');
         currentMode = 'play'; // Ensure we start in play mode
+        
+        // Ensure play mode is shown and edit mode is hidden when switching templates
+        if (playMode) {
+          playMode.classList.remove('hidden');
+        }
+        if (editMode) {
+          editMode.classList.add('hidden');
+        }
+        if (modeToggleText) modeToggleText.textContent = 'Switch to Edit Mode';
+        
         loadActivity(true); // Auto-load saved or default template
       } else {
         // console.log('No UID, loading dummy data');
         // If not authenticated yet, load dummy and wait for auth
+        
+        // Ensure play mode is shown and edit mode is hidden when switching templates
+        if (playMode) {
+          playMode.classList.remove('hidden');
+        }
+        if (editMode) {
+          editMode.classList.add('hidden');
+        }
+        if (modeToggleText) modeToggleText.textContent = 'Switch to Edit Mode';
+        
         loadDummyData(template);
         updateActivityDisplay();
         setTimeout(() => {
@@ -5330,6 +5353,56 @@ Created with Tamer Educational Activities
       }
     };
     
+    // Toggle SCORM controls expansion (show/hide additional buttons)
+    window.toggleSCORMControls = function() {
+      scormControlsExpanded = !scormControlsExpanded;
+      updatePlayControlsForCurrentTemplate();
+    };
+    
+    // Switch to preview mode (collapse controls to show only Edit button)
+    window.switchToPreviewMode = function() {
+      scormControlsExpanded = false;
+      updatePlayControlsForCurrentTemplate();
+    };
+    
+    // Centralized function to update play controls based on current template and expanded state
+    window.updatePlayControlsForCurrentTemplate = function() {
+      if (!playControls) return;
+      
+      // Determine which template type we're dealing with for specific fullscreen/reload functions
+      const templateType = currentTemplate;
+      
+      if (scormControlsExpanded) {
+        // Expanded state: show all buttons
+        playControls.innerHTML = `
+          <button class="btn btn-primary" onclick="toggleSCORMFullscreen()">
+            <i class="fas fa-expand mr-2"></i>
+            Fullscreen
+          </button>
+          <button class="btn btn-ghost" onclick="refreshSCORM()">
+            <i class="fas fa-sync-alt mr-2"></i>
+            Reload
+          </button>
+          <button class="btn btn-ghost" onclick="openColorEditor()" title="Customize colors">
+            <i class="fas fa-palette mr-2"></i>
+            Edit Scorm
+          </button>
+          <button class="btn btn-accent" onclick="switchToPreviewMode()" title="Switch to preview mode">
+            <i class="fas fa-eye mr-2"></i>
+            Preview
+          </button>
+        `;
+      } else {
+        // Collapsed state: show only Edit button
+        playControls.innerHTML = `
+          <button class="btn btn-primary" onclick="toggleSCORMControls()" title="Show control options">
+            <i class="fas fa-edit mr-2"></i>
+            Edit Mode
+          </button>
+        `;
+      }
+    };
+    
     // Reset activity
     window.resetActivity = function() {
       // console.log('Resetting activity');
@@ -5353,6 +5426,9 @@ Created with Tamer Educational Activities
         // console.log('Play area elements not found');
         return;
       }
+      
+      // Reset controls to collapsed state when entering play mode
+      scormControlsExpanded = false;
       
       playArea.innerHTML = '';
       playControls.innerHTML = '';
@@ -5457,64 +5533,64 @@ Created with Tamer Educational Activities
       
       switch(currentTemplate) {
         case 'mcq':
-          renderSCORMViewerPlayMode();
+          renderSCORMViewerEditMode();
           break;
         case 'truefalse':
-          renderSCORMViewerPlayMode();
+          renderSCORMViewerEditMode();
           break;
         case 'flipcards':
-          renderSCORMViewerPlayMode();
+          renderSCORMViewerEditMode();
           break;
         case 'dragdrop':
-          renderSCORMViewerPlayMode();
+          renderSCORMViewerEditMode();
           break;
         case 'contentreveal':
-          renderSCORMViewerPlayMode();
+          renderSCORMViewerEditMode();
           break;
         case 'mentaldrag':
-          renderSCORMViewerPlayMode();
+          renderSCORMViewerEditMode();
           break;
         case 'pickmany':
-          renderSCORMViewerPlayMode();
+          renderSCORMViewerEditMode();
           break;
         case 'infocard':
-          renderSCORMViewerPlayMode();
+          renderSCORMViewerEditMode();
           break;
         case 'scormviewer':
-          renderSCORMViewerPlayMode();
+          renderSCORMViewerEditMode();
           break;
         case 'interactivevideo':
-          renderSCORMViewerPlayMode();
+          renderInteractiveVideoEditMode();
           break;
         case 'gamearena':
-          renderSCORMViewerPlayMode();
+          renderGameArenaEditMode();
           break;
         case 'crossword':
-          renderSCORMViewerPlayMode();
+          renderSCORMViewerEditMode();
           break;
         case 'timeline':
-          renderSCORMViewerPlayMode();
+          renderSCORMViewerEditMode();
           break;
         case 'matchingpairs':
-          renderSCORMViewerPlayMode();
+          renderSCORMViewerEditMode();
           break;
         case 'sorting':
-          renderSCORMViewerPlayMode();
+          renderSCORMViewerEditMode();
           break;
         case 'labeldiagram':
-          renderSCORMViewerPlayMode();
+          renderSCORMViewerEditMode();
           break;
         case 'wordsearch':
-          renderSCORMViewerPlayMode();
+          renderSCORMViewerEditMode();
           break;
         case 'survey':
-          renderSCORMViewerPlayMode();
+          renderSCORMViewerEditMode();
           break;
         case 'accordion':
-          renderSCORMViewerPlayMode();
+          renderSCORMViewerEditMode();
           break;
         case 'imagehotspot':
-          renderSCORMViewerPlayMode();
+          renderSCORMViewerEditMode();
           break;
         default:
           editor.innerHTML = '<div class="text-center py-12 text-muted">Unsupported template type.</div>';
@@ -6887,7 +6963,9 @@ Created with Tamer Educational Activities
         <div class="relative rounded-lg overflow-hidden scorm-iframe-wrapper">
           <iframe 
             src="${activityData.scormUrl}" 
-            style="width: ${activityData.width || '100%'}; height: ${activityData.height || '600px'}; border: none;"
+            style="width: 100%; height: ${activityData.height || '600px'}; border: none;"
+            allowfullscreen
+            autoplay
             allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             title="${activityData.title || 'SCORM Content'}"
           ></iframe>
@@ -6908,22 +6986,9 @@ Created with Tamer Educational Activities
         });
       }
       
-      // Add fullscreen button
+      // Add fullscreen button using centralized controls
       if (playControls) {
-        playControls.innerHTML = `
-          <button class="btn btn-primary" onclick="toggleSCORMFullscreen()">
-            <i class="fas fa-expand mr-2"></i>
-            Fullscreen
-          </button>
-          <button class="btn btn-ghost" onclick="refreshSCORM()">
-            <i class="fas fa-sync-alt mr-2"></i>
-            Reload
-          </button>
-          <button class="btn btn-ghost" onclick="openColorEditor()" title="Customize colors">
-            <i class="fas fa-palette mr-2"></i>
-            Edit Scorm
-          </button>
-        `;
+        updatePlayControlsForCurrentTemplate();
       }
     };
     
@@ -6939,45 +7004,18 @@ Created with Tamer Educational Activities
           <input type="text" value="${activityData.scormUrl || ''}" 
                  class="w-full px-4 py-2 rounded-lg outline-none focus:border-primary transition-colors" 
                  style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);"
-                 oninput="updateSCORMViewer('scormUrl', this.value)"
+                 oninput="updateSCORMViewer('scormUrl', this.value, false)"
+                 onchange="updateSCORMViewer('scormUrl', this.value, true)"
                  placeholder="scorm/story.html or full URL">
           <p class="text-xs text-muted mt-1">Path to your SCORM package entry point (story.html or index_lms.html)</p>
         </div>
-        
         <div class="mb-4">
           <label class="block text-sm text-muted mb-2">Description</label>
-          <input type="text" value="${activityData.description || ''}" 
+          <input type="text" value="${activityData.description || ''}"  disabled
                  class="w-full px-4 py-2 rounded-lg outline-none focus:border-primary transition-colors" 
                  style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);"
                  oninput="updateSCORMViewer('description', this.value)"
                  placeholder="Brief description of the SCORM content">
-        </div>
-        
-        <div class="grid grid-cols-2 gap-4 mb-4">
-          <div>
-            <label class="block text-sm text-muted mb-2">Width</label>
-            <input type="text" value="${activityData.width || '100%'}" 
-                   class="w-full px-4 py-2 rounded-lg outline-none focus:border-primary transition-colors" 
-                   style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);"
-                   oninput="updateSCORMViewer('width', this.value)"
-                   placeholder="100% or 800px">
-          </div>
-          <div>
-            <label class="block text-sm text-muted mb-2">Height</label>
-            <input type="text" value="${activityData.height || '600px'}" 
-                   class="w-full px-4 py-2 rounded-lg outline-none focus:border-primary transition-colors" 
-                   style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);"
-                   oninput="updateSCORMViewer('height', this.value)"
-                   placeholder="600px">
-          </div>
-        </div>
-        
-        <div class="p-4 rounded-lg" style="background-color: var(--drag-bg); border: 1px solid var(--card-border);">
-          <p class="text-sm mb-2"><strong>Available SCORM Packages:</strong></p>
-          <ul class="text-sm text-muted space-y-1">
-            <li>• <code class="text-primary">scorm/story.html</code> - Tamer Educational Activities</li>
-            <li>• <code class="text-primary">scorm/index_lms.html</code> - LMS Version</li>
-          </ul>
         </div>
       `;
       
@@ -6993,6 +7031,8 @@ Created with Tamer Educational Activities
             src="${activityData.scormUrl || 'about:blank'}" 
             style="width: 100%; height: 100%; border: none;"
             title="SCORM Preview"
+            allowfullscreen
+            autoplay
           ></iframe>
         </div>
         <p class="text-xs text-muted mt-2">Switch to Play Mode for full-size preview</p>
@@ -7007,12 +7047,16 @@ Created with Tamer Educational Activities
     };
     
     // Update SCORM Viewer settings
-    window.updateSCORMViewer = function(field, value) {
+    window.updateSCORMViewer = function(field, value, updatePreview = true) {
       if (activityData) {
         activityData[field] = value;
-        // Refresh preview
-        if (currentMode === 'edit') {
-          renderEditMode();
+        // Only update the preview iframe src directly without full re-render
+        // updatePreview is false during oninput (typing) and true on onchange (blur)
+        if (field === 'scormUrl' && currentMode === 'edit' && updatePreview) {
+          const previewIframe = document.querySelector('#editor iframe');
+          if (previewIframe) {
+            previewIframe.src = value || 'about:blank';
+          }
         }
       }
     };
@@ -7099,6 +7143,8 @@ Created with Tamer Educational Activities
             style="width: ${activityData.width || '100%'}; height: ${activityData.height || '700px'}; border: none;"
             allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             title="${activityData.title || 'Game Arena Activity'}"
+            allowfullscreen
+            autoplay
           ></iframe>
         </div>
       `;
@@ -7117,22 +7163,9 @@ Created with Tamer Educational Activities
         });
       }
       
-      // Add fullscreen button
+      // Add fullscreen button using centralized controls
       if (playControls) {
-        playControls.innerHTML = `
-          <button class="btn btn-primary" onclick="toggleGameArenaFullscreen()">
-            <i class="fas fa-expand mr-2"></i>
-            Fullscreen
-          </button>
-          <button class="btn btn-ghost" onclick="refreshGameArena()">
-            <i class="fas fa-sync-alt mr-2"></i>
-            Reload
-          </button>
-          <button class="btn btn-ghost" onclick="openColorEditor()" title="Customize colors">
-            <i class="fas fa-palette mr-2"></i>
-            Edit Scrom
-          </button>
-        `;
+        updatePlayControlsForCurrentTemplate();
       }
     };
     
@@ -7150,7 +7183,8 @@ Created with Tamer Educational Activities
           <input type="text" value="${activityData.packagePath || ''}" 
                  class="w-full px-4 py-2 rounded-lg outline-none focus:border-primary transition-colors" 
                  style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);"
-                 oninput="updateGameArena('packagePath', this.value)"
+                 oninput="updateGameArena('packagePath', this.value, false)"
+                 onchange="updateGameArena('packagePath', this.value, true)"
                  placeholder="Path to your game package folder">
           <p class="text-xs text-muted mt-1">Path to your Game Arena package folder (e.g., 'Game Arena')</p>
         </div>
@@ -7211,6 +7245,8 @@ Created with Tamer Educational Activities
             src="${activityData.packagePath || 'Game Arena'}/story.html" 
             style="width: 100%; height: 100%; border: none;"
             title="Game Arena Preview"
+            allowfullscreen
+            autoplay
           ></iframe>
         </div>
         <p class="text-xs text-muted mt-2">Switch to Play Mode for full-size preview</p>
@@ -7225,17 +7261,20 @@ Created with Tamer Educational Activities
     };
     
     // Update Game Arena settings
-    window.updateGameArena = function(field, value) {
+    window.updateGameArena = function(field, value, updatePreview = true) {
       // console.log('updateGameArena called with field:', field, 'value:', value);
       // console.log('Current activityData before update:', activityData);
       if (activityData) {
         activityData[field] = value;
         // console.log('Updated Game Arena field:', field, 'to:', value);
         // console.log('Current activityData after update:', activityData);
-        // Refresh preview
-        if (currentMode === 'edit') {
-          // console.log('Refreshing edit mode preview');
-          renderEditMode();
+        // Only update the preview iframe src directly without full re-render
+        // updatePreview is false during oninput (typing) and true on onchange (blur)
+        if (field === 'packagePath' && currentMode === 'edit' && updatePreview) {
+          const previewIframe = document.querySelector('#editor iframe');
+          if (previewIframe) {
+            previewIframe.src = value ? `${value}/story.html` : 'about:blank';
+          }
         }
       }
     };
@@ -7583,10 +7622,13 @@ Created with Tamer Educational Activities
         return;
       }
       
+      // Note: URL is not updated to preserve the original URL when opening Interactive Video template
+      
       // Reset state
       currentQuestionIndex = 0;
       videoScore = 0;
       questionsAnswered = [];
+      videoPlayer = null; // Store reference to video iframe
       
       const container = document.createElement('div');
       container.className = 'interactive-video-container';
@@ -7595,31 +7637,44 @@ Created with Tamer Educational Activities
           <p class="text-sm text-muted">${activityData.description || 'Interactive Video Lesson'}</p>
         </div>
         
-        <div id="video-question-area" class="hidden p-6 rounded-lg mb-4" style="background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white;">
-          <div class="text-lg font-bold mb-4" id="question-text">Which statement is correct?</div>
-          <div id="question-options" class="space-y-3">
-            <button class="w-full p-3 rounded-lg border-2 border-white/30 hover:border-white/60 hover:bg-white/10 transition-all text-left video-option" onclick="answerVideoQuestion(0)">
-              A. Plants produce oxygen
-            </button>
-            <button class="w-full p-3 rounded-lg border-2 border-white/30 hover:border-white/60 hover:bg-white/10 transition-all text-left video-option" onclick="answerVideoQuestion(1)">
-              B. Plants produce carbon dioxide
-            </button>
-            <button class="w-full p-3 rounded-lg border-2 border-white/30 hover:border-white/60 hover:bg-white/10 transition-all text-left video-option" onclick="answerVideoQuestion(2)">
-              C. Plants don't breathe
-            </button>
-          </div>
-          <div id="video-feedback" class="mt-4 p-3 rounded-lg" style="background-color: rgba(16, 185, 129, 0.2); border: 2px solid;">✅ <strong>Correct!</strong> Great job!</div>
-        </div>
-        
         <div class="relative rounded-lg overflow-hidden mb-4" style="background-color: var(--background); border: 2px solid var(--card-border);">
           <iframe 
             id="video-player"
             src="${getEmbedUrl(activityData.videoUrl)}"
             style="width: 100%; height: 500px; border: none;"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
             allowfullscreen
+            autoplay
             title="${activityData.title || 'Interactive Video'}"
           ></iframe>
+          
+          <!-- Question Overlay - appears on top of video with transparent background -->
+          <div id="video-question-area" class="hidden absolute inset-0 flex items-center justify-center p-4" style="background: rgba(0, 0, 0, 0.4);">
+            <div class="max-w-2xl w-full p-6 rounded" style="background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; box-shadow: 0 20px 60px rgba(0,0,0,0.5);">
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-2">
+                  <i class="fas fa-question-circle text-2xl"></i>
+                  <span class="text-sm opacity-75" id="question-counter">Question 1 of ${activityData.questions ? activityData.questions.length : 0}</span>
+                </div>
+                <button onclick="skipVideoQuestion()" class="text-sm opacity-75 hover:opacity-100 underline">
+                  Skip Question
+                </button>
+              </div>
+              <div class="text-xl font-bold mb-6" id="question-text">Which statement is correct?</div>
+              <div id="question-options" class="space-y-3">
+                <button class="w-full p-4 rounded-lg border-2 border-white/30 hover:border-white/60 hover:bg-white/10 transition-all text-left video-option" onclick="answerVideoQuestion(0)">
+                  A. Plants produce oxygen
+                </button>
+                <button class="w-full p-4 rounded-lg border-2 border-white/30 hover:border-white/60 hover:bg-white/10 transition-all text-left video-option" onclick="answerVideoQuestion(1)">
+                  B. Plants produce carbon dioxide
+                </button>
+                <button class="w-full p-4 rounded-lg border-2 border-white/30 hover:border-white/60 hover:bg-white/10 transition-all text-left video-option" onclick="answerVideoQuestion(2)">
+                  C. Plants don't breathe
+                </button>
+              </div>
+              <div id="video-feedback" class="hidden mt-4 p-4 rounded-lg" style="background-color: rgba(255, 255, 255, 0.2); border: 2px solid;"></div>
+            </div>
+          </div>
         </div>
         
         <div class="flex justify-between items-center p-4 rounded-lg" style="background-color: var(--button-bg); border: 1px solid var(--button-border);">
@@ -7634,9 +7689,10 @@ Created with Tamer Educational Activities
       playArea.innerHTML = '';
       playArea.appendChild(container);
       
-      // Note: Actual YouTube API integration would require additional setup
-      // This is a simplified version that shows the concept
+      // Store reference to video player
+      videoPlayer = document.getElementById('video-player');
       
+      // Use video-specific controls
       if (playControls) {
         playControls.innerHTML = `
           <button class="btn btn-primary" onclick="toggleVideoFullscreen()">
@@ -7650,10 +7706,137 @@ Created with Tamer Educational Activities
         `;
       }
       
-      // Simulate question triggers (in production, use YouTube/Vimeo API)
+      // Start question timer
+      startVideoQuestionTimer();
+    };
+    
+    // Start video question timer
+    window.startVideoQuestionTimer = function() {
+      if (!activityData.questions || activityData.questions.length === 0) return;
+      
+      // Sort questions by timestamp
+      const sortedQuestions = [...activityData.questions].sort((a, b) => a.timestamp - b.timestamp);
+      
+      // Schedule questions
+      sortedQuestions.forEach((question, index) => {
+        setTimeout(() => {
+          showScheduledVideoQuestion(index);
+        }, question.timestamp * 1000); // Convert seconds to milliseconds
+      });
+    };
+    
+    // Show scheduled video question
+    window.showScheduledVideoQuestion = function(questionIndex) {
+      if (!activityData.questions || questionIndex >= activityData.questions.length) return;
+      
+      const question = activityData.questions[questionIndex];
+      currentQuestionIndex = questionIndex;
+      
+      const questionArea = document.getElementById('video-question-area');
+      const questionText = document.getElementById('question-text');
+      const questionOptions = document.getElementById('question-options');
+      const questionCounter = document.getElementById('question-counter');
+      const feedbackDiv = document.getElementById('video-feedback');
+      
+      if (!questionArea || !questionText || !questionOptions) return;
+      
+      // Pause video
+      if (videoPlayer) {
+        try {
+          videoPlayer.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+        } catch(e) {
+          console.log('Could not pause video');
+        }
+      }
+      
+      // Update question counter
+      if (questionCounter) {
+        questionCounter.textContent = `Question ${questionIndex + 1} of ${activityData.questions.length}`;
+      }
+      
+      // Hide previous feedback
+      if (feedbackDiv) {
+        feedbackDiv.classList.add('hidden');
+      }
+      
+      questionText.textContent = question.question;
+      questionOptions.innerHTML = question.options.map((option, index) => `
+        <button class="w-full p-4 rounded-lg border-2 border-white/30 hover:border-white/60 hover:bg-white/10 transition-all text-left video-option"
+                onclick="answerScheduledVideoQuestion(${questionIndex}, ${index})">
+          ${String.fromCharCode(65 + index)}. ${option}
+        </button>
+      `).join('');
+      
+      questionArea.classList.remove('hidden');
+    };
+    
+    // Answer scheduled video question
+    window.answerScheduledVideoQuestion = function(questionIndex, selectedIndex) {
+      const question = activityData.questions[questionIndex];
+      const feedbackDiv = document.getElementById('video-feedback');
+      const options = document.querySelectorAll('.video-option');
+      const questionArea = document.getElementById('video-question-area');
+      
+      // Disable all options
+      options.forEach(opt => opt.disabled = true);
+      
+      const isCorrect = selectedIndex === question.correctIndex;
+      
+      if (isCorrect) {
+        videoScore++;
+        options[selectedIndex].style.backgroundColor = 'rgba(16, 185, 129, 0.3)';
+        options[selectedIndex].style.borderColor = '#10b981';
+        if (feedbackDiv) {
+          feedbackDiv.className = 'mt-4 p-3 rounded-lg';
+          feedbackDiv.style.backgroundColor = 'rgba(16, 185, 129, 0.2)';
+          feedbackDiv.style.borderColor = '#10b981';
+          feedbackDiv.style.border = '2px solid';
+          feedbackDiv.innerHTML = '✅ <strong>Correct!</strong> Great job!';
+          feedbackDiv.classList.remove('hidden');
+        }
+      } else {
+        options[selectedIndex].style.backgroundColor = 'rgba(244, 63, 94, 0.3)';
+        options[selectedIndex].style.borderColor = '#f43f5e';
+        options[question.correctIndex].style.backgroundColor = 'rgba(16, 185, 129, 0.3)';
+        options[question.correctIndex].style.borderColor = '#10b981';
+        if (feedbackDiv) {
+          feedbackDiv.className = 'mt-4 p-3 rounded-lg';
+          feedbackDiv.style.backgroundColor = 'rgba(244, 63, 94, 0.2)';
+          feedbackDiv.style.borderColor = '#f43f5e';
+          feedbackDiv.style.border = '2px solid';
+          feedbackDiv.innerHTML = '❌ <strong>Incorrect.</strong> The correct answer is highlighted.';
+          feedbackDiv.classList.remove('hidden');
+        }
+      }
+      
+      questionsAnswered.push(questionIndex);
+      
+      // Update progress
+      const progressEl = document.getElementById('video-progress');
+      const scoreEl = document.getElementById('video-score');
+      if (progressEl) progressEl.textContent = questionsAnswered.length;
+      if (scoreEl) scoreEl.textContent = videoScore;
+      
+      // Hide question and resume video after delay
       setTimeout(() => {
-        showNextVideoQuestion();
-      }, 5000);
+        if (questionArea) questionArea.classList.add('hidden');
+        
+        // Resume video
+        if (videoPlayer) {
+          try {
+            videoPlayer.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+          } catch(e) {
+            console.log('Could not resume video');
+          }
+        }
+        
+        // Check if all questions are answered
+        if (questionsAnswered.length >= activityData.questions.length) {
+          setTimeout(() => {
+            showVideoCompletion();
+          }, 2000);
+        }
+      }, 3000);
     };
     
     // Show next video question
@@ -7667,12 +7850,24 @@ Created with Tamer Educational Activities
       const questionArea = document.getElementById('video-question-area');
       const questionText = document.getElementById('question-text');
       const questionOptions = document.getElementById('question-options');
+      const questionCounter = document.getElementById('question-counter');
+      const feedbackDiv = document.getElementById('video-feedback');
       
       if (!questionArea || !questionText || !questionOptions) return;
       
+      // Update question counter
+      if (questionCounter) {
+        questionCounter.textContent = `Question ${currentQuestionIndex + 1} of ${activityData.questions.length}`;
+      }
+      
+      // Hide previous feedback
+      if (feedbackDiv) {
+        feedbackDiv.classList.add('hidden');
+      }
+      
       questionText.textContent = question.question;
       questionOptions.innerHTML = question.options.map((option, index) => `
-        <button class="w-full p-3 rounded-lg border-2 border-white/30 hover:border-white/60 hover:bg-white/10 transition-all text-left video-option"
+        <button class="w-full p-4 rounded-lg border-2 border-white/30 hover:border-white/60 hover:bg-white/10 transition-all text-left video-option"
                 onclick="answerVideoQuestion(${index})">
           ${String.fromCharCode(65 + index)}. ${option}
         </button>
@@ -7680,7 +7875,22 @@ Created with Tamer Educational Activities
       
       questionArea.classList.remove('hidden');
       
-      // In production, pause the video here using YouTube/Vimeo API
+      // Note: Video continues playing in background
+      // In production, you may want to pause the video here using YouTube/Vimeo API
+    };
+    
+    // Skip current video question
+    window.skipVideoQuestion = function() {
+      const questionArea = document.getElementById('video-question-area');
+      if (questionArea) {
+        questionArea.classList.add('hidden');
+      }
+      currentQuestionIndex++;
+      
+      // Show next question after delay
+      setTimeout(() => {
+        showNextVideoQuestion();
+      }, 5000);
     };
     
     // Answer video question
@@ -7751,18 +7961,29 @@ Created with Tamer Educational Activities
       
       const percentage = Math.round((videoScore / activityData.questions.length) * 100);
       
-      questionArea.className = 'p-6 rounded-lg mb-4 text-center';
-      questionArea.style.background = 'linear-gradient(135deg, var(--success) 0%, var(--accent) 100%)';
-      questionArea.style.color = 'white';
+      // Stop video
+      if (videoPlayer) {
+        try {
+          videoPlayer.contentWindow.postMessage('{"event":"command","func":"stopVideo","args":""}', '*');
+        } catch(e) {
+          console.log('Could not stop video');
+        }
+      }
+      
+      questionArea.className = 'absolute inset-0 flex items-center justify-center p-4';
+      questionArea.style.background = 'rgba(0, 0, 0, 0.4)';
       questionArea.innerHTML = `
-        <div class="text-3xl font-bold mb-4">🎉 Video Complete!</div>
-        <div class="text-2xl mb-4">Final Score: ${videoScore}/${activityData.questions.length}</div>
-        <div class="text-xl mb-6">${percentage}% Correct</div>
-        <div class="text-lg mb-4">${percentage >= 80 ? 'Excellent work!' : percentage >= 60 ? 'Good job!' : 'Keep practicing!'}</div>
-        <button class="btn" style="background: white; color: var(--primary);" onclick="resetVideoActivity()">
-          <i class="fas fa-redo mr-2"></i>
-          Watch Again
-        </button>
+        <div class="max-w-2xl w-full p-8 rounded text-center" style="background: linear-gradient(135deg, var(--success) 0%, var(--accent) 100%); color: white; box-shadow: 0 20px 60px rgba(0,0,0,0.5);">
+          <div class="text-5xl mb-4">🎉</div>
+          <div class="text-3xl font-bold mb-4">Video Complete!</div>
+          <div class="text-2xl mb-4">Final Score: ${videoScore}/${activityData.questions.length}</div>
+          <div class="text-xl mb-6">${percentage}% Correct</div>
+          <div class="text-lg mb-6">${percentage >= 80 ? 'Excellent work!' : percentage >= 60 ? 'Good job!' : 'Keep practicing!'}</div>
+          <button class="btn btn-lg" style="background: white; color: var(--primary);" onclick="resetVideoActivity()">
+            <i class="fas fa-redo mr-2"></i>
+            Watch Again
+          </button>
+        </div>
       `;
       questionArea.classList.remove('hidden');
     };
@@ -7775,24 +7996,26 @@ Created with Tamer Educational Activities
         <h4 class="text-lg font-bold mb-4">Video Configuration</h4>
         
         <div class="mb-4">
+          <label class="block text-sm text-muted mb-2">Activity Title</label>
+          <input type="text" value="${activityData.title || ''}" 
+                 class="w-full px-4 py-2 rounded-lg outline-none focus:border-primary transition-colors" 
+                 style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);"
+                 oninput="updateActivityTitle(this.value)"
+                 placeholder="Enter activity title">
+        </div>
+        
+        <div class="mb-4">
           <label class="block text-sm text-muted mb-2">Video URL</label>
           <input type="text" value="${activityData.videoUrl || ''}" 
                  class="w-full px-4 py-2 rounded-lg outline-none focus:border-primary transition-colors" 
                  style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);"
-                 oninput="updateInteractiveVideo('videoUrl', this.value)"
+                 oninput="updateInteractiveVideo('videoUrl', this.value, false)"
+                 onchange="updateInteractiveVideo('videoUrl', this.value, true)"
                  placeholder="YouTube or Vimeo URL (e.g., https://www.youtube.com/watch?v=...)">
           <p class="text-xs text-muted mt-1">Paste a YouTube or Vimeo video URL</p>
         </div>
         
-        <div class="mb-4">
-          <label class="block text-sm text-muted mb-2">Video Type</label>
-          <select class="w-full px-4 py-2 rounded-lg outline-none focus:border-primary transition-colors" 
-                  style="background-color: var(--button-bg); border: 1px solid var(--button-border); color: var(--text);"
-                  onchange="updateInteractiveVideo('videoType', this.value)">
-            <option value="youtube" ${activityData.videoType === 'youtube' ? 'selected' : ''}>YouTube</option>
-            <option value="vimeo" ${activityData.videoType === 'vimeo' ? 'selected' : ''}>Vimeo</option>
-          </select>
-        </div>
+      
         
         <div class="mb-4">
           <label class="block text-sm text-muted mb-2">Description</label>
@@ -7834,8 +8057,9 @@ Created with Tamer Educational Activities
           <iframe 
             src="${activityData.videoUrl ? getEmbedUrl(activityData.videoUrl) : 'about:blank'}" 
             style="width: 100%; height: 100%; border: none;"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
             allowfullscreen
+            autoplay
             title="Video Preview"
           ></iframe>
         </div>
@@ -7942,11 +8166,16 @@ Created with Tamer Educational Activities
     };
     
     // Update interactive video settings
-    window.updateInteractiveVideo = function(field, value) {
+    window.updateInteractiveVideo = function(field, value, updatePreview = true) {
       if (activityData) {
         activityData[field] = value;
-        if (field === 'videoUrl' && currentMode === 'edit') {
-          renderEditMode();
+        // Only update the preview iframe src directly without full re-render
+        // updatePreview is false during oninput (typing) and true on onchange (blur)
+        if (field === 'videoUrl' && currentMode === 'edit' && updatePreview) {
+          const previewIframe = document.querySelector('#editor iframe');
+          if (previewIframe) {
+            previewIframe.src = value ? getEmbedUrl(value) : 'about:blank';
+          }
         }
       }
     };
@@ -7960,13 +8189,15 @@ Created with Tamer Educational Activities
         const videoId = url.includes('youtu.be') 
           ? url.split('youtu.be/')[1]?.split('?')[0]
           : new URLSearchParams(new URL(url).search).get('v');
-        return videoId ? `https://www.youtube.com/embed/${videoId}?enablejsapi=1` : url;
+        // Use autoplay=1 and mute=1 (required by browsers for autoplay to work)
+        return videoId ? `https://www.youtube.com/embed/${videoId}?enablejsapi=1&rel=0&playsinline=1&autoplay=1&mute=1` : url;
       }
       
       // Vimeo
       if (url.includes('vimeo.com')) {
         const videoId = url.split('vimeo.com/')[1]?.split('?')[0];
-        return videoId ? `https://player.vimeo.com/video/${videoId}` : url;
+        // Use autoplay=1 and muted=1 (required by browsers for autoplay to work)
+        return videoId ? `https://player.vimeo.com/video/${videoId}?title=0&byline=0&autoplay=1&muted=1` : url;
       }
       
       return url;
@@ -7993,7 +8224,33 @@ Created with Tamer Educational Activities
       currentQuestionIndex = 0;
       videoScore = 0;
       questionsAnswered = [];
-      renderPlayMode();
+      
+      // Restart video
+      if (videoPlayer) {
+        try {
+          videoPlayer.contentWindow.postMessage('{"event":"command","func":"seekTo","args":[0, true]}', '*');
+          videoPlayer.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+        } catch(e) {
+          console.log('Could not restart video');
+        }
+      }
+      
+      // Hide question area
+      const questionArea = document.getElementById('video-question-area');
+      if (questionArea) {
+        questionArea.classList.add('hidden');
+      }
+      
+      // Reset progress display
+      const progressEl = document.getElementById('video-progress');
+      const scoreEl = document.getElementById('video-score');
+      if (progressEl) progressEl.textContent = '0';
+      if (scoreEl) scoreEl.textContent = '0';
+      
+      // Restart question timer
+      setTimeout(() => {
+        startVideoQuestionTimer();
+      }, 1000);
     };
     
     // ===== End Interactive Video Functions =====
@@ -8106,7 +8363,7 @@ Created with Tamer Educational Activities
       
       const embedUrl = `${window.location.origin}${window.location.pathname}?template=${currentTemplate}&id=${activityData?.templateId || 'demo'}&embed=true`;
       
-      const embedCode = `<iframe src="${embedUrl}" width="${width}" height="${height}" frameborder="0" allowfullscreen></iframe>`;
+      const embedCode = `<iframe src="${embedUrl}" width="${width}" height="${height}" frameborder="0"  allowfullscreen autoplay></iframe>`;
       
       if (textarea) {
         textarea.value = embedCode;
@@ -9339,8 +9596,16 @@ Created with Tamer Educational Activities
         
         updateActivityDisplay();
         if (currentMode === 'play') {
+          // Ensure play mode is shown and edit mode is hidden
+          if (playMode) playMode.classList.remove('hidden');
+          if (editMode) editMode.classList.add('hidden');
+          if (modeToggleText) modeToggleText.textContent = 'Switch to Edit Mode';
           renderPlayMode();
         } else {
+          // Ensure edit mode is shown and play mode is hidden
+          if (playMode) playMode.classList.add('hidden');
+          if (editMode) editMode.classList.remove('hidden');
+          if (modeToggleText) modeToggleText.textContent = 'Switch to Play Mode';
           renderEditMode();
         }
       } catch (error) {
@@ -9351,8 +9616,16 @@ Created with Tamer Educational Activities
           activityData = JSON.parse(JSON.stringify(DUMMIES[currentTemplate]));
           updateActivityDisplay();
           if (currentMode === 'play') {
+            // Ensure play mode is shown and edit mode is hidden
+            if (playMode) playMode.classList.remove('hidden');
+            if (editMode) editMode.classList.add('hidden');
+            if (modeToggleText) modeToggleText.textContent = 'Switch to Edit Mode';
             renderPlayMode();
           } else {
+            // Ensure edit mode is shown and play mode is hidden
+            if (playMode) playMode.classList.add('hidden');
+            if (editMode) editMode.classList.remove('hidden');
+            if (modeToggleText) modeToggleText.textContent = 'Switch to Play Mode';
             renderEditMode();
           }
         }
